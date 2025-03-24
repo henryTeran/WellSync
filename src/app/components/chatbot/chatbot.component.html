@@ -1,0 +1,10 @@
+<div class="chat-container">
+    <h3>Chat IA - WellSync</h3>
+    <div class="chat-box">
+      <p><strong>IA:</strong> {{ botResponse }}</p>
+    </div>
+    
+    <input type="text" [(ngModel)]="userMessage" placeholder="Posez une question..." (keyup.enter)="sendMessage()" />
+    <button (click)="sendMessage()" [disabled]="isLoading">Envoyer</button>
+  </div>
+  
