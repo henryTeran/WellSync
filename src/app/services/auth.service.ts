@@ -9,7 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class AuthService {
   private auth = inject(Auth);
   private firestore = inject(Firestore);
-  
+
   private userSubject = new BehaviorSubject<User | null>(null);
   private roleSubject = new BehaviorSubject<string | null>(null); 
 
@@ -96,4 +96,5 @@ export class AuthService {
       this.role$.subscribe(role => observer.next(role === 'admin'));
     });
   }
+  
 }
