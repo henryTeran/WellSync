@@ -11,7 +11,7 @@ import { addDoc, collection } from 'firebase/firestore';
 })
 export class OpenAiService {
   private apiUrl = 'https://api.openai.com/v1/chat/completions';
-  private apiKey = environment.openAiApiKey; // 🔥 Vérifie que l'API Key est bien définie
+  private apiKey = environment.openAiApiKey; 
 
   constructor(private http: HttpClient, private firestore: Firestore) {}
 
@@ -27,7 +27,7 @@ export class OpenAiService {
     });
 
     const body = {
-      model: 'gpt-4o',  // Assurez-vous que votre compte a accès à ce modèle
+      model: 'gpt-4o',  
       messages: [{ role: 'user', content: message }],
       temperature: 0.7,
     };

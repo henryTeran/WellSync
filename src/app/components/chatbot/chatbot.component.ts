@@ -47,7 +47,5 @@ export class ChatbotComponent {
 
     this.userMessage = '';
     this.isLoading = false;
-}
-
-
+  }
 }
