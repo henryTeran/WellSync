@@ -2,13 +2,13 @@ import { Routes } from '@angular/router';
 import { HomePageComponent } from './pages/home/home-page.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { authResolver } from './resolvers/auth/auth.resolver';
-import { servicesResolver } from './resolvers/services/services.resolver';
 import { ServicesComponent } from './components/services/services.component';
-import { recommendationsResolver } from './resolvers/recommendations/recommendations.resolver';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminComponent } from './components/admin/admin.component';
-import { adminResolver } from './resolvers/auth/admin.resolver';
+
+// ✅ Importation des Guards
+import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
     { 
@@ -17,18 +17,7 @@ export const routes: Routes = [
     },
     { 
         path: 'login', 
-        component: LoginComponent,
-        resolve: { 
-            isAuthenticated: authResolver 
-        }
-    },
-    { 
-        path: 'admin', 
-        component: AdminComponent, 
-        resolve: 
-        { 
-            isAdmin: adminResolver 
-        } 
+        component: LoginComponent
     },
     { 
         path: 'register', 
@@ -36,28 +25,21 @@ export const routes: Routes = [
     },
     { 
         path: 'services', 
-        component: ServicesComponent, 
-        resolve: 
-        { 
-            services: servicesResolver 
-        } 
+        component: ServicesComponent
     },
-   
-
     { 
         path: 'dashboard', 
         component: DashboardComponent, 
-        resolve: 
-        { 
-            recommendations: recommendationsResolver 
-        } 
+        canActivate: [authGuard] //  Protéger avec authGuard
     },
-
-
+    { 
+        path: 'admin', 
+        component: AdminComponent, 
+        canActivate: [authGuard, adminGuard] //  Protéger avec authGuard et adminGuard
+    },
     { 
         path: '**', 
         redirectTo: '', 
         pathMatch: 'full' 
     } // Redirige vers Home si la route est inconnue
-  
 ];
