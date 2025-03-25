@@ -12,6 +12,8 @@
       <button (click)="logout()">Déconnexion</button>
     }
 </nav>
-  <app-chatbot></app-chatbot>
+  @if (isLoggedIn  && !isAdmin) {
+    <app-chatbot></app-chatbot>
+  }
   <router-outlet></router-outlet>
   
