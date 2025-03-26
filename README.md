@@ -21,7 +21,7 @@ WellSync est une plateforme de gestion de santé moderne développée avec **Ang
 npm install
 npm start
 ```
-Puis ouvrir [http://localhost:4200](http://localhost:4200)
+Puis ouvrir [http://localhost:4200]
 
 ## 📁 Structure recommandée
 ```
@@ -35,7 +35,7 @@ src/
 
 ## ✅ Scripts utiles
 ```bash
-npm run format       # Formater le code avec Prettier
+
 npm run test         # Lancer les tests unitaires
 ```
 
