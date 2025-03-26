@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
-import { AuthService } from './services/auth.service';
+import { AuthService } from './core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
 

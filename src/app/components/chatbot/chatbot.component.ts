@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { OpenAiService } from '../../services/openia.service';
+import { OpenAiService } from '../../core/services/openia.service';
 import { FormsModule } from '@angular/forms';
 import { lastValueFrom } from 'rxjs';
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -36,10 +36,11 @@ export class ChatbotComponent {
         this.messages.push({ id: Date.now(), sender: 'bot', text: response });
 
         // Sauvegarde du message dans la base de données si l'utilisateur est connecté
-        this.authService.user$.subscribe(user => {
-            if (user?.uid) {
-                this.openAiService.saveMessage(user.uid, this.userMessage, response);
-            }
+        const sub = this.authService.user$.subscribe(user => {
+          if (user?.uid) {
+            this.openAiService.saveMessage(user.uid, this.userMessage, response);
+          }
+          sub.unsubscribe(); // on se désabonne immédiatement
         });
     } catch (error) {
         this.messages.push({ id: Date.now(), sender: 'bot', text: 'Erreur lors de la récupération de la réponse.' });

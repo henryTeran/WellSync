@@ -6,9 +6,9 @@ import { ServicesComponent } from './components/services/services.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminComponent } from './components/admin/admin.component';
 
-// ✅ Importation des Guards
-import { authGuard } from './guards/auth.guard';
-import { adminGuard } from './guards/admin.guard';
+//  Importation des Guards
+import { authGuard } from './core/guards/auth.guard';
+import { adminGuard } from './core/guards/admin.guard';
 
 export const routes: Routes = [
     { 
