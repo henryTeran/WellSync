@@ -1,14 +1,12 @@
-const fs = require('fs');
-const path = require('path');
-const dotenv = require('dotenv');
+import * as path from 'path';
+import * as fs from 'fs';
+import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-// Vérifie et crée le dossier si nécessaire
+// Dossier cible
 const envDir = path.resolve(__dirname, 'src/environments');
-if (!fs.existsSync(envDir)) {
-  fs.mkdirSync(envDir, { recursive: true });
-}
+if (!fs.existsSync(envDir)) fs.mkdirSync(envDir, { recursive: true });
 
 const fileContent = `export const environment = {
   production: false,
