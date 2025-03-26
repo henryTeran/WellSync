@@ -1,63 +1,51 @@
+# WellSync 🩺
 
-# WellSync
-=======
-# WellSync
+WellSync est une plateforme de gestion de santé moderne développée avec **Angular 19**, **Firebase** et **OpenAI**.
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.4.
+## 🚀 Fonctionnalités principales
+- Authentification Firebase (user / admin)
+- Chat IA (OpenAI)
+- Dashboard patient et admin
+- Système de rôles avec Guards
+- Sauvegarde des conversations dans Firestore
+- Fiches diagnostiques
 
-## Development server
+## 📦 Stack Technique
+- Angular 19 (Standalone components + Signals)
+- Firebase Auth & Firestore
+- OpenAI API (GPT-4o)
+- RxJS, TypeScript strict
 
-To start a local development server, run:
-
+## 🔧 Lancer le projet
 ```bash
-ng serve
+npm install
+npm start
+```
+Puis ouvrir [http://localhost:4200](http://localhost:4200)
+
+## 📁 Structure recommandée
+```
+src/
+├── app/
+│   ├── core/            # Services, Guards, Interfaces
+│   ├── components/      # UI Components (chatbot, login...)
+│   ├── pages/           # Pages (dashboard, home...)
+│   └── app.routes.ts    # Routes principales
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+## ✅ Scripts utiles
 ```bash
-ng generate component component-name
+npm run format       # Formater le code avec Prettier
+npm run test         # Lancer les tests unitaires
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+---
 
-```bash
-ng generate --help
-```
+## 🛡️ Sécurité
+- ⚠️ Vérifiez régulièrement l'onglet Security sur GitHub
+- Mettez à jour vos dépendances avec `npm audit fix`
 
-## Building
+---
 
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-
+## 🧑‍💻 Auteur
+Henry Teran – [GitHub](https://github.com/henryTeran)
