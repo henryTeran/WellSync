@@ -11,8 +11,8 @@
 .idea/
 
 # Env
-.env
-.env.*
+environment.ts
+environment.prod.ts
 
 # Logs
 npm-debug.log*
@@ -39,6 +39,3 @@ module.exports = {
   tabWidth: 2,
   endOfLine: 'auto',
 };
-```
-
-
