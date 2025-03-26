@@ -8,5 +8,5 @@ export const environment = {
     messagingSenderId: "630604447724",
     appId: "1:630604447724:web:ac54b79f87be1345690ac9"
   },
-  openAiApiKey: ""
+  openAiApiKey: "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"
 };

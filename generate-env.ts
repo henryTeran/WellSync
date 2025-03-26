@@ -1,8 +1,6 @@
-import * as path from 'path';
-import * as fs from 'fs';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
+const path = require('path');
+const fs = require('fs');
+require('dotenv').config();
 
 // Dossier cible
 const envDir = path.resolve(__dirname, 'src/environments');

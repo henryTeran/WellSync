@@ -36,11 +36,10 @@ export class ChatbotComponent {
         this.messages.push({ id: Date.now(), sender: 'bot', text: response });
 
         // Sauvegarde du message dans la base de données si l'utilisateur est connecté
-        const sub = this.authService.user$.subscribe(user => {
-          if (user?.uid) {
-            this.openAiService.saveMessage(user.uid, this.userMessage, response);
-          }
-          sub.unsubscribe(); // on se désabonne immédiatement
+        this.authService.user$.subscribe(user => {
+            if (user?.uid) {
+                this.openAiService.saveMessage(user.uid, this.userMessage, response);
+            }
         });
     } catch (error) {
         this.messages.push({ id: Date.now(), sender: 'bot', text: 'Erreur lors de la récupération de la réponse.' });

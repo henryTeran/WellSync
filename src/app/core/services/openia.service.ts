@@ -12,10 +12,11 @@ import { addDoc, collection } from 'firebase/firestore';
 export class OpenAiService {
   private apiUrl = 'https://api.openai.com/v1/chat/completions';
   private apiKey = environment.openAiApiKey; 
-
+  
   constructor(private http: HttpClient, private firestore: Firestore) {}
-
+  
   sendMessageToOpenAI(message: string): Observable<string> {
+    console.log(this.apiKey);
     if (!this.apiKey) {
       console.error("Erreur: La clé API OpenAI n'est pas définie.");
       return throwError(() => new Error("Clé API manquante. Vérifiez votre configuration."));
