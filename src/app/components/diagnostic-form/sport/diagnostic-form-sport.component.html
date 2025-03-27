@@ -1,0 +1,107 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="diagnostic-form">
+  <h3>⚖️ Données corporelles</h3>
+  <label>Poids actuel (kg):</label>
+  <input type="number" formControlName="poids" />
+
+  <label>Taille (cm):</label>
+  <input type="number" formControlName="taille" />
+
+  <!-- 1. Objectifs -->
+  <h3>🎯 Objectif principal</h3>
+  @for (objectif of objectifs; track objectif) {
+    <label>
+      <input type="checkbox" [value]="objectif" (change)="onCheckboxChange($event, 'objectifs')" />
+      {{ objectif }}
+    </label>
+  }
+  @if (form.get('objectifs')?.value.includes('Autre')) {
+    <input type="text" formControlName="autresObjectifs" placeholder="Autre objectif" />
+  }
+
+  <!-- 2. Zones ciblées -->
+  <h3>📍 Zone(s) à cibler</h3>
+  @for (zone of zones; track zone) {
+    <label>
+      <input type="checkbox" [value]="zone" (change)="onCheckboxChange($event, 'zones')" />
+      {{ zone }}
+    </label>
+  }
+
+  <!-- 3. Types de sport -->
+  <h3>🏃 Type(s) de sport préféré</h3>
+  @for (sport of sports; track sport) {
+    <label>
+      <input type="checkbox" [value]="sport" (change)="onCheckboxChange($event, 'sports')" />
+      {{ sport }}
+    </label>
+  }
+  @if (form.get('sports')?.value.includes('Autre')) {
+    <input type="text" formControlName="autresSports" placeholder="Autre sport" />
+  }
+
+  <!-- 4. Niveau -->
+  <h3>📊 Niveau actuel</h3>
+  @for (niveau of niveaux; track niveau) {
+    <label>
+      <input type="radio" [value]="niveau" formControlName="niveau" />
+      {{ niveau }}
+    </label>
+  }
+
+  <!-- 5. Fréquence -->
+  <h3>📅 Fréquence / semaine</h3>
+  @for (freq of frequences; track freq) {
+    <label>
+      <input type="radio" [value]="freq" formControlName="frequence" />
+      {{ freq }}
+    </label>
+  }
+
+  <!-- 6. Durée -->
+  <h3>⏱️ Durée par séance</h3>
+  @for (duree of durees; track duree) {
+    <label>
+      <input type="radio" [value]="duree" formControlName="duree" />
+      {{ duree }}
+    </label>
+  }
+
+  <!-- 7. Restrictions -->
+  <h3>⚠️ Restrictions / blessures</h3>
+  <label>
+    <input type="radio" value="oui" formControlName="restriction" /> Oui
+  </label>
+  <label>
+    <input type="radio" value="non" formControlName="restriction" /> Non
+  </label>
+  @if (form.get('restriction')?.value === 'oui') {
+    <input type="text" formControlName="detailRestriction" placeholder="Précisez vos restrictions" />
+  }
+
+  <!-- 8. Équipements -->
+  <h3>🧰 Équipements disponibles</h3>
+  @for (eq of equipements; track eq) {
+    <label>
+      <input type="checkbox" [value]="eq" (change)="onCheckboxChange($event, 'equipements')" />
+      {{ eq }}
+    </label>
+  }
+  @if (form.get('equipements')?.value.includes('Autres')) {
+    <input type="text" formControlName="autresEquipements" placeholder="Autres équipements" />
+  }
+
+  <!-- 9. Rappels -->
+  <h3>🔔 Souhaitez-vous des rappels ?</h3>
+  <label>
+    <input type="radio" value="oui" formControlName="rappels" /> Oui
+  </label>
+  <label>
+    <input type="radio" value="non" formControlName="rappels" /> Non
+  </label>
+
+  <!-- 10. Remarques -->
+  <h3>🗒️ Remarques ou préférences</h3>
+  <textarea formControlName="remarques" rows="4" placeholder="Ajoutez vos remarques ici..."></textarea>
+
+  <button type="submit" [disabled]="form.invalid">Soumettre le diagnostic</button>
+</form>

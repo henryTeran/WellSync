@@ -1,0 +1,119 @@
+<h2>🍽️ Questionnaire – Diagnostic Alimentation</h2>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+  <!-- 1. Données de base -->
+  <fieldset>
+    <legend>⚖️ 1. Données de base</legend>
+    <label>Poids (kg): <input type="number" formControlName="poids" /></label><br />
+    <label>Taille (cm): <input type="number" formControlName="taille" /></label><br />
+    <label>Âge: <input type="number" formControlName="age" /></label><br />
+    <label>Sexe :</label><br />
+    @for (sexe of sexes; track sexe) {
+      <label><input type="radio" [value]="sexe" formControlName="sexe" /> {{ sexe }}</label>
+    }
+  </fieldset>
+
+  <!-- 2. Objectifs -->
+  <fieldset>
+    <legend>🎯 2. Objectif principal</legend>
+    @for (obj of objectifs; track obj) {
+      <label>
+        <input type="checkbox" [value]="obj" (change)="onCheckboxChange($event, 'objectifs')" />
+        {{ obj }}
+      </label>
+    }
+    <div>
+      <label>Autre : <input type="text" formControlName="autresObjectifs" /></label>
+    </div>
+  </fieldset>
+
+  <!-- 3. Préférence de recommandation -->
+  <fieldset>
+    <legend>🧠 3. Préférence sur la recommandation</legend>
+    @for (pref of preferencesRecommandation; track pref) {
+      <label>
+        <input type="radio" [value]="pref" formControlName="preferenceRecommandation" />
+        {{ pref }}
+      </label>
+    }
+  </fieldset>
+
+  <!-- 4. Régimes spécifiques -->
+  <fieldset>
+    <legend>🥗 4. Régime alimentaire spécifique</legend>
+    @for (regime of regimes; track regime) {
+      <label>
+        <input type="checkbox" [value]="regime" (change)="onCheckboxChange($event, 'regimes')" />
+        {{ regime }}
+      </label>
+    }
+    <div>
+      <label>Autre : <input type="text" formControlName="autresRegimes" /></label>
+    </div>
+  </fieldset>
+
+  <!-- 5. Aliments à éviter -->
+  <fieldset>
+    <legend>❌ 5. Aliments à éviter</legend>
+    <textarea formControlName="alimentsAEviter" placeholder="Intolérances, allergies, goûts..."></textarea>
+  </fieldset>
+
+  <!-- 6. Temps de préparation -->
+  <fieldset>
+    <legend>🍳 6. Temps de préparation des repas</legend>
+    @for (temps of tempsPreparation; track temps) {
+      <label>
+        <input type="radio" [value]="temps" formControlName="tempsPreparation" />
+        {{ temps }}
+      </label>
+    }
+  </fieldset>
+
+  <!-- 7. Nombre de repas -->
+  <fieldset>
+    <legend>📅 7. Nombre de repas par jour</legend>
+    @for (repas of nbRepasJour; track repas) {
+      <label>
+        <input type="radio" [value]="repas" formControlName="nbRepasJour" />
+        {{ repas }}
+      </label>
+    }
+  </fieldset>
+
+  <!-- 8. Grignotage -->
+  <fieldset>
+    <legend>🧃 8. Grignotage ou encas ?</legend>
+    @for (g of grignotages; track g) {
+      <label>
+        <input type="radio" [value]="g" formControlName="grignotage" /> {{ g }}
+      </label>
+    }
+    <div>
+      <label>Si oui, quels types ? <input type="text" formControlName="typeGrignotage" /></label>
+    </div>
+  </fieldset>
+
+  <!-- 9. Horaires -->
+  <fieldset [formGroup]="horairesFormGroup">
+    <legend>⏱️ 9. Horaires des repas</legend>
+    <label>Petit-déjeuner : <input type="time" formControlName="petitDejeuner" /></label><br />
+    <label>Déjeuner : <input type="time" formControlName="dejeuner" /></label><br />
+    <label>Dîner : <input type="time" formControlName="diner" /></label>
+  </fieldset>
+
+  <!-- 10. Notifications -->
+  <fieldset>
+    <legend>🔔 10. Souhaites-tu recevoir des rappels ?</legend>
+    <label><input type="radio" value="oui" formControlName="rappels" /> Oui</label>
+    <label><input type="radio" value="non" formControlName="rappels" /> Non</label>
+  </fieldset>
+
+  <!-- 11. Remarques -->
+  <fieldset>
+    <legend>🗒️ 11. Remarques</legend>
+    <textarea formControlName="remarques" placeholder="Remarques ou besoins particuliers..."></textarea>
+  </fieldset>
+
+  <button type="submit" [disabled]="isLoading">Envoyer</button>
+</form>

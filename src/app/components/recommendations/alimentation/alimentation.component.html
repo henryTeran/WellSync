@@ -1,0 +1,25 @@
+<h2>🍽️ {{ recommendation?.titre }}</h2>
+<p><img [src]="recommendation?.imageUrl" alt="Plat recommandé" width="200" /></p>
+<p><strong>Description :</strong> {{ recommendation?.description }}</p>
+
+<h3>Bienfaits :</h3>
+<p>{{ recommendation?.bienfaits }}</p>
+
+<h3>Programme alimentaire</h3>
+@for (day of recommendation?.jours; track day.jour) {
+  <h4>📅 {{ day.jour }}</h4>
+  <ul>
+    @for (meal of day.repas; track meal.nom) {
+      <li>
+        <strong>{{ meal.nom }}</strong> ({{ meal.quantite }})<br />
+        <u>Ingrédients :</u>
+        <ul>
+          @for (ingredient of meal.ingredients; track ingredient) {
+            <li>{{ ingredient }}</li>
+          }
+        </ul>
+        <u>Préparation :</u> {{ meal.instructions }}
+      </li>
+    }
+  </ul>
+}

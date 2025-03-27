@@ -1,1 +1,33 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+    <h2>Bienvenue sur votre espace bien-être ✨</h2>
+  
+    <div class="recommendations">
+      <!-- Bloc Alimentation -->
+      <div class="recommendation-card">
+        <h3>🍽️ Recommandation Nutrition</h3>
+        <p>Découvrez un plat adapté à vos besoins du moment.</p>
+        <button (click)="naviguerVers('alimentation')">Voir le plat recommandé</button>
+      </div>
+  
+      <!-- Bloc Sport -->
+      <div class="recommendation-card">
+        <h3>🏋️ Routine Sportive</h3>
+        <p>Une séance ciblée selon vos objectifs forme et santé.</p>
+        <button (click)="naviguerVers('sport')">Voir la routine proposée</button>
+      </div>
+  
+      <!-- Bloc Soins & Bien-être -->
+      <div class="recommendation-card">
+        <h3>🧖‍♀️ Soin Bien-Être</h3>
+        <p>Un soin ou massage idéal pour votre état actuel.</p>
+        <button (click)="naviguerVers('soins')">Voir la prestation suggérée</button>
+      </div>
+    </div>
+  
+    <!-- Nouvelle consultation -->
+    <div class="new-consultation">
+      <h4>📝 Besoin d'une nouvelle analyse ?</h4>
+      <button (click)="naviguerVers('services')">Démarrer une nouvelle consultation</button>
+    </div>
+  </div>
+  

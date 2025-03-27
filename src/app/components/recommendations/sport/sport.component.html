@@ -1,0 +1,21 @@
+
+@if (recommendation?.routine?.jours) {
+  <h2>🏋️ {{ recommendation?.titre }}</h2>
+  <p><strong>Description :</strong> {{ recommendation?.description }}</p>
+
+  <h3>Routine :</h3>
+
+  @for (day of recommendation?.routine?.jours; track day.jour) {
+    <h4>📅 {{ day.jour }}</h4>
+    <ul>
+      @for (ex of day.exercices; track ex.nom) {
+        <li>
+          {{ ex.nom }} – {{ ex.repetitions }}<br />
+          <em>(Zone : {{ ex.zoneCiblee }})</em>
+        </li>
+      }
+    </ul>
+  }
+} @else {
+  <p>Chargement ou aucune donnée disponible.</p>
+}

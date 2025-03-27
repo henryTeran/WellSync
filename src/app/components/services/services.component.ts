@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-services',
@@ -7,5 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './services.component.css'
 })
 export class ServicesComponent {
+  constructor(private router: Router) {}
 
+  naviguerVers(theme: string) {
+    this.router.navigate(['/diagnostic', theme]);
+  }
 }

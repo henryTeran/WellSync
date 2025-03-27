@@ -1,0 +1,20 @@
+<h2>🧖‍♀️ Recommandation Bien-Être</h2>
+
+@if (isLoading) {
+  <p>Chargement de votre soin personnalisé...</p>
+} @else {
+  @if (recommendation) {
+    <div class="soin-card">
+      <h3>{{ recommendation.titre }}</h3>
+      <p>{{ recommendation.description }}</p>
+
+      <h4>✨ Prestation proposée :</h4>
+      <p>{{ recommendation.prestation }}</p>
+
+      <h4>🏢 Institut recommandé :</h4>
+      <p><strong>{{ recommendation.institutPropose }}</strong></p>
+    </div>
+  } @else {
+    <p>Aucune recommandation trouvée. Veuillez refaire un diagnostic.</p>
+  }
+}
