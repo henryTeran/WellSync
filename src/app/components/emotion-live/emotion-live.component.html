@@ -1,0 +1,19 @@
+<h2>🎥 Détection d’émotions en live</h2>
+
+<video #video autoplay muted playsinline width="400" height="300" style="border: 1px solid black;"></video>
+<br />
+<button (click)="captureAndDetect()"  [disabled]="loading">📷 Capturer & Analyser</button>
+
+<canvas #canvas style="display:none;"></canvas>
+
+@if(result) {
+
+    <div>
+        <h3>Résultat</h3>
+        <pre>{{ result | json }}</pre>
+    </div>
+}
+@if(loading) {
+
+    <p>Analyse en cours...</p>
+}

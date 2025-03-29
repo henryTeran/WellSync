@@ -1,0 +1,7 @@
+<h2>🧠 Détection des émotions</h2>
+<input type="file" (change)="onFileSelected($event)" accept="image/*" />
+@if (result) {
+<div style="margin-top: 20px; font-family: monospace; background: #eee; padding: 10px;">
+  <pre>{{ result | json }}</pre>
+</div>
+}

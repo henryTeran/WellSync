@@ -16,7 +16,9 @@ const fileContent = `export const environment = {
     messagingSenderId: "${process.env['NG_APP_FIREBASE_APIKEY_MESSAGING_SENDER_ID']}",
     appId: "${process.env['NG_APP_FIREBASE_APP_ID']}"
   },
-  openAiApiKey: "${process.env['NG_APP_OPENAI_KEY']}"
+  openAiApiKey: "${process.env['NG_APP_OPENAI_KEY']}",
+  luxandApiToken: "${process.env['NG_APP_LUXAND_API_TOKEN']}"
+
 };
 `;
 
