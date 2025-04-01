@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { OpenAiService } from '../../../core/services/openia.service';
 import { AlimentationRecommendation } from '../../../core/interfaces';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-alimentation',
@@ -14,22 +15,21 @@ export class AlimentationComponent implements OnInit {
   isLoading = true;
 
   constructor(
-    private authService: AuthService,
-    private openAiService: OpenAiService
+    private readonly _authService: AuthService,
+    private readonly _openAiService: OpenAiService
   ) {}
 
-  ngOnInit(): void {
-    this.authService.user$.subscribe(user => {
-      this.userId = user?.uid || null;
-      if (this.userId) {
-        this.loadRecommendation();
-      }
-    });
+  async ngOnInit(): Promise<void> {
+  const user = await firstValueFrom(this._authService.user$);
+    if (user?.uid) {
+      this.userId = user.uid;
+      await this.loadRecommendation();
+    }
   }
 
   async loadRecommendation() {
     try {
-      const recommandation = await this.openAiService.getLastRecommendation<AlimentationRecommendation>(this.userId!, 'alimentation');
+      const recommandation = await this._openAiService.getLastRecommendation<AlimentationRecommendation>(this.userId!, 'alimentation');
       this.recommendation = recommandation;
     } catch (e) {
       console.error('Erreur lors du chargement de la recommandation alimentation :', e);

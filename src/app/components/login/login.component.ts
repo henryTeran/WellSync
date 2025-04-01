@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -26,13 +27,13 @@ export class LoginComponent {
       try {
         const user = await this.authService.login(email, password);
         if (user) {
-          this.authService.role$.subscribe(role => {
+          const role = await firstValueFrom(this.authService.role$);
             if (role === 'admin') {
               this.router.navigate(['/admin']);
             } else {
               this.router.navigate(['/dashboard']);
             }
-          });
+          
         }
         this.errorMessage = null;
       } catch (error: any) {

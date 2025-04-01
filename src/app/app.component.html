@@ -1,19 +1,25 @@
 <nav>
-    <a routerLink="/">Accueil</a> |
-    @if (!isLoggedIn) {
-      <a routerLink="/login">Connexion</a> | 
-      <a routerLink="/register">Inscription</a> |
-    }
-    @if (isLoggedIn) {
-      <a routerLink="/dashboard">Tableau de bord</a> |
+  <a routerLink="/">Accueil</a> |
+
+  @if (!isLoggedIn) {
+    <a routerLink="/login">Connexion</a> | 
+    <a routerLink="/register">Inscription</a> |
+  }
+
+  @if (isLoggedIn) {
+    <a routerLink="/dashboard">Tableau de bord</a> |
+
+    @if (isAdmin$ | async; as isAdmin) {
       @if (isAdmin) {
         <a routerLink="/admin">Admin</a> |
       }
-      <button (click)="logout()">Déconnexion</button>
     }
-</nav>
-  @if (isLoggedIn  && !isAdmin) {
-    <app-chatbot></app-chatbot>
+
+    <button (click)="logout()">Déconnexion</button>
   }
-  <router-outlet></router-outlet>
-  
+</nav>
+
+@if (shouldShowChatbot$ | async) {
+  <app-chatbot></app-chatbot>
+}
+<router-outlet></router-outlet>
