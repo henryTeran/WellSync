@@ -23,4 +23,4 @@ const fileContent = `export const environment = {
 `;
 
 fs.writeFileSync(path.join(envDir, 'environment.ts'), fileContent);
-console.log('✅ environment.ts généré à partir du fichier .env');
+console.log(' environment.ts généré à partir du fichier .env');

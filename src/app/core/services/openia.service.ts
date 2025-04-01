@@ -196,9 +196,12 @@ Réponds uniquement avec un JSON strict. Pas de commentaires, pas de texte autou
   
   
   async getLastRecommendation<T>(userId: string, theme: 'sport' | 'alimentation' | 'soins'): Promise<T> {
-    const ref = collection(this.firestore, `users/${userId}/recommendations`);
-    const q = query(ref, where('theme', '==', theme), orderBy('date', 'desc'), limit(1));
+    const ref = collection(this.firestore, `recommendations`);
+    const q = query(ref, where('theme', '==', theme), where('userId', '==', userId),  orderBy('date', 'desc'), limit(1));
+    console.log(`[getLastRecommendation] UID: ${userId} | Thème: ${theme}`);
+    console.log(`[getLastRecommendation] Requête :`, q);
     const snapshot = await getDocs(q);
+    console.log(`[getLastRecommendation] Nombre de documents trouvés :`, snapshot.size);
     if (!snapshot.empty) {
       return snapshot.docs[0].data() as T;
     } else {
