@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { Firestore, collection, query, where, orderBy, limit, getDocs } from '@angular/fire/firestore';
 import { AuthService } from '../../../core/services/auth.service';
 import { SportRecommendation } from '../../../core/interfaces';
+import { OpenAiService } from '../../../core/services/openia.service';
+import { firstValueFrom } from 'rxjs';
 
 
 @Component({
@@ -15,27 +17,31 @@ import { SportRecommendation } from '../../../core/interfaces';
 export class SportComponent implements OnInit {
   userId: string | null = null;
   recommendation: SportRecommendation | null = null;
+  isLoading = true;
 
-  constructor(private firestore: Firestore, private authService: AuthService) {}
+  constructor(
+    private firestore: Firestore, 
+    private _authService: AuthService,
+    private _openAiService: OpenAiService ) {}
 
-  ngOnInit(): void {
-    this.authService.user$.subscribe(async (user) => {
-      if (user?.uid) {
-        this.userId = user.uid;
-        await this.loadRecommendation();
-      }
-    });
+  async ngOnInit(): Promise<void> {
+  const user = await firstValueFrom(this._authService.user$);
+    if (user?.uid) {
+      this.userId = user.uid;
+      await this.loadRecommendation();
+    }
   }
 
+ 
   async loadRecommendation() {
-    if (!this.userId) return;
-
-    const ref = collection(this.firestore, `users/${this.userId}/recommendations`);
-    const q = query(ref, where('theme', '==', 'sport'), orderBy('date', 'desc'), limit(1));
-    const snapshot = await getDocs(q);
-
-    if (!snapshot.empty) {
-      this.recommendation = snapshot.docs[0].data() as SportRecommendation;
+    try {
+      const recommandation = await this._openAiService.getLastRecommendation<SportRecommendation>(this.userId!, 'sport');
+      this.recommendation = recommandation;
+    } catch (e) {
+      console.error('Erreur lors du chargement de la recommandation soins :', e);
+    } finally {
+      this.isLoading = false;
     }
   }
 }
+

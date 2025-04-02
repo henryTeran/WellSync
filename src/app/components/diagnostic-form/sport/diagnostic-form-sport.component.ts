@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { OpenAiService } from '../../../core/services/openia.service';
 import { Router } from '@angular/router';
 import { Recommendation } from '../../../core/interfaces';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-diagnostic-form-sport',
   imports: [ReactiveFormsModule],
   templateUrl: './diagnostic-form-sport.component.html',
 })
-export class DiagnosticFormSportComponent {
+export class DiagnosticFormSportComponent implements OnInit {
   form: FormGroup;
   userId: string | null = null;
   isLoading = false;
@@ -79,11 +80,16 @@ export class DiagnosticFormSportComponent {
       remarques: ['']
     });
 
-    this.authService.user$.subscribe(user => {
-      this.userId = user?.uid || null;
-    });
+    
   }
-
+  async ngOnInit() {
+    const user = await firstValueFrom(this.authService.user$);
+    if (user?.uid) {
+      this.userId = user.uid;
+      console.log(this.userId);
+    }
+  }
+  
   onCheckboxChange(event: any, field: string) {
     const selected = this.form.get(field)?.value || [];
     if (event.target.checked) {

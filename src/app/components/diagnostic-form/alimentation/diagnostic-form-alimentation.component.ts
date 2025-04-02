@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { OpenAiService } from '../../../core/services/openia.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Recommendation } from '../../../core/interfaces';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-diagnostic-form-alimentation',
   imports: [ReactiveFormsModule],
   templateUrl: './diagnostic-form-alimentation.component.html',
 })
-export class DiagnosticFormAlimentationComponent {
+export class DiagnosticFormAlimentationComponent implements OnInit {
   form: FormGroup;
   isLoading = false;
   userId: string | null = null;
@@ -84,9 +85,14 @@ export class DiagnosticFormAlimentationComponent {
       remarques: ['']
     });
 
-    this.authService.user$.subscribe(user => {
-      this.userId = user?.uid || null;
-    });
+
+  }
+  async ngOnInit() {
+    const user = await firstValueFrom(this.authService.user$);
+    if (user?.uid) {
+      this.userId = user.uid;
+      console.log(this.userId);
+    }
   }
 
   get horairesFormGroup(): FormGroup {

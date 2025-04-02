@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { OpenAiService } from '../../../core/services/openia.service';
 import { SoinsRecommendation } from '../../../core/interfaces';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-soins',
@@ -14,17 +15,16 @@ export class SoinsComponent implements OnInit {
   isLoading = true;
 
   constructor(
-    private authService: AuthService,
+    private _authService: AuthService,
     private openAiService: OpenAiService
   ) {}
 
-  ngOnInit(): void {
-    this.authService.user$.subscribe(user => {
-      this.userId = user?.uid || null;
-      if (this.userId) {
-        this.loadRecommendation();
-      }
-    });
+  async ngOnInit(): Promise<void> {
+  const user = await firstValueFrom(this._authService.user$);
+    if (user?.uid) {
+      this.userId = user.uid;
+      await this.loadRecommendation();
+    }
   }
 
   async loadRecommendation() {
