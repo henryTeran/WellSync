@@ -56,27 +56,30 @@ export class OpenAiService {
   }
 
   saveMessage(userId: string, userMessage: string, botMessage: string) {
-    const messagesRef = collection(this.firestore, `users/${userId}/messages`);
+    const messagesRef = collection(this.firestore, `messages`);
     return addDoc(messagesRef, {
       userMessage,
       botMessage,
       date: new Date(),
+      userId: userId
     });
   }
 
   saveRecommendation(userId: string, recommendation: Recommendation) {
-    const ref = collection(this.firestore, `users/${userId}/recommendations`);
+    const ref = collection(this.firestore, `recommendations`);
     return addDoc(ref, {
       ...recommendation,
-      date: new Date()
+      date: new Date(),
+      userId: userId
     });
   }
 
   saveDiagnostic(userId: string, diagnostic: any) {
-    const ref = collection(this.firestore, `users/${userId}/diagnostic`);
+    const ref = collection(this.firestore, `diagnostic`);
     return addDoc(ref, {
       ...diagnostic,
-      date: new Date()
+      date: new Date(),
+      userId: userId
     });
   }
 
@@ -196,7 +199,7 @@ Réponds uniquement avec un JSON strict. Pas de commentaires, pas de texte autou
   
   
   async getLastRecommendation<T>(userId: string, theme: 'sport' | 'alimentation' | 'soins'): Promise<T> {
-    const ref = collection(this.firestore, `users/${userId}/recommendations`);
+    const ref = collection(this.firestore, `recommendations`);
     const q = query(ref, where('theme', '==', theme), orderBy('date', 'desc'), limit(1));
     const snapshot = await getDocs(q);
     if (!snapshot.empty) {
