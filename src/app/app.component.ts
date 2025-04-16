@@ -4,6 +4,9 @@ import { AuthService } from './core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
 import { combineLatest, firstValueFrom, map, Observable } from 'rxjs';
+import { register} from 'swiper/element-bundle'
+
+register();
 
 @Component({
   selector: 'app-root',

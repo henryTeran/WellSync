@@ -8,13 +8,19 @@ import { AdminComponent } from './components/admin/admin.component';
 //  Importation des Guards
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { SplashScreenComponent } from './pages/splash-screen/splash-screen.component';
 
 
 export const routes: Routes = [
     { 
         path: '', 
-        component: HomePageComponent 
+        component: SplashScreenComponent
     },
+    { 
+        path: 'home', 
+        component: HomePageComponent
+    },
+
     { 
         path: 'login', 
         component: LoginComponent

@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User, authState } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User, authState, signInAnonymously } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 
@@ -96,6 +96,25 @@ export class AuthService {
     return this.role$.pipe(
       map(role => role === 'admin')
     );
+  }
+
+  async loginAnonyme(): Promise<User | null> {
+    try {
+      const credential = await signInAnonymously(this.auth);
+      const user = credential.user;
+  
+      if (user) {
+       
+        const userRef = doc(this._firestore, `users/${user.uid}`);
+        await setDoc(userRef, { uid: user.uid, role: 'user', anonymous: true }, { merge: true });
+        this.roleSubject.next('user');
+      }
+  
+      return user;
+    } catch (error) {
+      console.error("Erreur de connexion anonyme :", error);
+      return null;
+    }
   }
   
 }
