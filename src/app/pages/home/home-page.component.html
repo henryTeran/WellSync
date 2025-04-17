@@ -1,39 +1,76 @@
 <ion-content class="ion-padding">
-
+  <div class="content-scroll-wrapper">
     <div class="banner">
       <h1>🌿 Bienvenue sur WellSync</h1>
       <p>Votre allié bien-être, intelligent et personnalisé.</p>
-  
-      <ion-button expand="block" color="success" (click)="commencer()" [disabled]="isLoading">
-        {{ isLoading ? 'Connexion...' : 'Commencer sans compte' }}
-      </ion-button>
     </div>
-  
-    <swiper-container [slidesPerView]="1" [loop]="true" [speed]="400" >
-      <swiper-slide>
-        <img src="assets/slider1.svg" alt="Recommandation" />
-        <h2>💡 Recommandations personnalisées</h2>
-        <p>Des plats, routines et soins adaptés à vos besoins.</p>
-      </swiper-slide>
-  
-      <swiper-slide>
-        <img src="assets/slider2.svg" alt="Diagnostic" />
-        <h2>📝 Diagnostic intelligent</h2>
-        <p>Un formulaire simple pour comprendre vos priorités.</p>
-      </swiper-slide>
-  
-      <swiper-slide>
-        <img src="assets/slider3.svg" alt="Émotions" />
-        <h2>😄 Détection émotionnelle</h2>
-        <p>Analyse votre humeur pour vous recommander mieux.</p>
-      </swiper-slide>
-  
-      <swiper-slide>
-        <img src="assets/slider4.svg" alt="Chat IA" />
-        <h2>🤖 Chat IA</h2>
-        <p>Un assistant intelligent à votre service 24/7.</p>
-      </swiper-slide>
-    </swiper-container>
-  
-  </ion-content>
-  
+
+    <div class="swiper-wrapper-fix">
+      <swiper-container
+        slides-per-view="1"
+        loop="true"
+        speed="400"
+        autoplay='{"delay": 3000}'
+        grid='{"rows": 1}'
+        init="true"
+      >
+        <swiper-slide>
+          <img src="assets/slider1.svg" alt="Recommandation" loading="lazy" />
+          <div class="slide-content">
+            <h2>💡 Recommandations personnalisées</h2>
+            <p>Des plats, routines et soins adaptés à vos besoins.</p>
+          </div>
+        </swiper-slide>
+
+        <swiper-slide>
+          <img src="assets/slider2.svg" alt="Diagnostic" loading="lazy" />
+          <div class="slide-content">
+            <h2>📝 Diagnostic intelligent</h2>
+            <p>Un formulaire simple pour comprendre vos priorités.</p>
+          </div>
+        </swiper-slide>
+
+        <swiper-slide>
+          <img src="assets/slider3.svg" alt="Émotions" loading="lazy" />
+          <div class="slide-content">
+            <h2>😄 Détection émotionnelle</h2>
+            <p>Analyse votre humeur pour vous recommander mieux.</p>
+          </div>
+        </swiper-slide>
+
+        <swiper-slide>
+          <img src="assets/slider4.svg" alt="Chat IA" loading="lazy" />
+          <div class="slide-content">
+            <h2>🤖 Chat IA</h2>
+            <p>Un assistant intelligent à votre service 24/7.</p>
+          </div>
+        </swiper-slide>
+      </swiper-container>
+    </div>
+
+    <ion-button expand="block" color="primary" (click)="commencer()" [disabled]="isLoading">
+      {{ isLoading ? 'Connexion...' : 'Commencer sans compte' }}
+    </ion-button>
+  </div>
+</ion-content>
+
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="back">
+      <ion-icon name="chevron-back-outline"></ion-icon>
+      Back
+    </ion-tab-button>
+    <ion-tab-button tab="next">
+      <ion-icon name="chevron-forward-outline"></ion-icon>
+      Next
+    </ion-tab-button>
+    <ion-tab-button tab="chat">
+      <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+      IA Chat
+    </ion-tab-button>
+    <ion-tab-button tab="login">
+      <ion-icon name="log-in-outline"></ion-icon>
+      Log-in
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

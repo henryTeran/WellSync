@@ -3,6 +3,9 @@ import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
+import { addIcons } from 'ionicons';
+import { chatboxEllipses, chatboxEllipsesOutline, chatbubbleEllipsesOutline, chevronBackOutline, chevronForwardOutline, library, logInOutline, playCircle, radio, search } from 'ionicons/icons';
+
  
 @Component({
   selector: 'app-home-page',
@@ -14,7 +17,9 @@ import { IonicModule } from '@ionic/angular';
 export class HomePageComponent {
   isLoading = false;
 
-  constructor(private _authService: AuthService, private _router: Router) {}
+  constructor(private _authService: AuthService, private _router: Router) {
+    addIcons({ chevronBackOutline, chevronForwardOutline, chatbubbleEllipsesOutline, logInOutline });
+  }
 
   async commencer() {
     this.isLoading = true;

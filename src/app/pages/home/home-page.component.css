@@ -1,22 +1,126 @@
-.mySwiper {
+ion-content::part(scroll) {
+  background: linear-gradient(to top, #c8ffe3 0%, #f6f9fc 90%);
+  display: flex;
+  flex-direction: column;
+}
+
+
+.content-scroll-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+  height: 100%;
+  padding-bottom: calc(140px + env(safe-area-inset-bottom));
+}
+
+.banner {
+  text-align: center;
+  margin: 32px 0 24px;
+}
+
+.banner h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: #1a1a1a;
+}
+
+.banner p {
+  font-size: 1.05rem;
+  color: #5c5c5c;
+  margin-top: 8px;
+}
+
+.swiper-wrapper-fix {
+  padding: 0 16px;
+  margin-bottom: 32px;
+}
+
+swiper-container {
+  display: block;
   width: 100%;
+}
+
+swiper-slide {
+  min-height: 280px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: fadeInSlide 0.5s ease-in-out;
+  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+}
+
+swiper-slide img {
+  max-width: 85%;
   height: auto;
-  padding-bottom: 1rem;
+  margin-bottom: 16px;
+}
+
+.slide-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   text-align: center;
 }
 
-.swiper-slide img {
-  max-width: 200px;
-  margin-bottom: 1rem;
+.slide-content h2 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 6px;
 }
 
-.swiper-slide h2 {
-  font-size: 1.4rem;
-  color: #2e7d32;
-  margin-bottom: 0.5rem;
+.slide-content p {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
 }
 
-.swiper-slide p {
+ion-button {
+  margin: 12px auto 40px;
+  max-width: 90%;
+  font-weight: 600;
+  --box-shadow: 0 4px 14px rgba(0, 168, 73, 0.3);
+  --border-radius: 50px;
   font-size: 1rem;
-  color: #555;
+  letter-spacing: 0.5px;
+  --background: #00c853;
+  --background-hover: #00b44a;
+  --color: #fff;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+}
+
+ion-tab-bar {
+  --background: #ffffff;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
+}
+
+ion-tab-button {
+  color: #7a7a7a;
+}
+
+ion-tab-button.ion-selected {
+  color: #00c853;
+}
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
