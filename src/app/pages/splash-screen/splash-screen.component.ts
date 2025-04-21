@@ -11,11 +11,11 @@ import { IonicModule } from '@ionic/angular';
 })
 export class SplashScreenComponent  implements OnInit {
 
-  constructor(private router: Router) {}
+  constructor(private _router: Router) {}
 
   ngOnInit() {
     setTimeout(() => {
-      this.router.navigateByUrl('/home');
+      this._router.navigateByUrl('app/home');
     }, 5000); // Durée de 5 secondes
   }
 

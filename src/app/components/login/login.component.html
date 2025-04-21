@@ -1,55 +1,52 @@
-<div class="login-container">
-    <h2>Connexion</h2>
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input 
-          type="email" 
-          id="email" 
-          formControlName="email"
-          [value]="loginForm.get('email')?.value | lowercase"
-        >
-        @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) { 
+<ion-content class="ion-padding">
+  <div class="login-wrapper">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">Connexion</ion-card-title>
+      </ion-card-header>
 
-            <div >
-                L'email est requis et doit être valide
-            </div>
-        }
-        <!-- @if (loginForm.get('email')?.errors?.['email'] && loginForm.get('email')?.touched){
+      <ion-card-content>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <ion-item lines="full">
+            <ion-label position="floating">Email</ion-label>
+            <ion-input
+              type="email"
+              formControlName="email"
+              [value]="loginForm.get('email')?.value | lowercase"
+              [class.invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+            ></ion-input>
+          </ion-item>
+          @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+            <ion-text color="danger">
+              <p class="ion-padding-start">L'email est requis et doit être valide.</p>
+            </ion-text>
+          }
 
-            <div >
-              Format d'email invalide
-            </div>
-        } -->
-      </div>
+          <ion-item lines="full">
+            <ion-label position="floating">Mot de passe</ion-label>
+            <ion-input
+              type="password"
+              formControlName="password"
+              [class.invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+            ></ion-input>
+          </ion-item>
+          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <ion-text color="danger">
+              <p class="ion-padding-start">Le mot de passe doit contenir au moins 6 caractères.</p>
+            </ion-text>
+          }
 
-      <div class="form-group">
-        <label for="password">Mot de passe:</label>
-        <input 
-          type="password" 
-          id="password" 
-          formControlName="password"
-        >
-        @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) { 
+          <ion-button expand="block" type="submit" [disabled]="!loginForm.valid" class="ion-margin-top">
+            Se connecter
+          </ion-button>
 
-            <div >
-                Le mot de passe doit contenir au moins 6 caractères
-            </div>
-        }
-        <!-- @if (loginForm.get('password')?.errors?.['minlength'] && loginForm.get('password')?.touched) {
-
-            <div >
-              Le mot de passe doit contenir au moins 6 caractères
-            </div>
-        } -->
-      </div>
-
-      <button type="submit" [disabled]="!loginForm.valid">
-        SE CONNECTER
-      </button>
-      @if (errorMessage) {
-
-          <p class="error">{{ errorMessage }}</p>
-      }
-    </form>
+          @if (errorMessage) {
+            <ion-text color="danger">
+              <p class="ion-text-center ion-margin-top">{{ errorMessage }}</p>
+            </ion-text>
+          }
+        </form>
+      </ion-card-content>
+    </ion-card>
   </div>
+</ion-content>

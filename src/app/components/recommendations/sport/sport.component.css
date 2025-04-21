@@ -1,0 +1,38 @@
+.sport-reco-container {
+    background: #f8f9fa;
+  
+    .header-section {
+      margin-bottom: 1.5rem;
+  
+      h1 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #2e7d32;
+      }
+  
+      p {
+        font-size: 1rem;
+        color: #666;
+      }
+    }
+  
+    ion-item-divider {
+      font-size: 1.1rem;
+      background-color: #e0f7fa;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+  
+    .exercise-label h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #000;
+    }
+  
+    .exercise-label p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #555;
+    }
+  }
+  

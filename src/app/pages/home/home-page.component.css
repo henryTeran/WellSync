@@ -11,7 +11,7 @@ ion-content::part(scroll) {
   justify-content: flex-start;
   overflow-y: auto;
   height: 100%;
-  padding-bottom: calc(140px + env(safe-area-inset-bottom));
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
 }
 
 .banner {
@@ -42,38 +42,48 @@ ion-content::part(scroll) {
 
 swiper-container {
   display: block;
-  width: 100%;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  padding-top: 5%;
 }
 
 swiper-slide {
-  min-height: 280px;
+  width: 40%;
+  height: 30vh; /* ~55% de la hauteur de l’écran */
+  min-height: 320px;
+  max-height: 480px;
   background: #ffffff;
   border-radius: 20px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
   padding: 24px 20px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  animation: fadeInSlide 0.5s ease-in-out;
-  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out;
+  box-sizing: border-box;
 }
 
 swiper-slide img {
-  max-width: 85%;
-  height: auto;
-  margin-bottom: 16px;
+  max-height: 55%;
+  max-width: 80%;
+  object-fit: contain;
+  margin-top: 5%;
+  flex-shrink: 0;
 }
 
 .slide-content {
+  text-align: center;
+  width: 100%;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  text-align: center;
+  justify-content: flex-end;
+  padding: 0 10px;
 }
 
 .slide-content h2 {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #222;
   margin-bottom: 6px;
@@ -99,20 +109,9 @@ ion-button {
   --color: #fff;
   --padding-top: 14px;
   --padding-bottom: 14px;
-}
+  }
 
-ion-tab-bar {
-  --background: #ffffff;
-  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.06);
-}
 
-ion-tab-button {
-  color: #7a7a7a;
-}
-
-ion-tab-button.ion-selected {
-  color: #00c853;
-}
 
 @keyframes fadeInSlide {
   from {

@@ -1,15 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, IonicModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class LoginComponent {
   loginForm: FormGroup;
@@ -29,9 +31,9 @@ export class LoginComponent {
         if (user) {
           const role = await firstValueFrom(this.authService.role$);
             if (role === 'admin') {
-              this.router.navigate(['/admin']);
+              this.router.navigate(['app/admin']);
             } else {
-              this.router.navigate(['/dashboard']);
+              this.router.navigate(['app/dashboard']);
             }
           
         }

@@ -109,7 +109,7 @@ Retour attendu au format JSON STRICT, avec cette structure :
       {
         "jour": "Lundi",
         "exercices": [
-          { "nom": "...", "repetitions": "...", "zoneCiblee": "..." },
+          { "nom": "...", "repetitions": "...", "zoneCiblee": "..."},
           ...
         ]
       },

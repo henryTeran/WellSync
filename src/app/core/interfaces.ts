@@ -14,6 +14,7 @@ export interface SportRecommendation extends Recommendation {
         nom: string;
         repetitions: string;
         zoneCiblee: string;
+        image?:string;
       }[];
     }[];
   };

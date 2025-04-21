@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { addIcons } from 'ionicons';
-import { chatboxEllipses, chatboxEllipsesOutline, chatbubbleEllipsesOutline, chevronBackOutline, chevronForwardOutline, library, logInOutline, playCircle, radio, search } from 'ionicons/icons';
+import { chatbubbleEllipsesOutline, chevronBackOutline, chevronForwardOutline, homeOutline, logInOutline } from 'ionicons/icons';
 
  
 @Component({
@@ -18,7 +18,7 @@ export class HomePageComponent {
   isLoading = false;
 
   constructor(private _authService: AuthService, private _router: Router) {
-    addIcons({ chevronBackOutline, chevronForwardOutline, chatbubbleEllipsesOutline, logInOutline });
+    addIcons({ chevronBackOutline, chevronForwardOutline, chatbubbleEllipsesOutline, logInOutline, homeOutline });
   }
 
   async commencer() {
