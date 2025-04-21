@@ -7,11 +7,16 @@
 
     <div class="swiper-wrapper-fix">
       <swiper-container
-        slides-per-view="1"
+        slides-per-view="2"
         loop="true"
         speed="400"
-        autoplay='{"delay": 5000}'
+        autoplay='{"delay": 3000}'
         grid='{"rows": 1}'
+        breakpoints='{
+          "0": { "slidesPerView": 1, "spaceBetween": 16 },
+          "600": { "slidesPerView": 2, "spaceBetween": 20 },
+          "992": { "slidesPerView": 3, "spaceBetween": 24 }
+        }'
         init="true"
       >
         <swiper-slide>

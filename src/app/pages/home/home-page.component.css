@@ -41,27 +41,14 @@ ion-content::part(scroll) {
 }
 
 swiper-container {
-  display: block;
-  width: auto;
-  max-width: 100%;
-  height: auto;
-  padding-top: 5%;
+  width: 100%;
+  padding: 0 8px;
 }
 
 swiper-slide {
-  width: 40%;
-  height: 30vh; /* ~55% de la hauteur de l’écran */
+  height: auto;
   min-height: 320px;
   max-height: 480px;
-  background: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-  padding: 24px 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
 }
 
 swiper-slide img {
@@ -121,5 +108,15 @@ ion-button {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .slide-content h2 {
+    font-size: 1rem;
+  }
+
+  .slide-content p {
+    font-size: 0.9rem;
   }
 }

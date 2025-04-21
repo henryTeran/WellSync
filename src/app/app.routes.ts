@@ -45,7 +45,7 @@ export const routes: Routes = [
       },
   
       { 
-          path: 'dashboard', 
+          path: 'dashboard/:uid', 
           component: DashboardComponent, 
           canActivate: [authGuard] //  Protéger avec authGuard
       },
