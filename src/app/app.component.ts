@@ -14,7 +14,7 @@ register();
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterModule, ChatbotComponent, IonApp, IonRouterOutlet],
+  imports: [CommonModule, RouterModule, IonApp, IonRouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

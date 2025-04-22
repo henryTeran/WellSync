@@ -3,8 +3,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
-import { addIcons } from 'ionicons';
-import { chatbubbleEllipsesOutline, chevronBackOutline, chevronForwardOutline, homeOutline, logInOutline } from 'ionicons/icons';
+
 
  
 @Component({
@@ -17,15 +16,13 @@ import { chatbubbleEllipsesOutline, chevronBackOutline, chevronForwardOutline, h
 export class HomePageComponent {
   isLoading = false;
 
-  constructor(private _authService: AuthService, private _router: Router) {
-    addIcons({ chevronBackOutline, chevronForwardOutline, chatbubbleEllipsesOutline, logInOutline, homeOutline });
-  }
+  constructor(private _authService: AuthService, private _router: Router) { }
 
   async commencer() {
     this.isLoading = true;
     const user = await this._authService.loginAnonyme();
     if (user) {
-      this._router.navigate(['/dashboard']);
+      this._router.navigate([`app/dashboard/${user.uid}`]);
     } else {
       alert('Erreur de connexion. Réessaie.');
     }

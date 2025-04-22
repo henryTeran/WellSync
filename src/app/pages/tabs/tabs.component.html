@@ -1,32 +1,40 @@
-<ion-tabs>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="back">
-      <ion-icon name="chevron-back-outline"></ion-icon>
-      Back
-    </ion-tab-button>
-    <ion-tab-button tab="next">
-      <ion-icon name="chevron-forward-outline"></ion-icon>
-      Next
-    </ion-tab-button>
-    <ion-tab-button tab="home">
-      <ion-icon name="home-outline"></ion-icon>
-      home
-    </ion-tab-button>
-    <ion-tab-button tab="chat">
-      <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-      IA Chat
-    </ion-tab-button>
-    @if (!(user$ | async)){ 
-      <ion-tab-button tab="login" >
-        <ion-icon name="log-in-outline"></ion-icon>
-        Log-in
+@if(user$ | async; as user) {
+
+  @if(user.isAnonymous){
+    <ion-chip color="warning" >
+      <ion-icon name="flask-outline"></ion-icon>
+      <ion-label>Mode test actif</ion-label>
+    </ion-chip>
+  }
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="back">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+        Back
       </ion-tab-button>
-    }
-    @if (user$ | async) {
-      <ion-tab-button tab="logout" (click)="logout()">
-        <ion-icon name="log-out-outline"></ion-icon>
-        Log-out
+      <ion-tab-button tab="next">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+        Next
       </ion-tab-button>
-    }
-  </ion-tab-bar>
-</ion-tabs>
+      <ion-tab-button tab="home">
+        <ion-icon name="home-outline"></ion-icon>
+        home
+      </ion-tab-button>
+      <ion-tab-button tab="chat">
+        <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+        IA Chat
+      </ion-tab-button>
+        @if (!user || user.isAnonymous || !user.email) {
+          <ion-tab-button tab="login">
+            <ion-icon name="log-in-outline"></ion-icon>
+            Log-in
+          </ion-tab-button>
+        } @else {
+          <ion-tab-button tab="logout" (click)="logout()">
+            <ion-icon name="log-out-outline"></ion-icon>
+            Log-out
+          </ion-tab-button>
+        }
+    </ion-tab-bar>
+  </ion-tabs>
+}

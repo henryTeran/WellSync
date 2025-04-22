@@ -1,25 +1,52 @@
-<div class="register-container">
-    <h2>Inscription</h2>
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label for="email">Email:</label>
-        <input type="email" id="email" formControlName="email">
-      </div>
-  
-      <div class="form-group">
-        <label for="password">Mot de passe:</label>
-        <input type="password" id="password" formControlName="password">
-      </div>
-  
-      <div class="form-group">
-        <label for="role">Rôle:</label>
-        <select id="role" formControlName="role">
-          <option value="user">Utilisateur</option>
-          <option value="admin">Admin</option>
-        </select>
-      </div>
-  
-      <button type="submit" [disabled]="!registerForm.valid">S'INSCRIRE</button>
-    </form>
-  </div>
-  
+<ion-content class="ion-padding">
+  <div class="register-wrapper">
+
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title class="ion-text-center">Inscription</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+          
+          <!-- Email -->
+          <ion-item>
+            <ion-label position="floating">Email</ion-label>
+            <ion-input type="email" formControlName="email" required></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
+          <p class="ion-padding-start">Email invalide</p>
+        </ion-text>
+
+        <!-- Mot de passe -->
+        <ion-item>
+          <ion-label position="floating">Mot de passe</ion-label>
+          <ion-input type="password" formControlName="password" required></ion-input>
+        </ion-item>
+        <ion-text color="danger" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+          <p class="ion-padding-start">Mot de passe trop court</p>
+        </ion-text>
+
+        <!-- Rôle -->
+        <ion-item>
+          <ion-label>Rôle</ion-label>
+          <ion-select formControlName="role" interface="popover">
+            <ion-select-option value="user">Utilisateur</ion-select-option>
+            <ion-select-option value="admin">Admin</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <!-- Bouton -->
+        <ion-button expand="block" type="submit" [disabled]="!registerForm.valid" class="ion-margin-top">
+          S'INSCRIRE
+        </ion-button>
+
+        <!-- Erreur globale -->
+        <ion-text color="danger" *ngIf="errorMessage">
+          <p class="ion-text-center">{{ errorMessage }}</p>
+        </ion-text>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</div>
+</ion-content>

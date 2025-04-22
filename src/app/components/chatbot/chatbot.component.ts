@@ -1,17 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core';
 import { OpenAiService } from '../../core/services/openia.service';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
+import { marked } from 'marked';
+
 
 @Component({
   selector: 'app-chatbot',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, IonicModule],
   templateUrl: './chatbot.component.html',
-  styleUrls: ['./chatbot.component.css']
+  styleUrls: ['./chatbot.component.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class ChatbotComponent {
+  @ViewChild('bottom') bottomRef!: ElementRef;
   userMessage: string = '';
   messages: { id: number; sender: string; text: string }[] = [];
 
@@ -26,6 +31,7 @@ export class ChatbotComponent {
 
     // Ajouter le message utilisateur
     this.messages.push({ id: Date.now(), sender: 'user', text: this.userMessage });
+    this.scrollToBottom();
 
     try {
         this.botResponse = 'Réponse en cours...';
@@ -34,7 +40,7 @@ export class ChatbotComponent {
 
         // Ajouter la réponse de l'IA
         this.messages.push({ id: Date.now(), sender: 'bot', text: response });
-
+        this.scrollToBottom();
         // Sauvegarde du message dans la base de données si l'utilisateur est connecté
         const user = await firstValueFrom(this.authService.user$);
         if (user?.uid) {
@@ -47,5 +53,26 @@ export class ChatbotComponent {
 
     this.userMessage = '';
     this.isLoading = false;
+  }
+  parseMarkdown(text: string): string {
+    return marked.parse(text) as string;
+  }
+  scrollToBottom() {
+    setTimeout(() => {
+      this.bottomRef?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
+  }
+  onKeyEnter(event: any) {
+    const e = event as KeyboardEvent;
+    if (!e.shiftKey) {
+      e.preventDefault();
+      this.sendMessage();
+    }
+  }
+  
+  resizeTextarea(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
   }
 }

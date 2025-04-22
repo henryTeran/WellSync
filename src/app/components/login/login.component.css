@@ -1,4 +1,5 @@
 .login-wrapper {
+    background: linear-gradient(to top, #c8ffe3 0%, #f6f9fc 90%);
     display: flex;
     justify-content: center;
     align-items: center;

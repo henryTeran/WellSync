@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User, authState, signInAnonymously } from '@angular/fire/auth';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, User, authState, signInAnonymously, EmailAuthProvider } from '@angular/fire/auth';
 import { Firestore, doc, setDoc, getDoc } from '@angular/fire/firestore';
+import { linkWithCredential } from 'firebase/auth';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 
 @Injectable({
@@ -115,6 +116,39 @@ export class AuthService {
       console.error("Erreur de connexion anonyme :", error);
       return null;
     }
+  }
+
+  async convertirEnCompte(email: string, password: string, role: string): Promise<User | null> {
+    const user = this.auth.currentUser;
+  
+    if (!user) {
+      throw new Error("Aucun utilisateur connecté");
+    }
+  
+    const credential = EmailAuthProvider.credential(email, password);
+  
+    try {
+      const result = await linkWithCredential(user, credential);
+  
+      // Met à jour le document Firestore existant (même UID !)
+      const userRef = doc(this._firestore, `users/${user.uid}`);
+      await setDoc(userRef, { 
+        email: result.user.email,
+        role, 
+        anonymous: false,
+        updatedAt: new Date() 
+      }, { merge: true });
+      
+      this.roleSubject.next(role);
+      return result.user;
+    } catch (error) {
+      console.error("Erreur de conversion en compte : ", error);
+      return null;
+    }
+  }
+
+  get currentUser(): User | null {
+    return this.auth.currentUser;
   }
   
 }

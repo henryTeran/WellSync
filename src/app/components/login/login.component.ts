@@ -33,7 +33,7 @@ export class LoginComponent {
             if (role === 'admin') {
               this.router.navigate(['app/admin']);
             } else {
-              this.router.navigate(['app/dashboard']);
+              this.router.navigate([`app/dashboard/${user.uid}`]);
             }
           
         }
