@@ -1,22 +1,122 @@
-.mySwiper {
-  width: 100%;
-  height: auto;
-  padding-bottom: 1rem;
+ion-content::part(scroll) {
+  background: linear-gradient(to top, #c8ffe3 0%, #f6f9fc 90%);
+  display: flex;
+  flex-direction: column;
+}
+
+
+.content-scroll-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-y: auto;
+  height: 100%;
+  padding-bottom: calc(100px + env(safe-area-inset-bottom));
+}
+
+.banner {
   text-align: center;
+  margin: 32px 0 24px;
 }
 
-.swiper-slide img {
-  max-width: 200px;
-  margin-bottom: 1rem;
+.banner h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: #1a1a1a;
 }
 
-.swiper-slide h2 {
-  font-size: 1.4rem;
-  color: #2e7d32;
-  margin-bottom: 0.5rem;
+.banner p {
+  font-size: 1.05rem;
+  color: #5c5c5c;
+  margin-top: 8px;
 }
 
-.swiper-slide p {
+.swiper-wrapper-fix {
+  padding: 0 16px;
+  margin-bottom: 32px;
+}
+
+swiper-container {
+  width: 100%;
+  padding: 0 8px;
+}
+
+swiper-slide {
+  height: auto;
+  min-height: 320px;
+  max-height: 480px;
+}
+
+swiper-slide img {
+  max-height: 55%;
+  max-width: 80%;
+  object-fit: contain;
+  margin-top: 5%;
+  flex-shrink: 0;
+}
+
+.slide-content {
+  text-align: center;
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 10px;
+}
+
+.slide-content h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 6px;
+}
+
+.slide-content p {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
+}
+
+ion-button {
+  margin: 12px auto 40px;
+  max-width: 90%;
+  font-weight: 600;
+  --box-shadow: 0 4px 14px rgba(0, 168, 73, 0.3);
+  --border-radius: 50px;
   font-size: 1rem;
-  color: #555;
+  letter-spacing: 0.5px;
+  --background: #00c853;
+  --background-hover: #00b44a;
+  --color: #fff;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  }
+
+
+
+@keyframes fadeInSlide {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .slide-content h2 {
+    font-size: 1rem;
+  }
+
+  .slide-content p {
+    font-size: 0.9rem;
+  }
 }

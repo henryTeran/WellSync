@@ -1,33 +1,71 @@
-<div class="dashboard-container">
-    <h2>Bienvenue sur votre espace bien-être ✨</h2>
+  <ion-content class="ion-padding">
+    <ion-header translucent>
+      <ion-toolbar>
+        <ion-title>Bienvenue ✨</ion-title>
+      </ion-toolbar>
+    </ion-header>
   
-    <div class="recommendations">
-      <!-- Bloc Alimentation -->
-      <div class="recommendation-card">
-        <h3>🍽️ Recommandation Nutrition</h3>
-        <p>Découvrez un plat adapté à vos besoins du moment.</p>
-        <button (click)="naviguerVers('alimentation')">Voir le plat recommandé</button>
-      </div>
+    <ion-grid class="ion-padding">
+      <ion-row>
+        <ion-col size="12" size-md="6">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>🍽️ Recommandation Nutrition</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p>Découvrez un plat adapté à vos besoins du moment.</p>
+              <ion-button expand="block" fill="solid" (click)="naviguerVers('alimentation')">
+                Voir le plat recommandé
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
   
-      <!-- Bloc Sport -->
-      <div class="recommendation-card">
-        <h3>🏋️ Routine Sportive</h3>
-        <p>Une séance ciblée selon vos objectifs forme et santé.</p>
-        <button (click)="naviguerVers('sport')">Voir la routine proposée</button>
-      </div>
+        <ion-col size="12" size-md="6">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>🏋️ Routine Sportive</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p>Une séance ciblée selon vos objectifs forme et santé.</p>
+              <ion-button expand="block" fill="solid" (click)="naviguerVers('sport')">
+                Voir la routine proposée
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
   
-      <!-- Bloc Soins & Bien-être -->
-      <div class="recommendation-card">
-        <h3>🧖‍♀️ Soin Bien-Être</h3>
-        <p>Un soin ou massage idéal pour votre état actuel.</p>
-        <button (click)="naviguerVers('soins')">Voir la prestation suggérée</button>
-      </div>
-    </div>
+        <ion-col size="12" size-md="6">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>🧖‍♀️ Soin Bien-Être</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p>Un soin ou massage idéal pour votre état actuel.</p>
+              <ion-button expand="block" fill="solid" (click)="naviguerVers('soins')">
+                Voir la prestation suggérée
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
   
-    <!-- Nouvelle consultation -->
-    <div class="new-consultation">
-      <h4>📝 Besoin d'une nouvelle analyse ?</h4>
-      <button (click)="naviguerVers('services')">Démarrer une nouvelle consultation</button>
-    </div>
-  </div>
+      <!-- Nouvelle consultation -->
+      <ion-row>
+        <ion-col size="12">
+          <ion-card color="light">
+            <ion-card-header>
+              <ion-card-title>📝 Nouvelle consultation</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <p>Besoin d'une nouvelle analyse ?</p>
+              <ion-button expand="block" color="tertiary" (click)="naviguerVers('services')">
+                Démarrer une nouvelle consultation
+              </ion-button>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-content>
   

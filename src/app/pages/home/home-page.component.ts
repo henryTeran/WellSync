@@ -3,6 +3,8 @@ import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
+
+
  
 @Component({
   selector: 'app-home-page',
@@ -14,13 +16,13 @@ import { IonicModule } from '@ionic/angular';
 export class HomePageComponent {
   isLoading = false;
 
-  constructor(private _authService: AuthService, private _router: Router) {}
+  constructor(private _authService: AuthService, private _router: Router) { }
 
   async commencer() {
     this.isLoading = true;
     const user = await this._authService.loginAnonyme();
     if (user) {
-      this._router.navigate(['/dashboard']);
+      this._router.navigate([`app/dashboard/${user.uid}`]);
     } else {
       alert('Erreur de connexion. Réessaie.');
     }

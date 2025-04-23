@@ -1,17 +1,35 @@
-<div class="chat-container">
-    <h3>💬 Chat IA - WellSync</h3>
-    
-    <div class="chat-box">
-        @for (message of messages; track message.id) {
-
-            <div>
-                <p [ngClass]="{'user-msg': message.sender === 'user', 'bot-msg': message.sender === 'bot'}">
-                    <strong>{{ message.sender === 'user' ? 'Vous' : 'IA' }}:</strong> {{ message.text }}
-                </p>
-            </div>
-        }
+<ion-content class="chat-container">
+    <div class="chat-header">
+      <h3>💬 Chat IA - WellSync</h3>
     </div>
-
-    <input type="text" [(ngModel)]="userMessage" placeholder="Posez une question..." (keyup.enter)="sendMessage()" />
-    <button (click)="sendMessage()" [disabled]="isLoading">Envoyer</button>
-</div>
+  
+    <div class="chat-box" #chatBox>
+      @for (message of messages; track message.id) {
+        <div class="message-wrapper" [ngClass]="message.sender">
+          <div class="message-bubble">
+            <strong>{{ message.sender === 'user' ? 'Vous' : 'IA' }}</strong>
+            <div class="message-content" [innerHTML]="parseMarkdown(message.text)"></div>
+          </div>
+        </div>
+      }
+    </div>
+    <div #bottom></div>
+    <div class="chat-input-bar">
+        <textarea
+        [(ngModel)]="userMessage"
+        placeholder="Posez votre question ici..."
+        (keyup.enter)="onKeyEnter($event)"
+        (input)="resizeTextarea($event)"
+        rows="1"
+      ></textarea>
+      <ion-button  
+        expand="block"
+        (click)="sendMessage()"
+        [disabled]="isLoading || !userMessage.trim()"
+        shape="round"
+        >
+        Envoyer
+      </ion-button>
+    </div>
+  </ion-content>
+  

@@ -1,21 +1,58 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>Routine Sportive</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-@if (recommendation?.routine?.jours) {
-  <h2>🏋️ {{ recommendation?.titre }}</h2>
-  <p><strong>Description :</strong> {{ recommendation?.description }}</p>
+<ion-content fullscreen>
+  @if (recommendation?.routine?.jours) {
+    <div class="routine-header ion-padding">
+      <h2>{{ recommendation?.titre }}</h2>
+      <p>{{ recommendation?.description }}</p>
+    </div>
 
-  <h3>Routine :</h3>
-
-  @for (day of recommendation?.routine?.jours; track day.jour) {
-    <h4>📅 {{ day.jour }}</h4>
-    <ul>
-      @for (ex of day.exercices; track ex.nom) {
-        <li>
-          {{ ex.nom }} – {{ ex.repetitions }}<br />
-          <em>(Zone : {{ ex.zoneCiblee }})</em>
-        </li>
+    <ion-slides pager="true" [options]="slideOpts" class="full-carousel">
+      @for (day of recommendation?.routine?.jours; track day.jour) {
+        <ion-slide>
+          <div class="day-container">
+            <h3>📅 {{ day.jour }}</h3>
+            <ion-list>
+              @for (ex of day.exercices; track ex.nom) {
+                <ion-item lines="none">
+                  <ion-label>
+                    <h3>{{ ex.nom }}</h3>
+                    <p>{{ ex.repetitions }}</p>
+                    <p><em>Zone : {{ ex.zoneCiblee }}</em></p>
+                    <video
+                      width="100%"
+                      height="180"
+                      controls
+                      [src]="getVideoUrl(ex.nom)"
+                    ></video>
+                  </ion-label>
+                </ion-item>
+              }
+            </ion-list>
+          </div>
+        </ion-slide>
       }
-    </ul>
+    </ion-slides>
+
+    <ion-footer class="ion-padding">
+      @if (!timerStarted) {
+        <ion-button expand="block" color="success" (click)="startRoutine()">
+          ▶️ Commencer cette routine
+        </ion-button>
+      } @else {
+        <div class="timer-display">
+          ⏱️ {{ timerDisplay }}
+        </div>
+        <ion-button expand="block" color="danger" (click)="stopRoutine()">
+          ⏹️ Stop
+        </ion-button>
+      }
+    </ion-footer>
+  } @else {
+    <div class="ion-padding">Chargement...</div>
   }
-} @else {
-  <p>Chargement ou aucune donnée disponible.</p>
-}
+</ion-content>
