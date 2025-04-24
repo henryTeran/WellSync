@@ -1,29 +1,3 @@
-<!-- <nav>
-  <a routerLink="/">Accueil</a> |
-
-  @if (!isLoggedIn) {
-    <a routerLink="/login">Connexion</a> | 
-    <a routerLink="/register">Inscription</a> |
-  }
-
-  @if (isLoggedIn) {
-    <a routerLink="/dashboard">Tableau de bord</a> |
-
-    @if (isAdmin$ | async; as isAdmin) {
-      @if (isAdmin) {
-        <a routerLink="/admin">Admin</a> |
-      }
-    }
-
-    <button (click)="logout()">Déconnexion</button>
-  }
-</nav>
-
-@if (shouldShowChatbot$ | async) {
-  <app-chatbot></app-chatbot>
-}
-<router-outlet></router-outlet> -->
-
 <ion-app>
   <ion-router-outlet></ion-router-outlet>
 </ion-app>

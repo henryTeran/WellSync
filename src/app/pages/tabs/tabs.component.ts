@@ -4,7 +4,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { firstValueFrom, Observable } from 'rxjs';
 import { User } from 'firebase/auth';
 import { CommonModule } from '@angular/common';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { appsOutline, cameraOutline, chatbubbleEllipsesOutline, homeOutline, logInOutline, logOutOutline } from 'ionicons/icons';
@@ -25,6 +25,7 @@ export class TabsComponent  implements OnInit {
     private toastCtrl: ToastController) {
     addIcons({ chatbubbleEllipsesOutline, logInOutline, homeOutline, logOutOutline, appsOutline, cameraOutline });
     this.user$ = _authService.user$; 
+    console.log(firstValueFrom(this.user$))
    }
 
   ngOnInit() {
