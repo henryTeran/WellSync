@@ -35,7 +35,11 @@ export interface AlimentationRecommendation extends Recommendation {
   }[];
 }
   export interface SoinsRecommendation extends Recommendation {
-    prestation: string;
+    prestation: {
+      nom: string;
+      duree: string;
+      bienfaits: string[];
+    };
     institutPropose: string;
   }
   

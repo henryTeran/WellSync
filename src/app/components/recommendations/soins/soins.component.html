@@ -1,20 +1,53 @@
-<h2>🧖‍♀️ Recommandation Bien-Être</h2>
+<ion-content class="ion-padding">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>🧖‍♀️ Recommandation Bien-Être</ion-title>
+    </ion-toolbar>
+  </ion-header>
 
-@if (isLoading) {
-  <p>Chargement de votre soin personnalisé...</p>
-} @else {
-  @if (recommendation) {
-    <div class="soin-card">
-      <h3>{{ recommendation.titre }}</h3>
-      <p>{{ recommendation.description }}</p>
-
-      <h4>✨ Prestation proposée :</h4>
-      <p>{{ recommendation.prestation }}</p>
-
-      <h4>🏢 Institut recommandé :</h4>
-      <p><strong>{{ recommendation.institutPropose }}</strong></p>
-    </div>
+  @if (isLoading) {
+    <ion-spinner name="crescent" class="ion-margin-top"></ion-spinner>
+    <p class="ion-text-center">Chargement de votre soin personnalisé...</p>
   } @else {
-    <p>Aucune recommandation trouvée. Veuillez refaire un diagnostic.</p>
+    @if (recommendation) {
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>{{ recommendation.titre }}</ion-card-title>
+          <ion-card-subtitle>{{ recommendation.description }}</ion-card-subtitle>
+        </ion-card-header>
+
+        <ion-card-content>
+          <ion-item lines="none">
+            <ion-label class="ion-text-wrap">
+              <h4>✨ <strong>Prestation proposée</strong></h4>
+              <p><strong>Nom :</strong> {{ recommendation.prestation.nom }}</p>
+              <p><strong>Durée :</strong> {{ recommendation.prestation.duree }}</p>
+              <p><strong>Bienfaits :</strong></p>
+              <ul>
+                @for (b of recommendation.prestation.bienfaits; track b) {
+                  <li>{{ b }}</li>
+                }
+              </ul>
+            </ion-label>
+          </ion-item>
+
+          <ion-item button detail (click)="openMap(recommendation.institutPropose)">
+            <ion-icon name="map" slot="start"></ion-icon>
+            <ion-label class="ion-text-wrap">
+              <h4>🏢 <strong>Institut recommandé</strong></h4>
+              <p>{{ recommendation.institutPropose }}</p>
+            </ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    } @else {
+      <ion-card>
+        <ion-card-content>
+          <ion-label class="ion-text-center">
+            <p>Aucune recommandation trouvée. Veuillez refaire un diagnostic.</p>
+          </ion-label>
+        </ion-card-content>
+      </ion-card>
+    }
   }
-}
+</ion-content>

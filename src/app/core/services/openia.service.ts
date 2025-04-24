@@ -164,20 +164,39 @@ Réponds uniquement avec un JSON strict. Pas de commentaires, pas de texte autou
       `;
     }else if (theme === 'soins') {
       prompt = `
-  ${basePrompt}
-  Génère un soin bien-être personnalisé selon les besoins exprimés.
-  
-  Structure attendue :
-  {
-    "theme": "soins",
-    "titre": "...",
-    "description": "...",
-    "prestation": "...",
-    "institutPropose": "..."
-  }
-  
-  Ne commente rien, retourne uniquement un JSON valide.
-  `;
+      ${basePrompt}
+      
+      Analyse les besoins esthétiques de l’utilisateur selon ses réponses et génère une **fiche soin personnalisée**, incluant :
+      
+      📝 Résumé des besoins perçus (problèmes cutanés, zones tendues, attentes, objectifs bien-être)
+      
+      💆‍♀️ Recommandation de prestation personnalisée :
+      - nom du soin
+      - description brève
+      - durée approximative
+      - bienfaits attendus
+      
+      📍 Institut suggéré :
+      - nom ou type d’établissement (ex : spa relaxant, institut dermatologique, centre minceur, etc.)
+      - adresse approximative (ville ou quartier, si connu)
+      
+      📦 Structure attendue (en JSON strict) :
+      {
+        "theme": "soins",
+        "titre": "Nom de la prestation",
+        "description": "Pourquoi ce soin est adapté",
+        "prestation": {
+          "nom": "Nom du soin",
+          "duree": "Durée approximative (ex : 60 min)",
+          "bienfaits": ["Hydratation", "Raffermissement", "Détente profonde"]
+        },
+        "institutPropose": "Nom ou type d’établissement",
+        "adresseInstitut": "Adresse approximative ou ville (ex : Genève, Lausanne, Quartier des Bains)"
+      }
+      
+      ⚠️ Ne commente rien, ne retourne que du JSON strictement valide.
+      `;
+
     }
   
     const response = await lastValueFrom(this.sendMessageToOpenAI(prompt));
