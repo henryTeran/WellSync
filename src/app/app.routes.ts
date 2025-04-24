@@ -21,6 +21,7 @@ export const routes: Routes = [
     path: 'app',
     component: TabsComponent,
     children: [
+      
       { path: 'home', component: HomePageComponent },
       { path: 'chat', component: ChatbotComponent },
       { path: 'login', component: LoginComponent },

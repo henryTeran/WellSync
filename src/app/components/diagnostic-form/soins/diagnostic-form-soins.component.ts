@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OpenAiService } from '../../../core/services/openia.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -15,7 +15,7 @@ import { FACIAL_FORM, MASSAGE_FORM, CORPS_FORM, ESTHETIQUE_FORM } from './forms.
   styleUrl: './diagnostic-form-soins.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class DiagnosticFormSoinsComponent {
+export class DiagnosticFormSoinsComponent implements OnInit {
   form: FormGroup;
   currentStep = 0;
   steps: any[] = [];
@@ -94,19 +94,19 @@ export class DiagnosticFormSoinsComponent {
     if (this.form.invalid || !this.userId) return;
     this.isLoading = true;
     const diagnosticData = this.form.value;
-
+    
     try {
       await this._openAiService.saveDiagnostic(this.userId, diagnosticData);
-
       const recommendation: Recommendation = await this._openAiService.enrichirAvecDiagnostic(
         this.userId,
         diagnosticData,
         'soins'
       );
 
+
       await this._openAiService.saveRecommendation(this.userId, recommendation);
 
-      this._router.navigate(['/soins']);
+      this._router.navigate(['app/recommendations/soins']);
     } catch (err) {
       console.error('Erreur lors de la recommandation soins :', err);
       alert("Erreur IA. Veuillez réessayer.");
@@ -114,6 +114,5 @@ export class DiagnosticFormSoinsComponent {
       this.isLoading = false;
     }
   }
-
 
 }

@@ -1,22 +1,47 @@
-<div class="services-container">
-    <h2>🧘‍♀️ Choisissez un service de bien-être</h2>
-  
-    <div class="service-card">
-      <h3>🍽️ Nutrition personnalisée</h3>
-      <p>Recevez un plat adapté à vos besoins bien-être.</p>
-      <button (click)="naviguerVers('alimentation')">Commencer le diagnostic</button>
-    </div>
-  
-    <div class="service-card">
-      <h3>🏋️ Routine sportive ciblée</h3>
-      <p>Obtenez une routine d'entraînement adaptée à votre forme.</p>
-      <button (click)="naviguerVers('sport')">Commencer le diagnostic</button>
-    </div>
-  
-    <div class="service-card">
-      <h3>🧖‍♀️ Soin esthétique & relaxant</h3>
-      <p>Bénéficiez d'un soin sur mesure selon votre peau ou votre tension.</p>
-      <button (click)="naviguerVers('soins')">Commencer le diagnostic</button>
-    </div>
-  </div>
-  
+<ion-content class="ion-padding">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Choisissez un service de bien-être</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid class="ion-padding">
+    <ion-row>
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>🍽️ Nutrition personnalisée</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>Recevez un plat adapté à vos besoins bien-être.</p>
+            <ion-button expand="block" (click)="naviguerVers('alimentation')">Commencer le diagnostic</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>🏋️ Routine sportive ciblée</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>Obtenez une routine d'entraînement adaptée à votre forme.</p>
+            <ion-button expand="block" (click)="naviguerVers('sport')">Commencer le diagnostic</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>🧖‍♀️ Soin esthétique & relaxant</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>Bénéficiez d'un soin sur mesure selon votre peau ou votre tension.</p>
+            <ion-button expand="block" (click)="naviguerVers('soins')">Commencer le diagnostic</ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
