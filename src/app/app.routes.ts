@@ -17,18 +17,20 @@ export const routes: Routes = [
     path: '',
     component: SplashScreenComponent
   },
+  
   {
     path: 'app',
-    component: TabsComponent,
+    loadComponent: () => import('./pages/tabs/tabs.component').then(m => m.TabsComponent),
     children: [
       
-      { path: 'home', component: HomePageComponent },
-      { path: 'chat', component: ChatbotComponent },
-      { path: 'login', component: LoginComponent },
+      { path: 'home', loadComponent: () => import('./pages/home/home-page.component').then(m => m.HomePageComponent) },
+      { path: 'chat', loadComponent: () => import('./components/chatbot/chatbot.component').then(m => m.ChatbotComponent) },
+      { path: 'login', loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent) },
+    
       { path: 'register', component: RegisterComponent },
       {
-        path: 'dashboard/:uid',
-        component: DashboardComponent,
+        path: 'dashboard',
+        loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent),
         canActivate: [authGuard]
       },
       {
