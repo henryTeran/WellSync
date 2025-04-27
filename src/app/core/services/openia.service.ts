@@ -6,6 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 import { Firestore } from '@angular/fire/firestore';
 import { addDoc, collection, doc, getDocs, limit, orderBy, query, setDoc, where } from 'firebase/firestore';
 import { Recommendation } from '../interfaces';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,10 @@ export class OpenAiService {
   private apiUrl = 'https://api.openai.com/v1/chat/completions';
   private apiKey = environment.openAiApiKey; 
   
-  constructor(private http: HttpClient, private firestore: Firestore) {}
+  constructor(
+    private http: HttpClient, 
+    private firestore: Firestore,
+    private _authservice: AuthService) {}
   
   sendMessageToOpenAI(message: string): Observable<string> {
   //  console.log(this.apiKey);
@@ -218,16 +222,35 @@ Réponds uniquement avec un JSON strict. Pas de commentaires, pas de texte autou
   
   
   async getLastRecommendation<T>(userId: string, theme: 'sport' | 'alimentation' | 'soins'): Promise<T> {
+    const currentUser = this._authservice.currentUser;
+  
+    if (!currentUser) {
+      throw new Error('Utilisateur non connecté.');
+    }
+  
+    if (currentUser.uid !== userId) {
+      throw new Error("Accès non autorisé à ce compte.");
+    }
+  
     const ref = collection(this.firestore, `recommendations`);
-    const q = query(ref, where('theme', '==', theme), orderBy('date', 'desc'), limit(1));
+    const q = query(
+      ref,
+      where('theme', '==', theme),
+      where('userId', '==', userId),
+      orderBy('date', 'desc'),
+      limit(1)
+    );
+  
     const snapshot = await getDocs(q);
-    console.log(`[getLastRecommendation] Nombre de documents trouvés :`, snapshot.size);
+    console.log(`[getLastRecommendation] Documents trouvés : ${snapshot.size}`);
+  
     if (!snapshot.empty) {
       return snapshot.docs[0].data() as T;
     } else {
       throw new Error("Aucune recommandation trouvée pour ce thème.");
     }
   }
+  
   
   private getTrainingDays(freq: string): number {
     const map = {

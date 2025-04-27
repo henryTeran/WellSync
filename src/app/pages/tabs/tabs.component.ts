@@ -7,10 +7,11 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { appsOutline, cameraOutline, chatbubbleEllipsesOutline, homeOutline, logInOutline, logOutOutline } from 'ionicons/icons';
+import { appsOutline, cameraOutline, chatbubbleEllipsesOutline, flaskOutline, homeOutline, logInOutline, logOutOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tabs',
+  standalone: true,
   imports: [IonicModule, CommonModule],
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
@@ -23,7 +24,7 @@ export class TabsComponent  implements OnInit {
     private _authService: AuthService, 
     private _router: Router,
     private toastCtrl: ToastController) {
-    addIcons({ chatbubbleEllipsesOutline, logInOutline, homeOutline, logOutOutline, appsOutline, cameraOutline });
+    addIcons({ chatbubbleEllipsesOutline, logInOutline, homeOutline, logOutOutline, appsOutline, cameraOutline, flaskOutline });
     this.user$ = _authService.user$; 
     console.log(firstValueFrom(this.user$))
    }

@@ -3,9 +3,6 @@ import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
-
-
- 
 @Component({
   selector: 'app-home-page',
   imports: [IonicModule],
