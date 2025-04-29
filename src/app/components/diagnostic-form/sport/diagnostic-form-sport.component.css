@@ -1,0 +1,242 @@
+:host {
+    display: block;
+    height: 100%;
+    background: var(--ion-color-light);
+   
+  }
+  
+  /* Content padding pour pas être collé */
+  ion-content {
+    --padding-bottom: 100px;
+    background: var(--background, var(--ion-color-light));
+  }
+  
+  /* Progress bar */
+  ion-progress-bar {
+    height: 6px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    --progress-background: #e0e0e0;
+    --background: #e0e0e0;
+    --buffer-background: #e0e0e0;
+  }
+   
+  /* Swiper pour bien centrer */
+  .swiper-container-custom {
+    height: calc(100% - 120px); 
+    padding: 16px 4px;
+  }
+  
+  /* Swiper */
+  swiper-container {
+    height: 100%;
+    margin-bottom: 10%;
+  }
+  
+  swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 20px;
+  
+  }
+  
+  /* Card moderne */
+  ion-card {
+    width: 100%;
+    max-width: 360px;
+    background: white;
+    box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.05);
+    border-radius: 24px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    max-height: calc(80vh - 200px); /* Ajuste la hauteur maximale pour éviter le débordement */
+    overflow: hidden; /* Empêche le débordement visuel */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Ajout d'un style pour masquer la barre de défilement sur certains navigateurs */
+  ion-card::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ion-card::-webkit-scrollbar-thumb {
+    background: var(--ion-color-medium);
+    border-radius: 4px;
+  }
+  
+  ion-card::-webkit-scrollbar-thumb:hover {
+    background: var(--ion-color-dark);
+  }
+  
+  /* Ajuste le contenu des cartes pour qu'il ne déborde pas */
+  ion-card-content {
+    flex: 1;
+    overflow-y: auto; /* Active le défilement vertical */
+    padding-right: 8px; /* Ajoute un espace pour éviter que le contenu touche le bord */
+    flex-grow: 1;
+  }
+  
+  /* Ajout d'un style pour masquer la barre de défilement sur certains navigateurs */
+  ion-card-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ion-card-content::-webkit-scrollbar-thumb {
+    background: var(--ion-color-medium);
+    border-radius: 4px;
+  }
+  
+  ion-card-content::-webkit-scrollbar-thumb:hover {
+    background: var(--ion-color-dark);
+  }
+  
+  /* Header de question */
+  ion-card-header {
+    font-size: 23px;
+    font-weight: 700;
+    color: var(--ion-color-success);
+    text-align:center;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    }
+  
+  /* Contenu du formulaire */
+  ion-card-content ion-item {
+    --background: transparent;
+    --inner-padding-end: 0;
+    --padding-start: 0;
+    --min-height: 48px;
+    
+  }
+  
+  /* Labels et inputs */
+  ion-label {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  
+  ion-input, ion-textarea, ion-select, ion-datetime {
+    font-size: 14px;
+  }
+  
+  /* Footer boutons */
+  .footer-buttons {
+    position: absolute; /* Utilisez sticky pour qu'ils restent visibles en bas */
+    bottom: 15%;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    z-index: 10; /* Assurez-vous qu'ils sont au-dessus des autres éléments */
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1); /* Ajoutez une ombre pour les démarquer */
+  }
+  
+  /* Style bouton modernisé */
+  .footer-buttons ion-button {
+    flex: 1;
+    max-width: 220px;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 12px;
+    height: 48px;
+  }
+  
+  /* Question compteur */
+  .question-counter {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ion-color-medium);
+    margin-bottom: 12px;
+  }
+  
+  /* Checkbox et Radio Group Styles */
+  ion-radio-group, ion-checkbox-group {
+    width: 100%;
+  }
+  
+  ion-radio, ion-checkbox {
+    margin-right: 8px;
+  }
+  
+  /* Fine adjustment when there is an ion-input (type "Autre") */
+  ion-input[formControlName], ion-textarea[formControlName] {
+    margin-top: 8px;
+  }
+  
+  ion-note {
+    font-weight: bold;
+    color: var(--ion-color-primary);
+  }
+  
+  .modal-datetime-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 16px;
+    background-color: var(--ion-background-color);
+  }
+  
+  .time-picker-container {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  ion-datetime {
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  ion-datetime {
+    width: 100%;
+    max-width: 300px;
+    margin: auto;
+  }
+  
+  /* Fond dégradé dynamique */
+  .background-slide-1 { --background: linear-gradient(to top, #c8ffe3 0%, #f6f9fc 90%);}
+  .background-slide-2 { --background: linear-gradient(to top, #e0f7fa, #b2ebf2); }
+  .background-slide-3 { --background: linear-gradient(to top, #fce4ec, #f8bbd0); }
+  .background-slide-4 { --background: linear-gradient(to top, #ede7f6, #d1c4e9); }
+  .background-slide-5 { --background: linear-gradient(to top, #fff3e0, #ffe0b2); }
+  .background-slide-6 { --background: linear-gradient(to top, #f1f8e9, #e8f5e9); }
+  .background-slide-7 { --background: linear-gradient(to top, #e3f2fd, #bbdefb); }
+  .background-slide-8 { --background: linear-gradient(to top, #f9fbe7, #dcedc8); }
+  .background-slide-9 { --background: linear-gradient(to top, #fbe9e7, #ffccbc); }
+  .background-slide-10 { --background: linear-gradient(to top, #ede7f6, #d1c4e9); }
+  .background-slide-11 { --background: linear-gradient(to top, #e8f5e9, #c8e6c9); }
+  .background-slide-12 { --background: linear-gradient(to top, #fff3e0, #ffe0b2); }
+  
+  .scrollable-content {
+    max-height: calc(100vh - 200px); /* Ajuste la hauteur maximale pour éviter le débordement */
+    overflow-y: auto; /* Active le défilement vertical */
+    padding-right: 8px; /* Ajoute un espace pour éviter que le contenu touche le bord */
+  }
+  
+  /* Ajout d'un style pour masquer la barre de défilement sur certains navigateurs */
+  .scrollable-content::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .scrollable-content::-webkit-scrollbar-thumb {
+    background: var(--ion-color-medium);
+    border-radius: 4px;
+  }
+  
+  .scrollable-content::-webkit-scrollbar-thumb:hover {
+    background: var(--ion-color-dark);
+  }
+  

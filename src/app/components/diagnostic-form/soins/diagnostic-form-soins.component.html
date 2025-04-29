@@ -1,95 +1,125 @@
-<ion-content class="ion-padding">
-  <ion-header>
-    <ion-toolbar>
-      <ion-title>🧖‍♀️ Diagnostic Soins</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>🧖‍♀️ Diagnostic Soins</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-  @if (steps.length) {
-    <ion-progress-bar [value]="(currentStep + 1) / steps.length" color="primary" class="ion-margin-vertical"></ion-progress-bar>
-  }
+<ion-content [class]="backgroundClass + ' ion-padding'" [fullscreen]="true">
+
+  <!-- <div class="progress-bar-container">
+    <div class="progress-bar" [style.width.%]="(currentStep / totalSteps) * 100"></div>
+  </div> -->
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    @if (!steps.length) {
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>Quel type de soin recherchez-vous ?</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-item>
-            <ion-label position="stacked">Type de soin</ion-label>
-            <ion-select formControlName="typeSoin" (ionChange)="onTypeSelected()">
-              <ion-select-option value="Soin visage">Soin visage</ion-select-option>
-              <ion-select-option value="Massage">Massage</ion-select-option>
-              <ion-select-option value="Soin corps">Soin corps</ion-select-option>
-              <ion-select-option value="Onglerie">Onglerie</ion-select-option>
-            </ion-select>
-          </ion-item>
-        </ion-card-content>
-      </ion-card>
-    }
 
-    @if (steps.length) {
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>{{ steps[currentStep].label }}</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          @if (steps[currentStep].type === 'select') {
+    <!-- Progression -->
+    <ion-progress-bar color = "secondary" [value]="progress"></ion-progress-bar>
+    <div class="question-counter">
+      Question {{ currentStep + 1 }} sur {{ totalSteps }}
+    </div>
+
+    <!-- Swiper avec questions -->
+    <swiper-container #swiper
+      class="swiper-container-custom"
+      [slides-per-view]="1"
+      [allow-touch-move]="false"
+      [speed]="400"
+      init="true">
+
+      <!-- Slide 1: Choix type de soin -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>Quel type de soin recherchez-vous ?</ion-card-header>
+          <ion-card-content>
             <ion-item>
-              <ion-label position="stacked">Choisissez une option</ion-label>
-              <ion-select [formControlName]="steps[currentStep].controlName">
-                @for (opt of steps[currentStep].options; track opt) {
-                  <ion-select-option [value]="opt">{{ opt }}</ion-select-option>
-                }
+              <ion-label position="stacked">Type de soin</ion-label>
+              <ion-select formControlName="typeSoin" (ionChange)="onTypeSelected()">
+                <ion-select-option value="Soin visage">Soin visage</ion-select-option>
+                <ion-select-option value="Massage">Massage</ion-select-option>
+                <ion-select-option value="Soin corps">Soin corps</ion-select-option>
+                <ion-select-option value="Onglerie">Onglerie</ion-select-option>
               </ion-select>
             </ion-item>
-          }
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
 
-          @if (steps[currentStep].type === 'radio') {
-            <ion-radio-group [formControlName]="steps[currentStep].controlName">
-              @for (opt of steps[currentStep].options; track opt) {
+      @for (step of steps; track step) {
+        <swiper-slide>
+          <ion-card>
+            <ion-card-header>{{ step.label }}</ion-card-header>
+            <ion-card-content>
+              @if (step.type === 'select') {
                 <ion-item>
-                  <ion-label>{{ opt }}</ion-label>
-                  <ion-radio slot="end" [value]="opt"></ion-radio>
+                  <ion-label position="stacked">Choisissez une option</ion-label>
+                  <ion-select [formControlName]="step.controlName">
+                    @for (opt of step.options; track opt) {
+                      <ion-select-option [value]="opt">{{ opt }}</ion-select-option>
+                    }
+                  </ion-select>
                 </ion-item>
               }
-            </ion-radio-group>
-          }
+              @if (step.type === 'radio') {
+                <ion-radio-group [formControlName]="step.controlName">
+                  @for (opt of step.options; track opt) {
+                    <ion-item>
+                      <ion-label>{{ opt }}</ion-label>
+                      <ion-radio slot="start" [value]="opt"></ion-radio>
+                    </ion-item>
+                  }
+                </ion-radio-group>
+              }
+              @if (step.type === 'checkbox') {
+                @for (opt of step.options; track opt) {
+                  <ion-item>
+                    <ion-label>{{ opt }}</ion-label>
+                    <ion-checkbox slot="start" [value]="opt" (ionChange)="onCheckboxChange($event, step.controlName)"></ion-checkbox>
+                  </ion-item>
+                }
+              }
+            </ion-card-content>
+          </ion-card>
+        </swiper-slide>
+      }
 
-          @if (steps[currentStep].type === 'checkbox') {
-            <ion-item lines="none">
-              <ion-label>Choisissez un ou plusieurs</ion-label>
+      <!-- Slide: Configuration des rappels -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🔔 Planifiez un rappel</ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label position="stacked">Heure du rappel</ion-label>
+              <ion-datetime formControlName="rappelHoraire" presentation="time" hour-cycle="h23"></ion-datetime>
             </ion-item>
-            @for (opt of steps[currentStep].options; track opt) {
-              <ion-item lines="none">
-                <ion-label>{{ opt }}</ion-label>
-                <ion-checkbox slot="end"
-                              [value]="opt"
-                              (ionChange)="onCheckboxChange($event, steps[currentStep].controlName)">
-                </ion-checkbox>
-              </ion-item>
-            }
-          }
-        </ion-card-content>
-      </ion-card>
-    }
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
 
-    @if (steps.length) {
-      <ion-grid>
-        <ion-row>
-          <ion-col size="6">
-            <ion-button expand="block" fill="outline" (click)="prevStep()" [disabled]="currentStep === 0">Retour</ion-button>
-          </ion-col>
-          <ion-col size="6">
-            @if (currentStep < steps.length - 1) {
-              <ion-button expand="block" (click)="nextStep()">Suivant</ion-button>
-            } @else {
-              <ion-button expand="block" type="submit">Envoyer</ion-button>
-            }
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    }
+    </swiper-container>
+
+    <!-- Boutons navigation -->
+    <div class="footer-buttons">
+      <ion-button color = "danger"  fill="outline" (click)="prevStep()" [disabled]="currentStep === 0">
+        Retour
+      </ion-button>
+
+      @if (currentStep < totalSteps - 1) {
+        <ion-button color="primary" (click)="nextStep()">
+          Suivant
+        </ion-button>
+      }
+
+      @if (currentStep === totalSteps - 1) {
+        <ion-button color="success" type="submit" [disabled]="isLoading">
+          @if (isLoading) {
+            <ion-spinner name="dots" slot="start"></ion-spinner>
+            Analyse en cours...
+          } @else {
+            Envoyer
+          }
+        </ion-button>
+      }
+    </div>
+
   </form>
 </ion-content>

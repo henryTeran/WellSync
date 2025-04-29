@@ -1,17 +1,42 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { OpenAiService } from '../../../core/services/openia.service';
 import { Router } from '@angular/router';
 import { Recommendation } from '../../../core/interfaces';
 import { firstValueFrom } from 'rxjs';
+import { IonicModule } from '@ionic/angular';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCheckbox, IonContent, IonDatetime, IonHeader, IonInput, IonItem, IonLabel, IonProgressBar, IonRadio, IonRadioGroup, IonTextarea, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-diagnostic-form-sport',
-  imports: [ReactiveFormsModule],
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    IonButton,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCheckbox,
+    IonContent,
+    IonDatetime,
+    IonHeader,
+    IonInput,
+    IonItem,
+    IonLabel,
+    IonProgressBar,
+    IonRadio,
+    IonRadioGroup,
+    IonTextarea,
+    IonTitle,
+    IonToolbar
+  ],
   templateUrl: './diagnostic-form-sport.component.html',
+  styleUrls: ['./diagnostic-form-sport.component.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DiagnosticFormSportComponent implements OnInit {
+  @ViewChild('swiper', { static: true }) swiperRef: any; 
   form: FormGroup;
   userId: string | null = null;
   isLoading = false;
@@ -54,6 +79,10 @@ export class DiagnosticFormSportComponent implements OnInit {
     'Autres'
   ];
 
+  currentSlide = 0;
+  progress = 0;
+  totalSlides = 11;
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -77,11 +106,11 @@ export class DiagnosticFormSportComponent implements OnInit {
       equipements: [[]],
       autresEquipements: [''],
       rappels: ['oui'],
-      remarques: ['']
+      remarques: [''],
+      rappelHoraire: [''] // Ajout du champ pour les rappels
     });
-
-    
   }
+
   async ngOnInit() {
     const user = await firstValueFrom(this.authService.user$);
     if (user?.uid) {
@@ -101,6 +130,28 @@ export class DiagnosticFormSportComponent implements OnInit {
     this.form.get(field)?.setValue(selected);
   }
 
+  async nextSlide() {
+    const swiperContainer = document.querySelector('swiper-container') as any;
+    await swiperContainer.swiper.slideNext();
+    this.currentSlide++;
+    this.updateProgress();
+  }
+
+  async prevSlide() {
+    const swiperContainer = document.querySelector('swiper-container') as any;
+    await swiperContainer.swiper.slidePrev();
+    this.currentSlide--;
+    this.updateProgress();
+  }
+
+  updateProgress() {
+    this.progress = (this.currentSlide + 1) / this.totalSlides;
+  }
+
+  get backgroundClass(): string {
+    return `background-slide-${this.currentSlide + 1}`;
+  }
+
   async onSubmit() {
     if (this.form.invalid || !this.userId) return;
 
@@ -118,6 +169,11 @@ export class DiagnosticFormSportComponent implements OnInit {
 
       await this.openAiService.saveRecommendation(this.userId, recommendation);
 
+      const rappelHoraire = this.form.get('rappelHoraire')?.value;
+      if (rappelHoraire) {
+        this.planifierNotification(rappelHoraire, 'sport');
+      }
+
       this.router.navigate(['/sport']);
     } catch (err) {
       console.error('Erreur lors de la génération de la recommandation sport :', err);
@@ -125,5 +181,10 @@ export class DiagnosticFormSportComponent implements OnInit {
     } finally {
       this.isLoading = false;
     }
+  }
+
+  private planifierNotification(horaire: string, type: string) {
+    console.log(`Notification planifiée à ${horaire} pour ${type}`);
+    // Implémentez ici la logique pour planifier une notification
   }
 }
