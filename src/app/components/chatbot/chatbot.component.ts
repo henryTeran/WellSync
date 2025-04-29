@@ -4,13 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
 import { marked } from 'marked';
+import { IonButton, IonContent } from '@ionic/angular/standalone';
 
-
+const elementsUI = [
+  IonContent,
+  IonButton
+]; 
 @Component({
   selector: 'app-chatbot',
-  imports: [FormsModule, CommonModule, IonicModule],
+  imports: [FormsModule, CommonModule, ...elementsUI],
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

@@ -1,19 +1,33 @@
-<h2>🎥 Détection d’émotions en live</h2>
+<ion-content class="ion-padding">
 
-<video #video autoplay muted playsinline width="400" height="300" style="border: 1px solid black;"></video>
-<br />
-<button (click)="captureAndDetect()"  [disabled]="loading">📷 Capturer & Analyser</button>
-
-<canvas #canvas style="display:none;"></canvas>
-
-@if(result) {
-
-    <div>
-        <h3>Résultat</h3>
-        <pre>{{ result | json }}</pre>
-    </div>
-}
-@if(loading) {
-
-    <p>Analyse en cours...</p>
-}
+    <h2>🎥 Détection émotionnelle</h2>
+  
+    @if (loading) {
+      <ion-spinner name="crescent" class="ion-margin-top"></ion-spinner>
+      <p>Analyse en cours...</p>
+    }
+  
+    @if (image && !loading) {
+      <img [src]="image" style="margin-top: 20px; width: 100%; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" />
+    }
+  
+    @if (emotionDetected && recommandationResult) {
+      <ion-card class="ion-margin-top">
+        <ion-card-header>
+          <ion-card-title>🎯 Recommandation bien-être</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-badge color="primary" style="font-size: 1rem; margin-bottom: 10px;">
+            Émotion détectée : {{ emotionDetected | titlecase }}
+          </ion-badge>
+          <p>{{ recommandationResult }}</p>
+        </ion-card-content>
+      </ion-card>
+    }
+  
+    <ion-button expand="block" fill="outline" color="success" class="ion-margin-top" (click)="takePictureAndAnalyze()">
+      📷 Reprendre une photo
+    </ion-button>
+  
+  </ion-content>
+  

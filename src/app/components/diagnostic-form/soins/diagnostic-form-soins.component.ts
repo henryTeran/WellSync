@@ -5,12 +5,32 @@ import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { Recommendation } from '../../../core/interfaces';
-import { IonicModule } from '@ionic/angular';
 import { FACIAL_FORM, MASSAGE_FORM, CORPS_FORM, ESTHETIQUE_FORM } from './forms.constants';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCheckbox, IonContent, IonDatetime, IonHeader, IonItem, IonLabel, IonProgressBar, IonRadio, IonRadioGroup, IonSelect, IonSelectOption, IonSpinner, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 
+const elementsUI =[
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonProgressBar,
+  IonCard,
+  IonCardHeader,
+  IonCardContent,
+  IonItem,
+  IonLabel,
+  IonSelect,
+  IonSelectOption,
+  IonRadioGroup,
+  IonRadio,
+  IonCheckbox,
+  IonDatetime,
+  IonButton,
+  IonSpinner
+];
 @Component({
   selector: 'app-diagnostic-form-soins',
-  imports: [ReactiveFormsModule, IonicModule],
+  imports: [ReactiveFormsModule, ...elementsUI],
   templateUrl: './diagnostic-form-soins.component.html',
   styleUrl: './diagnostic-form-soins.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

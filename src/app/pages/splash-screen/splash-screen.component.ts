@@ -1,13 +1,12 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonicModule } from '@ionic/angular';
+import { IonContent } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-splash-screen',
-  imports: [IonicModule],
+  imports: [IonContent],
   templateUrl: './splash-screen.component.html',
-  styleUrls: ['./splash-screen.component.css'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  styleUrls: ['./splash-screen.component.css']
 })
 export class SplashScreenComponent  implements OnInit {
 

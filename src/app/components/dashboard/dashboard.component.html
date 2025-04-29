@@ -1,71 +1,70 @@
-  <ion-content class="ion-padding">
-    <ion-header translucent>
-      <ion-toolbar>
-        <ion-title>Bienvenue ✨</ion-title>
-      </ion-toolbar>
-    </ion-header>
-  
-    <ion-grid class="ion-padding">
-      <ion-row>
-        <ion-col size="12" size-md="6">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>🍽️ Recommandation Nutrition</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <p>Découvrez un plat adapté à vos besoins du moment.</p>
-              <ion-button expand="block" fill="solid" (click)="naviguerVers('app/recommendations/alimentation')">
-                Voir le plat recommandé
-              </ion-button>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-  
-        <ion-col size="12" size-md="6">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>🏋️ Routine Sportive</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <p>Une séance ciblée selon vos objectifs forme et santé.</p>
-              <ion-button expand="block" fill="solid" (click)="naviguerVers('app/recommendations/sport')">
-                Voir la routine proposée
-              </ion-button>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-  
-        <ion-col size="12" size-md="6">
-          <ion-card>
-            <ion-card-header>
-              <ion-card-title>🧖‍♀️ Soin Bien-Être</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <p>Un soin ou massage idéal pour votre état actuel.</p>
-              <ion-button expand="block" fill="solid" (click)="naviguerVers('app/recommendations/soins')">
-                Voir la prestation suggérée
-              </ion-button>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-  
-      <!-- Nouvelle consultation -->
-      <ion-row>
-        <ion-col size="12">
-          <ion-card color="light">
-            <ion-card-header>
-              <ion-card-title>📝 Nouvelle consultation</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-              <p>Besoin d'une nouvelle analyse ?</p>
-              <ion-button expand="block" color="tertiary" (click)="naviguerVers('app/services')">
-                Démarrer une nouvelle consultation
-              </ion-button>
-            </ion-card-content>
-          </ion-card>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-content>
-  
+<ion-content class="ion-padding">
+  <ion-header translucent>
+    <ion-toolbar>
+      <ion-title>Bienvenue ✨</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-grid class="ion-padding">
+    <ion-row>
+
+      <!-- Recommandation Nutrition -->
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>🍽️ Recommandation Nutrition</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            @if (recommendationAlimentation; as recoAlim) {
+              <p>{{ recoAlim.resume || 'Voici une suggestion pour votre nutrition.' }}</p>
+            } @else {
+              <p>Aucune recommandation personnalisée disponible.</p>
+            }
+            <ion-button expand="block" fill="solid" (click)="naviguerVers('app/recommendations/alimentation')">
+              Voir
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <!-- Recommandation Sport -->
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>🏋️ Routine Sportive</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            @if (recommendationSport; as recoSport) {
+              <p>{{ recoSport.resume || 'Voici une routine sportive adaptée.' }}</p>
+            } @else {
+              <p>Aucune recommandation sportive disponible.</p>
+            }
+            <ion-button expand="block" fill="solid" (click)="naviguerVers('app/recommendations/sport')">
+              Voir
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <!-- Recommandation Soin Bien-Être -->
+      <ion-col size="12" size-md="6">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>🧖‍♀️ Soin Bien-Être</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            @if (recommendationSoins; as recoSoins) {
+              <p>{{ recoSoins.resume || 'Voici un soin adapté à votre besoin.' }}</p>
+            } @else {
+              <p>Aucune recommandation bien-être disponible.</p>
+            }
+            <ion-button expand="block" fill="solid" (click)="naviguerVers('app/recommendations/soins')">
+              Voir
+            </ion-button>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+</ion-content>

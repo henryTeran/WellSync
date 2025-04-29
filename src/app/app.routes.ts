@@ -1,12 +1,7 @@
 import { Routes } from '@angular/router';
-import { HomePageComponent } from './pages/home/home-page.component';
-import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { SplashScreenComponent } from './pages/splash-screen/splash-screen.component';
-import { TabsComponent } from './pages/tabs/tabs.component';
-import { ChatbotComponent } from './components/chatbot/chatbot.component';
 
 // Guards
 import { authGuard } from './core/guards/auth.guard';

@@ -7,12 +7,18 @@
     "start": "npm run generate-env && ng serve",
     "watch": "ng build --watch --configuration development",
     "build": "npm run generate-env && ng build",
-    "build:prod": "npm run generate-env && ng build --configuration production --base-href ./",
+
+    "build:prod": "npm run generate-env && ng build --configuration production",
     "serve:prod": "serve dist/well-sync/browser --single --listen 5000 --ssl-cert cert.pem --ssl-key key.pem",
+    
     "start:prod": "npm run build:prod && npm run serve:prod",
+    
     "test": "ng test",
+    
     "server:notification": "node server/send-notification.js",
-    "deploy:gh": "ng deploy --base-href=/WellSync/"
+
+    "deploy:gh": "ng deploy --base-href=/WellSync/",
+    "deploy:firebase": "npm run build:prod && firebase deploy"
   },
   "dependencies": {
     "@angular/common": "^19.2.8",
@@ -26,6 +32,7 @@
     "@angular/service-worker": "^19.2.8",
     "@capacitor/angular": "^2.0.3",
     "@capacitor/browser": "^7.0.1",
+    "@capacitor/camera": "^7.0.1",
     "@capacitor/core": "latest",
     "@ionic/angular": "^8.5.4",
     "@khmyznikov/pwa-install": "^0.5.4",

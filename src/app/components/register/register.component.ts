@@ -3,14 +3,27 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonInput, IonItem, IonLabel, IonSelect, IonSelectOption, IonText } from '@ionic/angular/standalone';
 
+const elementsUI = [
+  IonContent,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonItem, 
+  IonLabel,
+  IonInput,
+  IonText,
+  IonSelect, 
+  IonSelectOption,
+  IonButton
+];
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, CommonModule, IonicModule], //  Ajout de ReactiveFormsModule
+  imports: [ReactiveFormsModule, CommonModule, ...elementsUI], //  Ajout de ReactiveFormsModule
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  styleUrl: './register.component.css
 })
 export class RegisterComponent {
   registerForm: FormGroup;

@@ -1,21 +1,29 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 import { AuthService } from '../../core/services/auth.service';
 import { firstValueFrom, Observable } from 'rxjs';
 import { User } from 'firebase/auth';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular/standalone';
+import { IonChip, IonContent, IonIcon, IonLabel, IonSpinner, IonTabBar, IonTabButton, IonTabs, ToastController } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { appsOutline, cameraOutline, chatbubbleEllipsesOutline, flaskOutline, homeOutline, logInOutline, logOutOutline } from 'ionicons/icons';
 
+const elementsUi = [
+  IonTabs,
+  IonChip,
+  IonIcon,
+  IonLabel,
+  IonTabButton,
+  IonTabBar,
+  IonContent,
+  IonSpinner
+];
 @Component({
   selector: 'app-tabs',
   standalone: true,
-  imports: [IonicModule, CommonModule],
+  imports: [CommonModule, ...elementsUi],
   templateUrl: './tabs.component.html',
-  styleUrls: ['./tabs.component.css'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  styleUrls: ['./tabs.component.css']
 })
 export class TabsComponent  implements OnInit {
   user$: Observable <User | null>; 

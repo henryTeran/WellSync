@@ -4,14 +4,29 @@ import { OpenAiService } from '../../../core/services/openia.service';
 import { SoinsRecommendation } from '../../../core/interfaces';
 import { firstValueFrom } from 'rxjs';
 import { Browser } from "@capacitor/browser"
-import { IonicModule } from '@ionic/angular';
+import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonSpinner, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 
+const elementsUI = [
+  IonContent,
+  IonHeader,
+  IonToolbar,
+  IonSpinner,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonItem,
+  IonLabel,
+  IonIcon,
+  IonTitle
+
+];
 @Component({
   selector: 'app-soins',
-  imports: [IonicModule],
+  imports: [...elementsUI],
   templateUrl: './soins.component.html',
-  styleUrls: ['./soins.component.css'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  styleUrls: ['./soins.component.css']
 })
 export class SoinsComponent implements OnInit {
   recommendation: SoinsRecommendation | null = null;

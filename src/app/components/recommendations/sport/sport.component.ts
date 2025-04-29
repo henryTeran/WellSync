@@ -5,15 +5,27 @@ import { AuthService } from '../../../core/services/auth.service';
 import { SportRecommendation } from '../../../core/interfaces';
 import { OpenAiService } from '../../../core/services/openia.service';
 import { firstValueFrom } from 'rxjs';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { IonButton, IonContent, IonFooter, IonHeader, IonItem, IonLabel, IonList, IonTitle, IonToolbar,  } from '@ionic/angular/standalone';
 
+const elementsUI = [
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonFooter,
+  IonButton
+
+
+];
 @Component({
   selector: 'app-sport',
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, ...elementsUI],
   templateUrl: './sport.component.html',
-  styleUrl: './sport.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  styleUrl: './sport.component.css'
 })
 export class SportComponent implements OnInit {
   userId: string | null = null;

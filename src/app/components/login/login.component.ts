@@ -4,14 +4,25 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { IonicModule } from '@ionic/angular';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonInput, IonItem, IonLabel, IonText } from '@ionic/angular/standalone';
 
+const elementsUI = [
+  IonContent,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonItem,
+  IonLabel,
+  IonInput,
+  IonText,
+  IonButton
+];
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, CommonModule, IonicModule],
+  imports: [ReactiveFormsModule, CommonModule, ...elementsUI],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  styleUrl: './login.component.css'
 })
 export class LoginComponent {
   loginForm: FormGroup;

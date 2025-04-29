@@ -5,7 +5,6 @@ import { OpenAiService } from '../../../core/services/openia.service';
 import { Router } from '@angular/router';
 import { Recommendation } from '../../../core/interfaces';
 import { firstValueFrom } from 'rxjs';
-import { IonicModule } from '@ionic/angular';
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCheckbox, IonContent, IonDatetime, IonHeader, IonInput, IonItem, IonLabel, IonProgressBar, IonRadio, IonRadioGroup, IonTextarea, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 
 @Component({
