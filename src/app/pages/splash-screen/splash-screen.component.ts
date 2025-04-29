@@ -6,7 +6,7 @@ import { IonicModule } from '@ionic/angular';
   selector: 'app-splash-screen',
   imports: [IonicModule],
   templateUrl: './splash-screen.component.html',
-  styleUrls: ['./splash-screen.component.scss'],
+  styleUrls: ['./splash-screen.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class SplashScreenComponent  implements OnInit {

@@ -42,4 +42,9 @@ module.exports = {
   endOfLine: 'auto',
 };
 
+wellsync-a4123-firebase-adminsdk-fbsvc-18120e4005.json
+cert.pem
+key.pem
+openssl.cnf
+
 

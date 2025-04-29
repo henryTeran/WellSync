@@ -1,26 +1,38 @@
 const path = require('path');
 const fs = require('fs');
-require('dotenv').config();
+const dotenv = require('dotenv');
 
-// Dossier cible
 const envDir = path.resolve(__dirname, 'src/environments');
 if (!fs.existsSync(envDir)) fs.mkdirSync(envDir, { recursive: true });
 
-const fileContent = `export const environment = {
-  production: false,
-  firebase: {
-    apiKey: "${process.env['NG_APP_FIREBASE_API_KEY']}",
-    authDomain: "${process.env['NG_APP_FIREBASE_AUTH_DOMAIN']}",
-    projectId: "${process.env['NG_APP_FIREBASE_PROJECT_ID']}",
-    storageBucket: "${process.env['NG_APP_FIREBASE_STORAGE_BUCKET']}",
-    messagingSenderId: "${process.env['NG_APP_FIREBASE_APIKEY_MESSAGING_SENDER_ID']}",
-    appId: "${process.env['NG_APP_FIREBASE_APP_ID']}"
-  },
-  openAiApiKey: "${process.env['NG_APP_OPENAI_KEY']}",
-  luxandApiToken: "${process.env['NG_APP_LUXAND_API_TOKEN']}"
+// Charger séparément
+const envDev = dotenv.config({ path: '.env' }).parsed;
+const envProd = dotenv.config({ path: '.env.prod' }).parsed;
 
+function generateEnvFile(envVars: any, outputPath: string, isProd = false): void {
+  const fileContent = `export const environment = {
+  production: ${isProd},
+  firebase: {
+    apiKey: "${envVars['NG_APP_FIREBASE_API_KEY']}",
+    authDomain: "${envVars['NG_APP_FIREBASE_AUTH_DOMAIN']}",
+    projectId: "${envVars['NG_APP_FIREBASE_PROJECT_ID']}",
+    storageBucket: "${envVars['NG_APP_FIREBASE_STORAGE_BUCKET']}",
+    messagingSenderId: "${envVars['NG_APP_FIREBASE_APIKEY_MESSAGING_SENDER_ID']}",
+    appId: "${envVars['NG_APP_FIREBASE_APP_ID']}",
+    vapidKey: "${envVars['NG_APP_FIREBASE_VAPID_KEY']}"
+  },
+  openAiApiKey: "${envVars['NG_APP_OPENAI_KEY']}",
+  luxandApiToken: "${envVars['NG_APP_LUXAND_API_TOKEN']}",
+  notificationServerUrl: "${envVars['NG_APP_NOTIFICATION_SERVER_URL']}",
+  notificationBaseUrl: "${envVars['NG_APP_NOTIFICATION_BASE_URL']}"
 };
 `;
 
-fs.writeFileSync(path.join(envDir, 'environment.ts'), fileContent);
-console.log(' environment.ts généré à partir du fichier .env');
+  fs.writeFileSync(outputPath, fileContent);
+}
+
+// ➔ On passe envDev pour dev et envProd pour prod
+generateEnvFile(envDev, path.join(envDir, 'environment.ts'), false);
+generateEnvFile(envProd, path.join(envDir, 'environment.prod.ts'), true);
+
+console.log('✅ environment.ts et environment.prod.ts générés proprement.');

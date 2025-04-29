@@ -1,107 +1,256 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()" class="diagnostic-form">
-  <h3>⚖️ Données corporelles</h3>
-  <label>Poids actuel (kg):</label>
-  <input type="number" formControlName="poids" />
+<ion-header>
+  <ion-toolbar>
+    <ion-title>🏋️ Diagnostic Sport</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-  <label>Taille (cm):</label>
-  <input type="number" formControlName="taille" />
+<ion-content [class]="backgroundClass + ' ion-padding'" [fullscreen]="true">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-  <!-- 1. Objectifs -->
-  <h3>🎯 Objectif principal</h3>
-  @for (objectif of objectifs; track objectif) {
-    <label>
-      <input type="checkbox" [value]="objectif" (change)="onCheckboxChange($event, 'objectifs')" />
-      {{ objectif }}
-    </label>
-  }
-  @if (form.get('objectifs')?.value.includes('Autre')) {
-    <input type="text" formControlName="autresObjectifs" placeholder="Autre objectif" />
-  }
+    <!-- Barre de progression -->
+    <ion-progress-bar color="secondary" [value]="progress"></ion-progress-bar>
+    <div class="question-counter">
+      Question {{ currentSlide + 1 }} sur {{ totalSlides }}
+    </div>
 
-  <!-- 2. Zones ciblées -->
-  <h3>📍 Zone(s) à cibler</h3>
-  @for (zone of zones; track zone) {
-    <label>
-      <input type="checkbox" [value]="zone" (change)="onCheckboxChange($event, 'zones')" />
-      {{ zone }}
-    </label>
-  }
+    <!-- Swiper contenant toutes les questions -->
+    <swiper-container #swiper
+      class="swiper-container-custom"
+      [slides-per-view]="1"
+      [allow-touch-move]="false"
+      [speed]="400"
+      init="true">
 
-  <!-- 3. Types de sport -->
-  <h3>🏃 Type(s) de sport préféré</h3>
-  @for (sport of sports; track sport) {
-    <label>
-      <input type="checkbox" [value]="sport" (change)="onCheckboxChange($event, 'sports')" />
-      {{ sport }}
-    </label>
-  }
-  @if (form.get('sports')?.value.includes('Autre')) {
-    <input type="text" formControlName="autresSports" placeholder="Autre sport" />
-  }
+      <!-- Slide 1: Données corporelles -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>⚖️ Données corporelles</ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label position="floating">Poids actuel (kg)</ion-label>
+              <ion-input type="number" formControlName="poids"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Taille (cm)</ion-label>
+              <ion-input type="number" formControlName="taille"></ion-input>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
 
-  <!-- 4. Niveau -->
-  <h3>📊 Niveau actuel</h3>
-  @for (niveau of niveaux; track niveau) {
-    <label>
-      <input type="radio" [value]="niveau" formControlName="niveau" />
-      {{ niveau }}
-    </label>
-  }
+      <!-- Slide 2: Objectifs -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🎯 Objectif principal</ion-card-header>
+          <ion-card-content class="scrollable-content">
+            @for (objectif of objectifs; track objectif) {
+              <ion-item>
+                <ion-checkbox slot="start" (ionChange)="onCheckboxChange($event, 'objectifs')" [value]="objectif"></ion-checkbox>
+                <ion-label>{{ objectif }}</ion-label>
+              </ion-item>
+            }
+            <ion-item>
+              <ion-label position="floating">Autre objectif</ion-label>
+              <ion-input formControlName="autresObjectifs"></ion-input>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
 
-  <!-- 5. Fréquence -->
-  <h3>📅 Fréquence / semaine</h3>
-  @for (freq of frequences; track freq) {
-    <label>
-      <input type="radio" [value]="freq" formControlName="frequence" />
-      {{ freq }}
-    </label>
-  }
+      <!-- Slide 3: Zones ciblées -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>📍 Zone(s) à cibler</ion-card-header>
+          <ion-card-content class="scrollable-content">
+            @for (zone of zones; track zone) {
+              <ion-item>
+                <ion-checkbox slot="start" (ionChange)="onCheckboxChange($event, 'zones')" [value]="zone"></ion-checkbox>
+                <ion-label>{{ zone }}</ion-label>
+              </ion-item>
+            }
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
 
-  <!-- 6. Durée -->
-  <h3>⏱️ Durée par séance</h3>
-  @for (duree of durees; track duree) {
-    <label>
-      <input type="radio" [value]="duree" formControlName="duree" />
-      {{ duree }}
-    </label>
-  }
+      <!-- Slide 4: Types de sport -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🏃 Type(s) de sport préféré</ion-card-header>
+          <ion-card-content class="scrollable-content">
+            @for (sport of sports; track sport) {
+              <ion-item>
+                <ion-checkbox slot="start" (ionChange)="onCheckboxChange($event, 'sports')" [value]="sport"></ion-checkbox>
+                <ion-label>{{ sport }}</ion-label>
+              </ion-item>
+            }
+            <ion-item>
+              <ion-label position="floating">Autre sport</ion-label>
+              <ion-input formControlName="autresSports"></ion-input>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
 
-  <!-- 7. Restrictions -->
-  <h3>⚠️ Restrictions / blessures</h3>
-  <label>
-    <input type="radio" value="oui" formControlName="restriction" /> Oui
-  </label>
-  <label>
-    <input type="radio" value="non" formControlName="restriction" /> Non
-  </label>
-  @if (form.get('restriction')?.value === 'oui') {
-    <input type="text" formControlName="detailRestriction" placeholder="Précisez vos restrictions" />
-  }
+      <!-- Slide 5: Niveau -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>📊 Niveau actuel</ion-card-header>
+          <ion-card-content>
+            <ion-radio-group formControlName="niveau">
+              @for (niveau of niveaux; track niveau) {
+                <ion-item>
+                  <ion-label>{{ niveau }}</ion-label>
+                  <ion-radio slot="start" [value]="niveau"></ion-radio>
+                </ion-item>
+              }
+            </ion-radio-group>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
 
-  <!-- 8. Équipements -->
-  <h3>🧰 Équipements disponibles</h3>
-  @for (eq of equipements; track eq) {
-    <label>
-      <input type="checkbox" [value]="eq" (change)="onCheckboxChange($event, 'equipements')" />
-      {{ eq }}
-    </label>
-  }
-  @if (form.get('equipements')?.value.includes('Autres')) {
-    <input type="text" formControlName="autresEquipements" placeholder="Autres équipements" />
-  }
+      <!-- Slide 6: Fréquence -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>📅 Fréquence / semaine</ion-card-header>
+          <ion-card-content>
+            <ion-radio-group formControlName="frequence">
+              @for (freq of frequences; track freq) {
+                <ion-item>
+                  <ion-label>{{ freq }}</ion-label>
+                  <ion-radio slot="start" [value]="freq"></ion-radio>
+                </ion-item>
+              }
+            </ion-radio-group>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
 
-  <!-- 9. Rappels -->
-  <h3>🔔 Souhaitez-vous des rappels ?</h3>
-  <label>
-    <input type="radio" value="oui" formControlName="rappels" /> Oui
-  </label>
-  <label>
-    <input type="radio" value="non" formControlName="rappels" /> Non
-  </label>
+      <!-- Slide 7: Durée -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>⏱️ Durée par séance</ion-card-header>
+          <ion-card-content>
+            <ion-radio-group formControlName="duree">
+              @for (duree of durees; track duree) {
+                <ion-item>
+                  <ion-label>{{ duree }}</ion-label>
+                  <ion-radio slot="start" [value]="duree"></ion-radio>
+                </ion-item>
+              }
+            </ion-radio-group>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
 
-  <!-- 10. Remarques -->
-  <h3>🗒️ Remarques ou préférences</h3>
-  <textarea formControlName="remarques" rows="4" placeholder="Ajoutez vos remarques ici..."></textarea>
+      <!-- Slide 8: Restrictions -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>⚠️ Restrictions / blessures</ion-card-header>
+          <ion-card-content>
+            <ion-radio-group formControlName="restriction">
+              <ion-item>
+                <ion-label>Oui</ion-label>
+                <ion-radio slot="start" value="oui"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label>Non</ion-label>
+                <ion-radio slot="start" value="non"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+            <ion-item>
+              <ion-label position="floating">Détails</ion-label>
+              <ion-input formControlName="detailRestriction"></ion-input>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
 
-  <button type="submit" [disabled]="form.invalid">Soumettre le diagnostic</button>
-</form>
+      <!-- Slide 9: Équipements -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🧰 Équipements disponibles</ion-card-header>
+          <ion-card-content class="scrollable-content">
+            @for (eq of equipements; track eq) {
+              <ion-item>
+                <ion-checkbox slot="start" (ionChange)="onCheckboxChange($event, 'equipements')" [value]="eq"></ion-checkbox>
+                <ion-label>{{ eq }}</ion-label>
+              </ion-item>
+            }
+            <ion-item>
+              <ion-label position="floating">Autres équipements</ion-label>
+              <ion-input formControlName="autresEquipements"></ion-input>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 10: Rappels -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🔔 Souhaitez-vous des rappels ?</ion-card-header>
+          <ion-card-content>
+            <ion-radio-group formControlName="rappels">
+              <ion-item>
+                <ion-label>Oui</ion-label>
+                <ion-radio slot="start" value="oui"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label>Non</ion-label>
+                <ion-radio slot="start" value="non"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 11: Planifiez un rappel -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🔔 Planifiez un rappel</ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label position="stacked">Heure du rappel</ion-label>
+              <ion-datetime formControlName="rappelHoraire" presentation="time" hour-cycle="h23"></ion-datetime>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 12: Remarques -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🗒️ Remarques ou préférences</ion-card-header>
+          <ion-card-content>
+            <ion-textarea formControlName="remarques" placeholder="Ajoutez vos remarques ici..."></ion-textarea>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+    </swiper-container>
+
+    <!-- Navigation boutons -->
+    <div class="footer-buttons">
+      <ion-button color="danger" fill="outline" (click)="prevSlide()" [disabled]="currentSlide === 0">
+        Précédent
+      </ion-button>
+
+      @if (currentSlide < totalSlides - 1) {
+        <ion-button color="primary" (click)="nextSlide()">
+          Suivant
+        </ion-button>
+      }
+
+      @if (currentSlide === totalSlides - 1) {
+        <ion-button color="success" type="submit" [disabled]="isLoading">
+          @if (isLoading) {
+            <ion-spinner name="dots" slot="start"></ion-spinner>
+            Analyse en cours...
+          } @else {
+            Envoyer
+          }
+        </ion-button>
+      }
+    </div>
+
+  </form>
+</ion-content>

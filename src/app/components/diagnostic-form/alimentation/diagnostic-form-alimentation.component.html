@@ -1,119 +1,297 @@
-<h2>🍽️ Questionnaire – Diagnostic Alimentation</h2>
+<ion-header>
+  <ion-toolbar>
+    <ion-title>🍽️ Diagnostic Alimentation</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+<ion-content [class]="backgroundClass + ' ion-padding'" [fullscreen]="true">
+  <!-- <div class="progress-bar-container">
+    <div class="progress-bar" [style.width.%]="(currentSlide / totalSlides) * 100"></div>
+  </div> -->
 
-  <!-- 1. Données de base -->
-  <fieldset>
-    <legend>⚖️ 1. Données de base</legend>
-    <label>Poids (kg): <input type="number" formControlName="poids" /></label><br />
-    <label>Taille (cm): <input type="number" formControlName="taille" /></label><br />
-    <label>Âge: <input type="number" formControlName="age" /></label><br />
-    <label>Sexe :</label><br />
-    @for (sexe of sexes; track sexe) {
-      <label><input type="radio" [value]="sexe" formControlName="sexe" /> {{ sexe }}</label>
-    }
-  </fieldset>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
 
-  <!-- 2. Objectifs -->
-  <fieldset>
-    <legend>🎯 2. Objectif principal</legend>
-    @for (obj of objectifs; track obj) {
-      <label>
-        <input type="checkbox" [value]="obj" (change)="onCheckboxChange($event, 'objectifs')" />
-        {{ obj }}
-      </label>
-    }
-    <div>
-      <label>Autre : <input type="text" formControlName="autresObjectifs" /></label>
+    <!-- Barre de progression -->
+    <ion-progress-bar color="secondary" [value]="progress"></ion-progress-bar>
+    <div class="question-counter">
+      Question {{ currentSlide + 1 }} sur {{ totalSlides }}
     </div>
-  </fieldset>
 
-  <!-- 3. Préférence de recommandation -->
-  <fieldset>
-    <legend>🧠 3. Préférence sur la recommandation</legend>
-    @for (pref of preferencesRecommandation; track pref) {
-      <label>
-        <input type="radio" [value]="pref" formControlName="preferenceRecommandation" />
-        {{ pref }}
-      </label>
-    }
-  </fieldset>
+    <!-- Swiper contenant toutes les questions -->
+    <swiper-container #swiper
+      class="swiper-container-custom"
+      [slides-per-view]="1"
+      [allow-touch-move]="false"
+      [speed]="400"
+      init="true">
 
-  <!-- 4. Régimes spécifiques -->
-  <fieldset>
-    <legend>🥗 4. Régime alimentaire spécifique</legend>
-    @for (regime of regimes; track regime) {
-      <label>
-        <input type="checkbox" [value]="regime" (change)="onCheckboxChange($event, 'regimes')" />
-        {{ regime }}
-      </label>
-    }
-    <div>
-      <label>Autre : <input type="text" formControlName="autresRegimes" /></label>
+      <!-- Slide 1: Données de base -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>⚖️ Données de base</ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label position="floating">Poids (kg)</ion-label>
+              <ion-input type="number" formControlName="poids"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Taille (cm)</ion-label>
+              <ion-input type="number" formControlName="taille"></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Âge</ion-label>
+              <ion-input type="number" formControlName="age"></ion-input>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+
+      <swiper-slide> 
+        <ion-card> 
+          <ion-card-header> Sexe </ion-card-header>
+          <ion-card-content>
+            @for (sexe of sexes; track sexe) {
+              <ion-item>
+                <ion-label>{{ sexe }}</ion-label>
+                <ion-checkbox 
+                  slot="start" 
+                  [value]="sexe"
+                  (ionChange)="onCheckboxChange($event, 'sexe')">
+                </ion-checkbox>
+              </ion-item>
+            }
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 2: Objectifs -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🎯 Objectif principal</ion-card-header>
+          <ion-card-content class="scrollable-content">
+            @for (obj of objectifs; track obj) {
+              <ion-item>
+                <ion-checkbox slot="start" (ionChange)="onCheckboxChange($event, 'objectifs')" [value]="obj"></ion-checkbox>
+                <ion-label>{{ obj }}</ion-label>
+              </ion-item>
+            }
+            <ion-item>
+              <ion-label position="floating">Autre objectif</ion-label>
+              <ion-input formControlName="autresObjectifs"></ion-input>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 3: Préférences recommandation -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🧠 Préférence de recommandation</ion-card-header>
+          <ion-card-content>
+            <ion-radio-group formControlName="preferenceRecommandation">
+              @for (pref of preferencesRecommandation; track pref) {
+                <ion-item>
+                  <ion-label>{{ pref }}</ion-label>
+                  <ion-radio slot="start" [value]="pref"></ion-radio>
+                </ion-item>
+              }
+            </ion-radio-group>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 4: Régimes spécifiques -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🥗 Régimes alimentaires spécifiques</ion-card-header>
+          <ion-card-content class="scrollable-content">
+            @for (regime of regimes; track regime) {
+              <ion-item>
+                <ion-checkbox slot="start" (ionChange)="onCheckboxChange($event, 'regimes')" [value]="regime"></ion-checkbox>
+                <ion-label>{{ regime }}</ion-label>
+              </ion-item>
+            }
+            <ion-item>
+              <ion-label position="floating">Autre régime</ion-label>
+              <ion-input formControlName="autresRegimes"></ion-input>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 5: Aliments à éviter -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>❌ Aliments à éviter</ion-card-header>
+          <ion-card-content>
+            <ion-textarea formControlName="alimentsAEviter" placeholder="Intolérances, allergies, goûts..."></ion-textarea>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 6: Temps de préparation -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🍳 Temps de préparation des repas</ion-card-header>
+          <ion-card-content>
+            <ion-radio-group formControlName="tempsPreparation">
+              @for (temps of tempsPreparation; track temps) {
+                <ion-item>
+                  <ion-label>{{ temps }}</ion-label>
+                  <ion-radio slot="start" [value]="temps"></ion-radio>
+                </ion-item>
+              }
+            </ion-radio-group>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 7: Nombre de repas -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>📅 Nombre de repas par jour</ion-card-header>
+          <ion-card-content>
+            <ion-radio-group formControlName="nbRepasJour">
+              @for (repas of nbRepasJour; track repas) {
+                <ion-item>
+                  <ion-label>{{ repas }}</ion-label>
+                  <ion-radio slot="start" [value]="repas"></ion-radio>
+                </ion-item>
+              }
+            </ion-radio-group>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 8: Grignotage -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🧃 Grignotage ou encas ?</ion-card-header>
+          <ion-card-content>
+            <ion-radio-group formControlName="grignotage">
+              @for (g of grignotages; track g) {
+                <ion-item>
+                  <ion-label>{{ g }}</ion-label>
+                  <ion-radio slot="start" [value]="g"></ion-radio>
+                </ion-item>
+              }
+            </ion-radio-group>
+            <ion-item>
+              <ion-label position="floating">Type de grignotage</ion-label>
+              <ion-input formControlName="typeGrignotage"></ion-input>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 9: Horaires -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>⏱️ Horaires des repas</ion-card-header>
+          <ion-card-content>
+            <ion-item button (click)="toggleTimePicker('petitDejeuner')">
+              <ion-label>Petit-déjeuner</ion-label>
+              <ion-note slot="end">{{ horairesFormGroup.get('petitDejeuner')?.value || '--:--' }}</ion-note>
+            </ion-item>
+
+            <ion-item button (click)="toggleTimePicker('dejeuner')">
+              <ion-label>Déjeuner</ion-label>
+              <ion-note slot="end">{{ horairesFormGroup.get('dejeuner')?.value || '--:--' }}</ion-note>
+            </ion-item>
+
+            <ion-item button (click)="toggleTimePicker('diner')">
+              <ion-label>Dîner</ion-label>
+              <ion-note slot="end">{{ horairesFormGroup.get('diner')?.value || '--:--' }}</ion-note>
+            </ion-item>
+
+            <!-- Affichage conditionnel du ion-datetime -->
+             @if(isTimePickerOpen ) {
+            <div class="time-picker-container">
+              <ion-datetime
+                [value]="currentSelectedTime"
+                presentation="time"
+                hour-cycle="h23"
+                (ionChange)="setSelectedTime($event)">
+              </ion-datetime>
+              <ion-button expand="block" (click)="closeTimePicker()" style="margin-top: 16px;">
+                Valider
+              </ion-button>
+            </div>
+          }
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 10: Notifications -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🔔 Notifications</ion-card-header>
+          <ion-card-content>
+            <ion-radio-group formControlName="rappels">
+              <ion-item>
+                <ion-label>Oui</ion-label>
+                <ion-radio slot="start" value="oui"></ion-radio>
+              </ion-item>
+              <ion-item>
+                <ion-label>Non</ion-label>
+                <ion-radio slot="start" value="non"></ion-radio>
+              </ion-item>
+            </ion-radio-group>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 11: Planifiez un rappel -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🔔 Planifiez un rappel</ion-card-header>
+          <ion-card-content>
+            <ion-item>
+              <ion-label position="stacked">Heure du rappel</ion-label>
+              <ion-datetime formControlName="rappelHoraire" presentation="time" hour-cycle="h23"></ion-datetime>
+            </ion-item>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+      <!-- Slide 12: Remarques -->
+      <swiper-slide>
+        <ion-card>
+          <ion-card-header>🗒️ Remarques</ion-card-header>
+          <ion-card-content>
+            <ion-textarea formControlName="remarques" placeholder="Remarques ou besoins particuliers..."></ion-textarea>
+          </ion-card-content>
+        </ion-card>
+      </swiper-slide>
+
+    </swiper-container>
+
+    <!-- Navigation boutons -->
+    <div class="footer-buttons">
+      <ion-button color = "danger" fill="outline" (click)="prevSlide()" [disabled]="currentSlide === 0">
+        Précédent
+      </ion-button>
+
+      @if (currentSlide < totalSlides - 1) {
+        <ion-button color="primary" (click)="nextSlide()">
+          Suivant
+        </ion-button>
+      }
+
+      @if (currentSlide === totalSlides - 1) {
+        <ion-button color="success" type="submit" [disabled]="isLoading">
+          @if (isLoading) {
+            <ion-spinner name="dots" slot="start"></ion-spinner>
+            Analyse en cours...
+          } @else {
+            Envoyer
+          }
+        </ion-button>
+      }
     </div>
-  </fieldset>
 
-  <!-- 5. Aliments à éviter -->
-  <fieldset>
-    <legend>❌ 5. Aliments à éviter</legend>
-    <textarea formControlName="alimentsAEviter" placeholder="Intolérances, allergies, goûts..."></textarea>
-  </fieldset>
 
-  <!-- 6. Temps de préparation -->
-  <fieldset>
-    <legend>🍳 6. Temps de préparation des repas</legend>
-    @for (temps of tempsPreparation; track temps) {
-      <label>
-        <input type="radio" [value]="temps" formControlName="tempsPreparation" />
-        {{ temps }}
-      </label>
-    }
-  </fieldset>
+  </form>
 
-  <!-- 7. Nombre de repas -->
-  <fieldset>
-    <legend>📅 7. Nombre de repas par jour</legend>
-    @for (repas of nbRepasJour; track repas) {
-      <label>
-        <input type="radio" [value]="repas" formControlName="nbRepasJour" />
-        {{ repas }}
-      </label>
-    }
-  </fieldset>
-
-  <!-- 8. Grignotage -->
-  <fieldset>
-    <legend>🧃 8. Grignotage ou encas ?</legend>
-    @for (g of grignotages; track g) {
-      <label>
-        <input type="radio" [value]="g" formControlName="grignotage" /> {{ g }}
-      </label>
-    }
-    <div>
-      <label>Si oui, quels types ? <input type="text" formControlName="typeGrignotage" /></label>
-    </div>
-  </fieldset>
-
-  <!-- 9. Horaires -->
-  <fieldset [formGroup]="horairesFormGroup">
-    <legend>⏱️ 9. Horaires des repas</legend>
-    <label>Petit-déjeuner : <input type="time" formControlName="petitDejeuner" /></label><br />
-    <label>Déjeuner : <input type="time" formControlName="dejeuner" /></label><br />
-    <label>Dîner : <input type="time" formControlName="diner" /></label>
-  </fieldset>
-
-  <!-- 10. Notifications -->
-  <fieldset>
-    <legend>🔔 10. Souhaites-tu recevoir des rappels ?</legend>
-    <label><input type="radio" value="oui" formControlName="rappels" /> Oui</label>
-    <label><input type="radio" value="non" formControlName="rappels" /> Non</label>
-  </fieldset>
-
-  <!-- 11. Remarques -->
-  <fieldset>
-    <legend>🗒️ 11. Remarques</legend>
-    <textarea formControlName="remarques" placeholder="Remarques ou besoins particuliers..."></textarea>
-  </fieldset>
-
-  <button type="submit" [disabled]="isLoading">Envoyer</button>
-</form>
+</ion-content>

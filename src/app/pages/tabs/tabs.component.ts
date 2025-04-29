@@ -14,7 +14,7 @@ import { appsOutline, cameraOutline, chatbubbleEllipsesOutline, flaskOutline, ho
   standalone: true,
   imports: [IonicModule, CommonModule],
   templateUrl: './tabs.component.html',
-  styleUrls: ['./tabs.component.scss'],
+  styleUrls: ['./tabs.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class TabsComponent  implements OnInit {

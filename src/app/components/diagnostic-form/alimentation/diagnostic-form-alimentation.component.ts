@@ -1,20 +1,54 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { OpenAiService } from '../../../core/services/openia.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Recommendation } from '../../../core/interfaces';
 import { firstValueFrom } from 'rxjs';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCheckbox, IonContent, IonDatetime, IonHeader, IonInput, IonItem, IonLabel, IonNote, IonProgressBar, IonRadio, IonRadioGroup, IonSelect, IonSelectOption, IonSpinner, IonTextarea, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+
+const elementsUi = [
+  IonInput,
+  IonButton,
+  IonLabel,
+  IonItem,
+  IonCheckbox,
+  IonRadio,
+  IonRadioGroup,
+  IonTextarea,
+  IonContent,
+  IonDatetime,
+  IonProgressBar,
+  IonNote,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonToolbar,
+  IonTitle,
+  IonHeader,
+  IonSpinner
+];
 
 @Component({
   selector: 'app-diagnostic-form-alimentation',
-  imports: [ReactiveFormsModule],
+  standalone: true,
+  imports: [ReactiveFormsModule, ...elementsUi, FormsModule],
   templateUrl: './diagnostic-form-alimentation.component.html',
+  styleUrls: ['./diagnostic-form-alimentation.component.css'],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DiagnosticFormAlimentationComponent implements OnInit {
+  @ViewChild('swiper', { static: true }) swiperRef: any; 
+
   form: FormGroup;
   isLoading = false;
   userId: string | null = null;
+  currentSlide = 0;
+  progress = 0;
+  totalSlides = 12; // 11 questions
+  isTimePickerOpen = false;
+  currentControlName: string = '';
+  currentSelectedTime: string = '08:00';
 
   objectifs = [
     'Perdre du poids',
@@ -82,16 +116,15 @@ export class DiagnosticFormAlimentationComponent implements OnInit {
         diner: ['']
       }),
       rappels: ['oui'],
-      remarques: ['']
+      remarques: [''],
+      rappelHoraire: [''] // Ajout du champ pour les rappels
     });
-
-
   }
+
   async ngOnInit() {
     const user = await firstValueFrom(this.authService.user$);
     if (user?.uid) {
       this.userId = user.uid;
-      console.log(this.userId);
     }
   }
 
@@ -127,7 +160,14 @@ export class DiagnosticFormAlimentationComponent implements OnInit {
 
       await this.openAiService.saveRecommendation(this.userId, recommendation);
 
-      this.router.navigate(['/alimentation']);
+      const rappelHoraire = this.form.get('rappelHoraire')?.value;
+      if (rappelHoraire) {
+        this.planifierNotification(rappelHoraire, 'alimentation');
+      }
+
+      setTimeout(() => {
+        this.router.navigate(['recommendations/alimentation']);
+      }, 2500); // 2.5 secondes
     } catch (err) {
       console.error('Erreur lors de la génération de la recommandation :', err);
       alert("Erreur lors de l’analyse IA. Veuillez réessayer.");
@@ -136,4 +176,63 @@ export class DiagnosticFormAlimentationComponent implements OnInit {
     }
   }
 
+  private planifierNotification(horaire: string, type: string) {
+    console.log(`Notification planifiée à ${horaire} pour ${type}`);
+    // Implémentez ici la logique pour planifier une notification
+  }
+
+  async nextSlide() {
+    const swiperContainer = document.querySelector('swiper-container') as any;
+    await swiperContainer.swiper.slideNext();
+    this.currentSlide++;
+    this.updateProgress();
+  }
+  
+  async prevSlide() {
+    const swiperContainer = document.querySelector('swiper-container') as any;
+    await swiperContainer.swiper.slidePrev();
+    this.currentSlide--;
+    this.updateProgress();
+  }
+  
+  smoothScrollToTop() {
+    const content = document.querySelector('ion-content');
+    if (content) {
+      (content as any).scrollToTop(300); // 300ms de scroll smooth
+    }
+  }
+
+  updateProgress() {
+    this.progress = (this.currentSlide + 1) / this.totalSlides;
+  }
+
+  get backgroundClass(): string {
+    return `background-slide-${this.currentSlide + 1}`;
+  }
+
+  toggleTimePicker(controlName: string) {
+    if (this.isTimePickerOpen && this.currentControlName === controlName) {
+      this.closeTimePicker();
+    } else {
+      this.currentControlName = controlName;
+      const time = this.horairesFormGroup.get(controlName)?.value;
+      this.currentSelectedTime = time && time.match(/^\d{2}:\d{2}$/) ? time : '08:00';
+      this.isTimePickerOpen = true;
+    }
+  }
+
+  setSelectedTime(event: any) {
+    if (event && event.detail && event.detail.value) {
+      this.currentSelectedTime = event.detail.value;
+    }
+  }
+
+  closeTimePicker() {
+    this.horairesFormGroup.get(this.currentControlName)?.setValue(this.currentSelectedTime);
+    this.isTimePickerOpen = false;
+  }
+
+  onModalPresented() {
+    console.log('Modal is fully presented.');
+  }
 }

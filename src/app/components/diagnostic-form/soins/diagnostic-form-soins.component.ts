@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OpenAiService } from '../../../core/services/openia.service';
 import { AuthService } from '../../../core/services/auth.service';
@@ -16,12 +16,15 @@ import { FACIAL_FORM, MASSAGE_FORM, CORPS_FORM, ESTHETIQUE_FORM } from './forms.
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DiagnosticFormSoinsComponent implements OnInit {
+  @ViewChild('swiper', { static: true }) swiperRef: any;
   form: FormGroup;
   currentStep = 0;
   steps: any[] = [];
   typeSoin: string = '';
   userId: string | null = null;
   isLoading = false;
+  progress = 0; 
+  totalSteps = 0; 
 
   constructor(
     private _fb: FormBuilder,
@@ -30,7 +33,8 @@ export class DiagnosticFormSoinsComponent implements OnInit {
     private _router: Router
   ) {
     this.form = new FormGroup({
-      typeSoin: new FormControl('', Validators.required)
+      typeSoin: new FormControl('', Validators.required),
+      rappelHoraire: new FormControl('') // Ajout du champ pour les rappels
     });
   }
 
@@ -43,6 +47,7 @@ export class DiagnosticFormSoinsComponent implements OnInit {
   onTypeSelected() {
     this.typeSoin = this.form.get('typeSoin')?.value;
     let selectedForm: any[];
+    this.totalSteps = this.steps.length + 1;
 
     switch (this.typeSoin) {
       case 'Soin visage':
@@ -62,6 +67,8 @@ export class DiagnosticFormSoinsComponent implements OnInit {
     }
 
     this.steps = selectedForm;
+    this.totalSteps = selectedForm.length;
+    this.updateProgress();
 
     selectedForm.forEach(q => {
       this.form.addControl(
@@ -82,18 +89,39 @@ export class DiagnosticFormSoinsComponent implements OnInit {
     }
   }
 
-  nextStep() {
-    if (this.currentStep < this.steps.length) this.currentStep++;
+  async nextStep() {
+    const swiperContainer = document.querySelector('swiper-container') as any;
+    await swiperContainer.swiper.slideNext();
+    this.currentStep++;
+    this.updateProgress();
   }
-
-  prevStep() {
-    if (this.currentStep > 0) this.currentStep--;
+  
+  async prevStep() {
+    const swiperContainer = document.querySelector('swiper-container') as any;
+    await swiperContainer.swiper.slidePrev();
+    this.currentStep--;
+    this.updateProgress();
+  }
+  
+  updateProgress() {
+    this.progress = (this.currentStep + 1) / this.totalSteps;
   }
 
   async onSubmit() {
-    if (this.form.invalid || !this.userId) return;
+    for (const controlName of Object.keys(this.form.controls)) {
+      const control = this.form.get(controlName);
+      if (control && control.validator) {
+        control.markAsTouched();
+        control.updateValueAndValidity();
+      }
+    }
+  
+    console.log('Invalid:', this.isStepIncomplete(), 'UserId:', this.userId);
+    if (this.isStepIncomplete() || !this.userId) return;
+    
     this.isLoading = true;
     const diagnosticData = this.form.value;
+    console.log('diagnosticData:', diagnosticData, 'UserId:', this.userId);
     
     try {
       await this._openAiService.saveDiagnostic(this.userId, diagnosticData);
@@ -102,17 +130,37 @@ export class DiagnosticFormSoinsComponent implements OnInit {
         diagnosticData,
         'soins'
       );
-
-
       await this._openAiService.saveRecommendation(this.userId, recommendation);
-
       this._router.navigate(['app/recommendations/soins']);
+
+      const rappelHoraire = this.form.get('rappelHoraire')?.value;
+      if (rappelHoraire) {
+        this.planifierNotification(rappelHoraire, 'soins');
+      }
     } catch (err) {
-      console.error('Erreur lors de la recommandation soins :', err);
+      console.error('Erreur IA:', err);
       alert("Erreur IA. Veuillez réessayer.");
     } finally {
       this.isLoading = false;
     }
+  }
+  
+  private planifierNotification(horaire: string, type: string) {
+    console.log(`Notification planifiée à ${horaire} pour ${type}`);
+    // Implémentez ici la logique pour planifier une notification
+  }
+
+  isStepIncomplete(): boolean {
+    if (this.currentStep === 0) {
+      return this.form.get('typeSoin')?.invalid || false;
+    } else {
+      const step = this.steps[this.currentStep - 1];
+      const control = this.form.get(step.controlName);
+      return control?.invalid || false;
+    }
+  }
+  get backgroundClass(): string {
+    return `background-slide-${this.currentStep + 1}`;
   }
 
 }
