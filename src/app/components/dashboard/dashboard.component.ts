@@ -1,73 +1,65 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
-
-import { firstValueFrom } from 'rxjs';
 import { OpenAiService } from '../../core/services/openia.service';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonContent, IonGrid, IonHeader, IonRow, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline } from 'ionicons/icons';
+import { CommonModule } from '@angular/common';
+import { AlimentationRecommendation, SportRecommendation, SoinsRecommendation } from '../../core/interfaces';
+import { firstValueFrom, Observable, of, switchMap } from 'rxjs';
 
-const elementsUI =[
+const elementsUI = [
+  CommonModule,
   IonContent,
   IonHeader,
   IonToolbar,
   IonTitle,
-  IonGrid,
-  IonRow,
-  IonCol,
   IonCardHeader,
   IonCardTitle,
   IonCardContent,
   IonButton,
-  IonCard
+  IonCard,
+  IonButtons,
+  IonIcon
+];
 
-]; 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [...elementsUI],
+  imports: [...elementsUI, RouterLink],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrl: './dashboard.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DashboardComponent {
-
-  recommendationAlimentation: any = null;
-  recommendationSport: any = null;
-  recommendationSoins: any = null;
+  recommendationAlimentation$: Observable<AlimentationRecommendation | null>;
+  recommendationSport$: Observable<SportRecommendation | null>;
+  recommendationSoins$: Observable<SoinsRecommendation | null>;
 
   constructor(
-    private _authService: AuthService, 
+    private _authService: AuthService,
     private _openAiService: OpenAiService,
     private _router: Router
-  ) {}
+  ) {
+    addIcons({ arrowBackOutline });
 
-  async ngOnInit() {
-    const user = await firstValueFrom(this._authService.user$);
-    if (!user) return;
+    // Dynamique sans subscribe
+    this.recommendationAlimentation$ = this._authService.user$.pipe(
+      switchMap(user => user?.uid ? this._openAiService.getLastRecommendation<AlimentationRecommendation>(user.uid, 'alimentation') : of(null))
+    );
 
-    await this.loadRecommendations(user.uid);
+    this.recommendationSport$ = this._authService.user$.pipe(
+      switchMap(user => user?.uid ? this._openAiService.getLastRecommendation<SportRecommendation>(user.uid, 'sport') : of(null))
+    );
+
+    this.recommendationSoins$ = this._authService.user$.pipe(
+      switchMap(user => user?.uid ? this._openAiService.getLastRecommendation<SoinsRecommendation>(user.uid, 'soins') : of(null))
+    );
+    console.log(firstValueFrom(this.recommendationSoins$))
   }
 
-  async loadRecommendations(uid: string) {
-    try {
-      this.recommendationAlimentation = await this._openAiService.getLastRecommendation(uid, 'alimentation');
-    } catch (e) {
-      console.warn('Pas de recommandation alimentation trouvée.');
-    }
-
-    try {
-      this.recommendationSport = await this._openAiService.getLastRecommendation(uid, 'sport');
-    } catch (e) {
-      console.warn('Pas de recommandation sport trouvée.');
-    }
-
-    try {
-      this.recommendationSoins = await this._openAiService.getLastRecommendation(uid, 'soins');
-    } catch (e) {
-      console.warn('Pas de recommandation soins trouvée.');
-    }
-  }
-
-  naviguerVers(path: string) {
-    this._router.navigate(['/' + path]);
+  naviguerVers(path: string): void {
+    this._router.navigate([path]);
   }
 }

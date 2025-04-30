@@ -6,6 +6,8 @@ import { SplashScreenComponent } from './pages/splash-screen/splash-screen.compo
 // Guards
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { provideIonicAngular } from '@ionic/angular/standalone';
+import { authAnonymousGuard } from './core/guards/auth-anonymous.guard';
 
 export const routes: Routes = [
   {
@@ -16,6 +18,7 @@ export const routes: Routes = [
   {
     path: 'app',
     loadComponent: () => import('./pages/tabs/tabs.component').then(m => m.TabsComponent),
+    canActivate: [authAnonymousGuard],
     children: [
       
       { path: 'home', loadComponent: () => import('./pages/home/home-page.component').then(m => m.HomePageComponent) },
@@ -65,13 +68,33 @@ export const routes: Routes = [
           },
           {
             path: 'alimentation',
-            loadComponent: () => import('./components/recommendations/alimentation/alimentation.component').then(m => m.AlimentationComponent),
-            canActivate: [authGuard]
+            children: [
+              {
+                path: '',
+                loadComponent: () => import('./components/recommendations/alimentation/alimentation.component').then(m => m.AlimentationComponent),
+                canActivate: [authGuard]
+              },
+              {
+                path: 'planning',
+                loadComponent: () => import('./components/recommendations/alimentation/planning/planning.component').then(m => m.PlanningComponent),
+                canActivate: [authGuard]
+              }
+            ]
           },
           {
             path: 'soins',
-            loadComponent: () => import('./components/recommendations/soins/soins.component').then(m => m.SoinsComponent),
-            canActivate: [authGuard]
+            children: [
+              {
+                path: '',
+                loadComponent: () => import('./components/recommendations/soins/soins.component').then(m => m.SoinsComponent),
+                canActivate: [authGuard]
+              },
+              {
+                path: 'details',
+                loadComponent: () => import('./components/recommendations/soins/details/details.component').then(m => m.DetailsComponent),
+                canActivate: [authGuard]
+              }
+            ]
           },
         ]
       },

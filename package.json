@@ -7,16 +7,11 @@
     "start": "npm run generate-env && ng serve",
     "watch": "ng build --watch --configuration development",
     "build": "npm run generate-env && ng build",
-
     "build:prod": "npm run generate-env && ng build --configuration production",
     "serve:prod": "serve dist/well-sync/browser --single --listen 5000 --ssl-cert cert.pem --ssl-key key.pem",
-    
     "start:prod": "npm run build:prod && npm run serve:prod",
-    
     "test": "ng test",
-    
     "server:notification": "node server/send-notification.js",
-
     "deploy:gh": "ng deploy --base-href=/WellSync/",
     "deploy:firebase": "npm run build:prod && firebase deploy"
   },
@@ -38,6 +33,8 @@
     "@khmyznikov/pwa-install": "^0.5.4",
     "firebase": "^11.6.1",
     "googleapis": "^148.0.0",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "marked": "^15.0.9",
     "rxjs": "~7.8.0",
     "swiper": "^10.3.1",

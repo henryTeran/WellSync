@@ -1,11 +1,14 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { OpenAiService } from '../../../core/services/openia.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Recommendation } from '../../../core/interfaces';
 import { firstValueFrom } from 'rxjs';
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCheckbox, IonContent, IonDatetime, IonHeader, IonInput, IonItem, IonLabel, IonNote, IonProgressBar, IonRadio, IonRadioGroup, IonSelect, IonSelectOption, IonSpinner, IonTextarea, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline } from 'ionicons/icons';
+import { Swiper } from 'swiper';
 
 const elementsUi = [
   IonInput,
@@ -32,13 +35,13 @@ const elementsUi = [
 @Component({
   selector: 'app-diagnostic-form-alimentation',
   standalone: true,
-  imports: [ReactiveFormsModule, ...elementsUi, FormsModule],
+  imports: [ReactiveFormsModule, ...elementsUi, FormsModule, RouterLink],
   templateUrl: './diagnostic-form-alimentation.component.html',
   styleUrls: ['./diagnostic-form-alimentation.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DiagnosticFormAlimentationComponent implements OnInit {
-  @ViewChild('swiper', { static: true }) swiperRef: any; 
+  @ViewChild('swiper', { static: true }) swiperRef!: ElementRef; 
 
   form: FormGroup;
   isLoading = false;
@@ -95,6 +98,7 @@ export class DiagnosticFormAlimentationComponent implements OnInit {
     private authService: AuthService,
     private router: Router
   ) {
+    addIcons({ arrowBackOutline });
     this.form = this.fb.group({
       poids: ['', Validators.required],
       taille: ['', Validators.required],
@@ -166,7 +170,7 @@ export class DiagnosticFormAlimentationComponent implements OnInit {
       }
 
       setTimeout(() => {
-        this.router.navigate(['recommendations/alimentation']);
+        this.router.navigate(['app/recommendations/alimentation']);
       }, 2500); // 2.5 secondes
     } catch (err) {
       console.error('Erreur lors de la génération de la recommandation :', err);
@@ -182,17 +186,21 @@ export class DiagnosticFormAlimentationComponent implements OnInit {
   }
 
   async nextSlide() {
-    const swiperContainer = document.querySelector('swiper-container') as any;
-    await swiperContainer.swiper.slideNext();
-    this.currentSlide++;
-    this.updateProgress();
+    const swiper = this.swiperRef.nativeElement.swiper as Swiper;
+    if (swiper && swiper.slideNext) {
+      await swiper.slideNext();
+      this.currentSlide++;
+      this.updateProgress();
+    }
   }
   
   async prevSlide() {
-    const swiperContainer = document.querySelector('swiper-container') as any;
-    await swiperContainer.swiper.slidePrev();
-    this.currentSlide--;
-    this.updateProgress();
+    const swiper = this.swiperRef.nativeElement.swiper as Swiper;
+    if (swiper && swiper.slidePrev) {
+      await swiper.slidePrev();
+      this.currentSlide--;
+      this.updateProgress();
+    }
   }
   
   smoothScrollToTop() {

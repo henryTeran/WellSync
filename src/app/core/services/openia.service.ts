@@ -113,7 +113,7 @@ Retour attendu au format JSON STRICT, avec cette structure :
       {
         "jour": "Lundi",
         "exercices": [
-          { "nom": "...", "repetitions": "...", "zoneCiblee": "..."},
+          { "nom": "...", "repetitions": "...", "zoneCiblee": "...", "tempsEntrainement": "..."},
           ...
         ]
       },
@@ -158,6 +158,7 @@ Réponds uniquement avec un JSON strict. Pas de commentaires, pas de texte autou
                 "1 c. à soupe d’huile d’olive"
               ],
               "instructions": "Cuire le poulet au four pendant 25 min avec les légumes."
+              "tempsReparation: "45 min de préparation"
             }
           ]
         }
@@ -168,41 +169,102 @@ Réponds uniquement avec un JSON strict. Pas de commentaires, pas de texte autou
       `;
     }else if (theme === 'soins') {
       prompt = `
-      ${basePrompt}
-      
-      Analyse les besoins esthétiques de l’utilisateur selon ses réponses et génère une **fiche soin personnalisée**, incluant :
-      
-      📝 Résumé des besoins perçus (problèmes cutanés, zones tendues, attentes, objectifs bien-être)
-      
-      💆‍♀️ Recommandation de prestation personnalisée :
-      - nom du soin
-      - description brève
-      - durée approximative
-      - bienfaits attendus
-      
-      📍 Institut suggéré :
-      - nom ou type d’établissement (ex : spa relaxant, institut dermatologique, centre minceur, etc.)
-      - adresse approximative (ville ou quartier, si connu)
-      
-      📦 Structure attendue (en JSON strict) :
-      {
-        "theme": "soins",
-        "titre": "Nom de la prestation",
-        "description": "Pourquoi ce soin est adapté",
-        "prestation": {
-          "nom": "Nom du soin",
-          "duree": "Durée approximative (ex : 60 min)",
-          "bienfaits": ["Hydratation", "Raffermissement", "Détente profonde"]
-        },
-        "institutPropose": "Nom ou type d’établissement",
-        "adresseInstitut": "Adresse approximative ou ville (ex : Genève, Lausanne, Quartier des Bains)"
-      }
-      
-      ⚠️ Ne commente rien, ne retourne que du JSON strictement valide.
-      `;
-
+    ${basePrompt}
+    
+    Analyse les réponses de l'utilisateur pour générer une **fiche de soin professionnelle personnalisée**, en adaptant le contenu selon le **type de soin détecté** (visage, massage, remodelage du corps, ou esthétique).
+    
+    🔍 Étape 1 : Identifier le type de soin selon les réponses :
+    - Si des termes comme "taches", "acné", "rides", "peau", "hydratation" apparaissent → soin visage
+    - Si des zones comme "dos", "nuque", "jambes", "tensions", "détente" sont citées → massage bien-être
+    - Si "cellulite", "ventre", "raffermir", "cuisses", "fessiers" apparaissent → remodelage / soin corps
+    - Si "vernis", "ongles", "cils", "sourcils", "manucure", "nail art" apparaissent → soin esthétique
+    
+    ---
+    
+    📝 Résumé des besoins :
+    - Problèmes esthétiques ou tensions perçues
+    - Objectifs bien-être ou beauté
+    - Zones concernées
+    
+    ---
+    
+    💆‍♀️ Recommandation adaptée au type :
+    - Nom du soin
+    - Description du soin et pourquoi il est adapté
+    - Durée approximative
+    - Bienfaits attendus
+    
+    ---
+    
+    📋 Protocole professionnel (ajusté selon le type) :
+    
+    👉 Si soin visage :
+    - Démaquillage
+    - Diagnostic de peau
+    - Gommage
+    - Vapeur / VapoZone
+    - Extraction si besoin
+    - Appareils spécifiques
+    - Massage
+    - Masque
+    - Soin final (crème, sérum, protection)
+    
+    👉 Si massage :
+    - Type de massage recommandé
+    - Zones ciblées
+    - Techniques de relaxation ou de drainage
+    - Durée et ambiance
+    - Bienfaits ressentis
+    
+    👉 Si soin remodelage corps :
+    - Zones à traiter (ventre, fessiers, cuisses…)
+    - Technologies recommandées (radiofréquence, cryo, etc.)
+    - Techniques manuelles
+    - Objectif (minceur, raffermissement, drainage)
+    
+    👉 Si soin esthétique (manucure, cils, sourcils…) :
+    - Prestation recommandée
+    - Style et finition
+    - Produits utilisés (gel, vernis, sérum)
+    - Conseils post-soin
+    
+    ---
+    
+    💡 Détails produits et techniques :
+    - Appareillage ou outils spécifiques
+    - Noms des techniques (drainage, pressothérapie, modelage relaxant…)
+    - Produits utilisés (sérum, crèmes, huiles, vernis, etc.)
+    
+    ---
+    
+    📍 Institut suggéré :
+    - Type d’établissement (spa, institut dermatologique, onglerie, centre minceur, etc.)
+    - Localisation (ville ou quartier)
+    
+    ---
+    
+    📦 Format de sortie (JSON strict) :
+    {
+      "theme": "soins",
+      "titre": "Nom du soin",
+      "description": "Pourquoi ce soin est recommandé",
+      "prestation": {
+        "nom": "Nom du soin",
+        "duree": "Ex : 75 min",
+        "bienfaits": ["...", "..."],
+        "protocole": "Protocole détaillé adapté",
+        "appareillage": "...",
+        "nomTechnique": "...",
+        "nomCremes": "..."
+      },
+      "institutPropose": "Nom ou type d’établissement",
+      "adresseInstitut": "Ville ou quartier"
     }
-  
+    
+    ⚠️ Ne commente rien. Retourne uniquement du JSON strictement valide.
+      `;
+    }
+    
     const response = await lastValueFrom(this.sendMessageToOpenAI(prompt));
   
     try {
@@ -262,4 +324,6 @@ Réponds uniquement avec un JSON strict. Pas de commentaires, pas de texte autou
     return (map as any)[freq] || 3;
 
   }
+
+  
 }

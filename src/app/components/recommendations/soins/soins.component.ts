@@ -4,7 +4,10 @@ import { OpenAiService } from '../../../core/services/openia.service';
 import { SoinsRecommendation } from '../../../core/interfaces';
 import { firstValueFrom } from 'rxjs';
 import { Browser } from "@capacitor/browser"
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonSpinner, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonSpinner, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { Router, RouterLink } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline, fitnessOutline } from 'ionicons/icons';
 
 const elementsUI = [
   IonContent,
@@ -19,26 +22,31 @@ const elementsUI = [
   IonItem,
   IonLabel,
   IonIcon,
-  IonTitle
+  IonTitle,
+  IonButtons,
+  IonButton
 
 ];
 @Component({
   selector: 'app-soins',
-  imports: [...elementsUI],
+  imports: [...elementsUI, RouterLink],
   templateUrl: './soins.component.html',
   styleUrls: ['./soins.component.css']
 })
-export class SoinsComponent implements OnInit {
+export class SoinsComponent {
   recommendation: SoinsRecommendation | null = null;
   userId: string | null = null;
   isLoading = true;
 
   constructor(
     private _authService: AuthService,
-    private _openAiService: OpenAiService
-  ) {}
+    private _openAiService: OpenAiService,
+    private router: Router
+  ) {
+    addIcons({arrowBackOutline, fitnessOutline});
+  }
 
-  async ngOnInit(): Promise<void> {
+  async ionViewWillEnter(): Promise<void> {
   const user = await firstValueFrom(this._authService.user$);
     if (user?.uid) {
       this.userId = user.uid;
@@ -60,5 +68,11 @@ export class SoinsComponent implements OnInit {
   async openMap(institut: string) {
     const query = encodeURIComponent(institut);
     await Browser.open({ url: `https://www.google.com/maps/search/?api=1&query=${query}` });
+  }
+  goTodetails() {
+    this.router.navigate(['/app/recommendations/soins/details'], {
+      state: { recommendation: this.recommendation }
+    });
+  
   }
 }

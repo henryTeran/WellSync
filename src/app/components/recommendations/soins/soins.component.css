@@ -1,0 +1,11 @@
+ion-content::part(scroll) {
+    padding-bottom: 140px !important; /* évite que le bouton touche le bas */
+    --background: linear-gradient(to top, #c8ffe3 0%, #f6f9fc 90%);
+  }
+
+  ion-card-content p {
+    text-transform: none !important;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #333;
+  }

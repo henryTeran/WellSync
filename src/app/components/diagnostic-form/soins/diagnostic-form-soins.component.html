@@ -1,5 +1,11 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button routerLink="/app/services">
+        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+       
+      </ion-button>
+    </ion-buttons>
     <ion-title>🧖‍♀️ Diagnostic Soins</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -15,7 +21,7 @@
     <!-- Progression -->
     <ion-progress-bar color = "secondary" [value]="progress"></ion-progress-bar>
     <div class="question-counter">
-      Question {{ currentStep + 1 }} sur {{ totalSteps }}
+      Question {{ currentSlide + 1 }} sur {{ totalSteps }}
     </div>
 
     <!-- Swiper avec questions -->
@@ -99,17 +105,17 @@
 
     <!-- Boutons navigation -->
     <div class="footer-buttons">
-      <ion-button color = "danger"  fill="outline" (click)="prevStep()" [disabled]="currentStep === 0">
-        Retour
+      <ion-button color = "danger"  fill="outline" (click)="prevStep()" [disabled]="currentSlide === 0">
+        Précédente
       </ion-button>
 
-      @if (currentStep < totalSteps - 1) {
+      @if (currentSlide < totalSteps - 1) {
         <ion-button color="primary" (click)="nextStep()">
           Suivant
         </ion-button>
       }
 
-      @if (currentStep === totalSteps - 1) {
+      @if (currentSlide === totalSteps - 1) {
         <ion-button color="success" type="submit" [disabled]="isLoading">
           @if (isLoading) {
             <ion-spinner name="dots" slot="start"></ion-spinner>

@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonInput, IonItem, IonLabel, IonText } from '@ionic/angular/standalone';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonInput, IonItem, IonLabel, IonText } from '@ionic/angular/standalone';
 
 const elementsUI = [
   IonContent,
@@ -16,7 +16,8 @@ const elementsUI = [
   IonLabel,
   IonInput,
   IonText,
-  IonButton
+  IonButton, 
+  IonCardSubtitle
 ];
 @Component({
   selector: 'app-login',
@@ -44,7 +45,7 @@ export class LoginComponent {
             if (role === 'admin') {
               this.router.navigate(['app/admin']);
             } else {
-              this.router.navigate([`app/dashboard/${user.uid}`]);
+              this.router.navigate([`app/dashboard`]);
             }
           
         }

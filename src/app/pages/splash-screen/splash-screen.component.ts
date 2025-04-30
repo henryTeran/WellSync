@@ -8,14 +8,14 @@ import { IonContent } from '@ionic/angular/standalone';
   templateUrl: './splash-screen.component.html',
   styleUrls: ['./splash-screen.component.css']
 })
-export class SplashScreenComponent  implements OnInit {
+export class SplashScreenComponent {
 
   constructor(private _router: Router) {}
 
   ngOnInit() {
     setTimeout(() => {
       this._router.navigateByUrl('app/home');
-    }, 5000); // Durée de 5 secondes
+    }, 3000); // Durée de 3 secondes
   }
 
 }

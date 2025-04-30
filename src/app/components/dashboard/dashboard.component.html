@@ -1,70 +1,112 @@
-<ion-content class="ion-padding">
-  <ion-header translucent>
-    <ion-toolbar>
-      <ion-title>Bienvenue ✨</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-header class="custom-header">
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button routerLink="/app/home" fill="clear">
+        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>  
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Bienvenue ✨</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-grid class="ion-padding">
-    <ion-row>
-
-      <!-- Recommandation Nutrition -->
-      <ion-col size="12" size-md="6">
-        <ion-card>
+<ion-content class="ion-padding content-bg">
+  <div class="swiper-wrapper-container">
+    <swiper-container
+      class="custom-swiper"
+      [slides-per-view]="1"
+      [pagination]="true"
+      [space-between]="40"
+      [centered-slides]="true"
+      [loop]="false"
+      effect="slide"
+    >
+      <!-- Slide Nutrition -->
+      <swiper-slide>
+        <ion-card class="recommendation-card">
+          <img src="assets/nutrition.png" alt="Nutrition" class="recommendation-img" />
           <ion-card-header>
-            <ion-card-title>🍽️ Recommandation Nutrition</ion-card-title>
+            <ion-card-title class="recommendation-title">Recommandation Nutrition</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            @if (recommendationAlimentation; as recoAlim) {
-              <p>{{ recoAlim.resume || 'Voici une suggestion pour votre nutrition.' }}</p>
+            @if (recommendationAlimentation$ | async; as recoAlim) {
+              <p>{{ recoAlim.titre || 'Voici une suggestion pour votre nutrition.' }}</p>
             } @else {
               <p>Aucune recommandation personnalisée disponible.</p>
             }
-            <ion-button expand="block" fill="solid" (click)="naviguerVers('app/recommendations/alimentation')">
-              Voir
-            </ion-button>
           </ion-card-content>
+          <div class="button-container">
+            <ion-button expand="block" (click)="naviguerVers('app/recommendations/alimentation')">
+              VOIR
+            </ion-button>
+          </div>
         </ion-card>
-      </ion-col>
+      </swiper-slide>
 
-      <!-- Recommandation Sport -->
-      <ion-col size="12" size-md="6">
-        <ion-card>
+      <!-- Slide Sport -->
+      <swiper-slide>
+        <ion-card class="recommendation-card">
+          <img src="assets/sport.jpg" alt="Sport" class="recommendation-img" />
           <ion-card-header>
-            <ion-card-title>🏋️ Routine Sportive</ion-card-title>
+            <ion-card-title class="recommendation-title">Routine Sportive</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            @if (recommendationSport; as recoSport) {
-              <p>{{ recoSport.resume || 'Voici une routine sportive adaptée.' }}</p>
+            @if (recommendationSport$ | async; as recoSport) {
+              <p>{{ recoSport.description || 'Voici une routine sportive adaptée.' }}</p>
             } @else {
               <p>Aucune recommandation sportive disponible.</p>
             }
-            <ion-button expand="block" fill="solid" (click)="naviguerVers('app/recommendations/sport')">
-              Voir
-            </ion-button>
           </ion-card-content>
+          <div class="button-container">
+            <ion-button expand="block" (click)="naviguerVers('app/recommendations/sport')">
+              VOIR
+            </ion-button>
+          </div>
         </ion-card>
-      </ion-col>
+      </swiper-slide>
 
-      <!-- Recommandation Soin Bien-Être -->
-      <ion-col size="12" size-md="6">
-        <ion-card>
+      <!-- Slide Soins -->
+      <swiper-slide>
+        <ion-card class="recommendation-card">
+          <img src="assets/soins.png" alt="Soins" class="recommendation-img" />
           <ion-card-header>
-            <ion-card-title>🧖‍♀️ Soin Bien-Être</ion-card-title>
+            <ion-card-title class="recommendation-title">Soin Bien-Être</ion-card-title>
           </ion-card-header>
           <ion-card-content>
-            @if (recommendationSoins; as recoSoins) {
-              <p>{{ recoSoins.resume || 'Voici un soin adapté à votre besoin.' }}</p>
+            @if (recommendationSoins$ | async; as recoSoins) {
+              <p>{{ recoSoins.titre || 'Voici un soin adapté à votre besoin.' }}</p>
             } @else {
               <p>Aucune recommandation bien-être disponible.</p>
             }
-            <ion-button expand="block" fill="solid" (click)="naviguerVers('app/recommendations/soins')">
-              Voir
-            </ion-button>
           </ion-card-content>
+          <div class="button-container">
+            <ion-button 
+              expand="block" 
+              (click)="naviguerVers('app/recommendations/soins')" 
+              [disabled]="!recommendationSoins$">
+              VOIR
+            </ion-button>
+          </div>
         </ion-card>
-      </ion-col>
+      </swiper-slide>
 
-    </ion-row>
-  </ion-grid>
+      <!-- Slide Nouvelle Recommandation -->
+      <swiper-slide>
+        <ion-card class="recommendation-card">
+          <img src="assets/diag-soins.jpg" alt="Nouvelle Recommandation" class="recommendation-img" />
+          <ion-card-header>
+            <ion-card-title class="recommendation-title">Nouvelle Recommandation</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <p>Vous souhaitez une nouvelle suggestion bien-être ? Relancez un diagnostic personnalisé !</p>
+          </ion-card-content>
+          <div class="button-container">
+            <ion-button expand="block" color="success" (click)="naviguerVers('app/services')">
+              DÉMARRER
+            </ion-button>
+          </div>
+
+        </ion-card>
+      </swiper-slide>
+    </swiper-container>
+  </div>
 </ion-content>

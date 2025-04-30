@@ -35,4 +35,13 @@
       color: #555;
     }
   }
+
+  ion-content {
+    --padding-bottom: 80px; /* assez pour ne pas passer sous la tab-bar */
+    --background: linear-gradient(to top, #c8ffe3 0%, #f6f9fc 90%);
+  }
+
+  .ion-padding{
+    --background:transparent;
+  }
   

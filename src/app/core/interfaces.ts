@@ -15,6 +15,7 @@ export interface SportRecommendation extends Recommendation {
         repetitions: string;
         zoneCiblee: string;
         image?:string;
+        tempsEntrainement:string
       }[];
     }[];
   };
@@ -39,7 +40,23 @@ export interface AlimentationRecommendation extends Recommendation {
       nom: string;
       duree: string;
       bienfaits: string[];
+      protocole: string;
+      appareillage: string;
+      nomTechnique: string;
+      nomCremes: string;
     };
     institutPropose: string;
+    adresseInstitut: string;
+  }
+
+  interface Repas {
+    nom: string;
+    ingredients: string[];
+    instructions: string;
+  }
+  
+  interface Jour {
+    jour: string;
+    repas: Repas[];
   }
   

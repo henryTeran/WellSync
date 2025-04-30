@@ -27,6 +27,7 @@ const elementsUi = [
 })
 export class TabsComponent  implements OnInit {
   user$: Observable <User | null>; 
+  private toastShown = false;
 
   constructor(
     private _authService: AuthService, 
@@ -37,45 +38,16 @@ export class TabsComponent  implements OnInit {
     console.log(firstValueFrom(this.user$))
    }
 
-  ngOnInit() {
-    this.user$.subscribe(async user => {
-      if (user?.isAnonymous) {
-        const toast = await this.toastCtrl.create({
-          message: '🧪 Vous êtes actuellement en mode test. Certaines fonctionnalités peuvent être limitées.',
-          duration: 6000,
-          position: 'top',
-          color: 'warning',
-          buttons: [
-            {
-              text: 'Créer un compte',
-              handler: () => {
-                this.goToRegister();
-                return false;
-              }
-            }
-          ]
-        });
-        await toast.present();
-      }
-    });
+   ngOnInit() {
 
   }
+  
   async logout() {
     await this._authService.logout();
-    this._router.navigate(['app/login']);
+    await this._authService.loginAnonyme();
+    this._router.navigate(['app/home']);
   }
 
-  toastButtons = [
-    {
-      text: 'Créer un compte',
-      handler: () => {
-        this.goToRegister();
-        return false;
-      }
-    }
-  ];
 
-  goToRegister() {
-    this._router.navigate(['app/register']);
-  }
+
 }

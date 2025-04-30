@@ -1,21 +1,34 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title>Routine Sportive</ion-title>
+    <ion-buttons slot="start">
+      <ion-button routerLink="/app/dashboard">
+        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="fitness-outline"></ion-icon> Routine Sportive
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen>
+
   @if (recommendation?.routine?.jours) {
     <div class="routine-header ion-padding">
       <h2>{{ recommendation?.titre }}</h2>
       <p>{{ recommendation?.description }}</p>
     </div>
 
-    <ion-slides pager="true" [options]="slideOpts" class="full-carousel">
+    <swiper-container
+      class="swiper-container-custom"
+      [slides-per-view]="1"
+      [pagination]="true"
+      init="true">
+
       @for (day of recommendation?.routine?.jours; track day.jour) {
-        <ion-slide>
-          <div class="day-container">
-            <h3>📅 {{ day.jour }}</h3>
+        <swiper-slide>
+          <div class="day-container ion-padding">
+            <h3> {{ day.jour }}</h3>
             <ion-list>
               @for (ex of day.exercices; track ex.nom) {
                 <ion-item lines="none">
@@ -23,20 +36,23 @@
                     <h3>{{ ex.nom }}</h3>
                     <p>{{ ex.repetitions }}</p>
                     <p><em>Zone : {{ ex.zoneCiblee }}</em></p>
+                    <p><em>Temps entrainement : {{ ex.tempsEntrainement }}</em></p>
+
                     <video
                       width="100%"
                       height="180"
                       controls
-                      [src]="getVideoUrl(ex.nom)"
-                    ></video>
+                      [src]="getVideoUrl(ex.nom)">
+                    </video>
                   </ion-label>
                 </ion-item>
               }
             </ion-list>
           </div>
-        </ion-slide>
+        </swiper-slide>
       }
-    </ion-slides>
+
+    </swiper-container>
 
     <ion-footer class="ion-padding">
       @if (!timerStarted) {
@@ -52,7 +68,9 @@
         </ion-button>
       }
     </ion-footer>
+
   } @else {
     <div class="ion-padding">Chargement...</div>
   }
+
 </ion-content>

@@ -110,7 +110,7 @@ export class AuthService {
         await setDoc(userRef, { uid: user.uid, role: 'user', anonymous: true }, { merge: true });
         this.roleSubject.next('user');
       }
-  
+      console.log("userAnonyme", user )
       return user;
     } catch (error) {
       console.error("Erreur de connexion anonyme :", error);

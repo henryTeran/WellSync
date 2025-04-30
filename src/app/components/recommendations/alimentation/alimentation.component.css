@@ -1,0 +1,38 @@
+.logo-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin: 10px auto;
+    display: block;
+  }
+  
+  h2 {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    color: #226688;
+  }
+  
+  ul {
+    padding-left: 20px;
+    margin: 5px 0;
+  }
+  
+  .dots {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+  }
+  
+  .dots span {
+    width: 8px;
+    height: 8px;
+    margin: 0 4px;
+    border-radius: 50%;
+    background-color: #ccc;
+    cursor: pointer;
+  }
+  
+  .dots span.active {
+    background-color: #0074cc;
+  }
+  
