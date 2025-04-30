@@ -1,52 +1,54 @@
-<ion-content class="ion-padding">
-  <div class="register-wrapper">
+<ion-content class="ion-padding login-page">
+  <div class="login-wrapper">
+    <ion-card class="login-card">
+      <div class="logo-container">
+        <img src="assets/icons/my-logo-96x96.png" alt="Logo WellSync" />
+      </div>
 
-    <ion-card>
-      <ion-card-header>
-        <ion-card-title class="ion-text-center">Inscription</ion-card-title>
-      </ion-card-header>
-      
+      <h2 class="login-title">Bienvenue</h2>
+      <p class="login-subtitle">Inscris-toi et confie-nous ton bien-être</p>
+
       <ion-card-content>
         <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-          
+
           <!-- Email -->
           <ion-item>
             <ion-label position="floating">Email</ion-label>
-            <ion-input type="email" formControlName="email" required></ion-input>
+            <ion-input type="email" formControlName="email" required [class.invalid]="registerForm.get('email')?.invalid && registerForm.get('email')?.touched"></ion-input>
           </ion-item>
           <ion-text color="danger" *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid">
-          <p class="ion-padding-start">Email invalide</p>
-        </ion-text>
+            <p class="error-text">Email invalide</p>
+          </ion-text>
 
-        <!-- Mot de passe -->
-        <ion-item>
-          <ion-label position="floating">Mot de passe</ion-label>
-          <ion-input type="password" formControlName="password" required></ion-input>
-        </ion-item>
-        <ion-text color="danger" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
-          <p class="ion-padding-start">Mot de passe trop court</p>
-        </ion-text>
+          <!-- Mot de passe -->
+          <ion-item>
+            <ion-label position="floating">Mot de passe</ion-label>
+            <ion-input type="password" formControlName="password" required [class.invalid]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"></ion-input>
+          </ion-item>
+          <ion-text color="danger" *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid">
+            <p class="error-text">Mot de passe trop court</p>
+          </ion-text>
 
-        <!-- Rôle -->
-        <ion-item>
-          <ion-label>Rôle</ion-label>
-          <ion-select formControlName="role" interface="popover">
-            <ion-select-option value="user">Utilisateur</ion-select-option>
-            <ion-select-option value="admin">Admin</ion-select-option>
-          </ion-select>
-        </ion-item>
+          <!-- Rôle
+          <ion-item>
+            <ion-label>Rôle</ion-label>
+            <ion-select formControlName="role" interface="popover">
+              <ion-select-option value="user">Utilisateur</ion-select-option>
+              <ion-select-option value="admin">Admin</ion-select-option>
+            </ion-select>
+          </ion-item> -->
 
-        <!-- Bouton -->
-        <ion-button expand="block" type="submit" [disabled]="!registerForm.valid" class="ion-margin-top">
-          S'INSCRIRE
-        </ion-button>
+          <!-- Bouton -->
+          <ion-button expand="block" type="submit" [disabled]="!registerForm.valid" class="submit-btn">
+            S'inscrire
+          </ion-button>
 
-        <!-- Erreur globale -->
-        <ion-text color="danger" *ngIf="errorMessage">
-          <p class="ion-text-center">{{ errorMessage }}</p>
-        </ion-text>
-      </form>
-    </ion-card-content>
-  </ion-card>
-</div>
+          <!-- Erreur globale -->
+          <ion-text color="danger" *ngIf="errorMessage">
+            <p class="ion-text-center ion-margin-top">{{ errorMessage }}</p>
+          </ion-text>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

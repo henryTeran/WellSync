@@ -1,0 +1,169 @@
+:host {
+    display: block;
+    height: 100%;
+    background: var(--ion-color-light);
+  }
+  
+  /* Content padding */
+  ion-content {
+    --padding-bottom: 80px;
+    height: 100%;
+  }
+  
+  swiper-container {
+    display: block;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    padding: 0;
+  }
+  
+  swiper-slide {
+    height: 100%;
+    overflow-y: auto;
+    padding: 16px 2px 120px; /* espace bas pour éviter le débordement sous la tab-bar */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Title of each day */
+  .jour-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #226688;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 0px;
+    }
+  
+  /* Card style for repas */
+  ion-list {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    padding: 16px;
+  }
+  
+  /* List items */
+  ion-item {
+    --background: transparent;
+    --inner-padding-end: 0;
+    --padding-start: 0;
+    --min-height: 48px;
+  }
+  
+  ion-label {
+    font-size: 14px;
+  }
+  
+  ion-label h3 {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  
+  /* Ingrédients list */
+  ul {
+    padding-left: 20px;
+    margin: 8px 0;
+  }
+  
+  li {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+/* Footer boutons */
+.footer-buttons {
+    position: sticky; /* Utilisez sticky pour qu'ils restent visibles en bas */
+    bottom: 3%;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    z-index: 10; /* Assurez-vous qu'ils sont au-dessus des autres éléments */
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1); /* Ajoutez une ombre pour les démarquer */
+  }
+  
+  /* Style bouton modernisé */
+  .footer-buttons ion-button {
+    flex: 1;
+    max-width: 220px;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 12px;
+    height: 48px;
+  }
+
+  .export-button {
+    --background: var(--ion-color-primary);      /* fond transparent */
+    --color: black;         /* couleur du texte + icône */
+    --border-radius: 12px;
+    --box-shadow: none;
+    font-weight: bold;
+  }
+
+  .export-toolbar{
+    --background: transparent; 
+  }
+
+  /* Hide scrollbar if needed */
+  ion-list::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  ion-list::-webkit-scrollbar-thumb {
+    background: var(--ion-color-medium);
+    border-radius: 4px;
+  }
+  
+  ion-list::-webkit-scrollbar-thumb:hover {
+    background: var(--ion-color-dark);
+  }
+  
+  /* Responsive spacing */
+  @media (max-width: 480px) {
+    .pagination-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .pagination-buttons ion-button {
+      max-width: 100%;
+    }
+  }
+
+  /* Fond dégradé dynamique */
+.background-slide-1 { --background: linear-gradient(to top, #c8ffe3 0%, #f6f9fc 90%);}
+.background-slide-2 { --background: linear-gradient(to top, #e0f7fa, #b2ebf2); }
+.background-slide-3 { --background: linear-gradient(to top, #fce4ec, #f8bbd0); }
+.background-slide-4 { --background: linear-gradient(to top, #ede7f6, #d1c4e9); }
+.background-slide-5 { --background: linear-gradient(to top, #fff3e0, #ffe0b2); }
+.background-slide-6 { --background: linear-gradient(to top, #f1f8e9, #e8f5e9); }
+.background-slide-7 { --background: linear-gradient(to top, #e3f2fd, #bbdefb); }
+.background-slide-8 { --background: linear-gradient(to top, #f9fbe7, #dcedc8); }
+.background-slide-9 { --background: linear-gradient(to top, #fbe9e7, #ffccbc); }
+.background-slide-10 { --background: linear-gradient(to top, #ede7f6, #d1c4e9); }
+.background-slide-11 { --background: linear-gradient(to top, #e8f5e9, #c8e6c9); }
+.background-slide-12 { --background: linear-gradient(to top, #fff3e0, #ffe0b2); }
+
+@media (max-height: 800px) {
+  swiper-slide {
+    max-height: calc(80vh - 140px);
+  }
+
+  .footer-buttons {
+    padding: 12px;
+  }
+
+  .footer-buttons ion-button {
+    font-size: 14px;
+    height: 42px;
+  }
+}

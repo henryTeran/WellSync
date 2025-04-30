@@ -1,17 +1,23 @@
 import { inject } from '@angular/core';
-import { Auth } from '@angular/fire/auth';
+import { Auth, signInAnonymously } from '@angular/fire/auth';
 import { CanActivateFn, Router } from '@angular/router';
 
 export const authAnonymousGuard: CanActivateFn = async () => {
   const auth = inject(Auth);
   const router = inject(Router);
 
-  const user = auth.currentUser;
+  let user = auth.currentUser;
 
-  if (user && !user.isAnonymous) {
-    return true;
-  } else {
-    await router.navigate(['/register']);
-    return false;
+  if (!user) {
+    try {
+      const cred = await signInAnonymously(auth);
+      user = cred.user;
+    } catch (error) {
+      console.error("Erreur lors de la création du compte anonyme :", error);
+      await router.navigate(['/register']);
+      return false;
+    }
   }
+
+  return true;
 };

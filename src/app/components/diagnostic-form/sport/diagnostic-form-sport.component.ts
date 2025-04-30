@@ -1,12 +1,14 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
 import { OpenAiService } from '../../../core/services/openia.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Recommendation } from '../../../core/interfaces';
 import { firstValueFrom } from 'rxjs';
-import { IonicModule } from '@ionic/angular';
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCheckbox, IonContent, IonDatetime, IonHeader, IonInput, IonItem, IonLabel, IonProgressBar, IonRadio, IonRadioGroup, IonTextarea, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline } from 'ionicons/icons';
+import { Swiper } from 'swiper';
 
 @Component({
   selector: 'app-diagnostic-form-sport',
@@ -29,14 +31,15 @@ import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCheckbox, IonCont
     IonRadioGroup,
     IonTextarea,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    RouterLink
   ],
   templateUrl: './diagnostic-form-sport.component.html',
   styleUrls: ['./diagnostic-form-sport.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DiagnosticFormSportComponent implements OnInit {
-  @ViewChild('swiper', { static: true }) swiperRef: any; 
+  @ViewChild('swiper', { static: true }) swiperRef!: ElementRef; 
   form: FormGroup;
   userId: string | null = null;
   isLoading = false;
@@ -89,6 +92,7 @@ export class DiagnosticFormSportComponent implements OnInit {
     private openAiService: OpenAiService,
     private router: Router
   ) {
+    addIcons({ arrowBackOutline });
     this.form = this.fb.group({
       poids: ['', Validators.required],
       taille: ['', Validators.required],
@@ -131,17 +135,21 @@ export class DiagnosticFormSportComponent implements OnInit {
   }
 
   async nextSlide() {
-    const swiperContainer = document.querySelector('swiper-container') as any;
-    await swiperContainer.swiper.slideNext();
-    this.currentSlide++;
-    this.updateProgress();
+    const swiper = this.swiperRef.nativeElement.swiper as Swiper;
+    if (swiper && swiper.slideNext) {
+      await swiper.slideNext();
+      this.currentSlide++;
+      this.updateProgress();
+    }
   }
 
   async prevSlide() {
-    const swiperContainer = document.querySelector('swiper-container') as any;
-    await swiperContainer.swiper.slidePrev();
-    this.currentSlide--;
-    this.updateProgress();
+    const swiper = this.swiperRef.nativeElement.swiper as Swiper;
+    if (swiper && swiper.slidePrev) {
+      await swiper.slidePrev();
+      this.currentSlide--;
+      this.updateProgress();
+    }
   }
 
   updateProgress() {
@@ -174,7 +182,9 @@ export class DiagnosticFormSportComponent implements OnInit {
         this.planifierNotification(rappelHoraire, 'sport');
       }
 
-      this.router.navigate(['/sport']);
+      this.router.navigate(['app/recommendations/sport'], {
+        state: { recommendation }
+      });
     } catch (err) {
       console.error('Erreur lors de la génération de la recommandation sport :', err);
       alert("Erreur lors de l’analyse IA. Veuillez réessayer.");

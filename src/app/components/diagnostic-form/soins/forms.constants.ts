@@ -69,7 +69,7 @@ export const FACIAL_FORM = [
       label: "Quelles zones souhaitez-vous traiter ?",
       type: "checkbox",
       controlName: "zonesCorps",
-      options: ["Ventre", "Cuisses", "Hanches", "Fessiers", "Bras"]
+      options: ["Ventre", "Cuisses", "Hanches", "Fessiers", "Bras", "Dos", "Haut du corps"]
     },
     {
       label: "Quel est votre objectif principal ?",

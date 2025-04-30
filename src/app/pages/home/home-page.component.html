@@ -1,5 +1,13 @@
 <ion-content class="ion-padding">
   <div class="content-scroll-wrapper">
+    @if (authService.user$ | async; as user) {
+      @if (user.isAnonymous) {
+        <div class="test-mode-badge">
+          <ion-icon name="flask-outline" slot="start"></ion-icon>
+          <span>Mode test actif</span>
+        </div>
+      }
+    }
     <div class="banner">
       <h1>🌿 Bienvenue sur WellSync</h1>
       <p>Votre allié bien-être, intelligent et personnalisé.</p>
@@ -53,8 +61,8 @@
       </swiper-container>
     </div>
 
-    <ion-button expand="block" color="primary" (click)="commencer()" [disabled]="isLoading">
+    <!-- <ion-button expand="block" color="primary" (click)="commencer()" [disabled]="isLoading">
       {{ isLoading ? 'Connexion...' : 'Commencer sans compte' }}
-    </ion-button>
+    </ion-button> -->
   </div>
 </ion-content>

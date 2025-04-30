@@ -3,14 +3,28 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonInput, IonItem, IonLabel, IonSelect, IonSelectOption, IonText } from '@ionic/angular/standalone';
 
+const elementsUI = [
+  IonContent,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonItem, 
+  IonLabel,
+  IonInput,
+  IonText,
+  IonSelect, 
+  IonSelectOption,
+  IonButton,
+  IonCardSubtitle
+];
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, CommonModule, IonicModule], //  Ajout de ReactiveFormsModule
+  imports: [ReactiveFormsModule, CommonModule, ...elementsUI], //  Ajout de ReactiveFormsModule
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  styleUrl: './register.component.css'
 })
 export class RegisterComponent {
   registerForm: FormGroup;
@@ -34,12 +48,12 @@ export class RegisterComponent {
           //  Cas 1 : conversion depuis compte anonyme
           const convertedUser = await this.authService.convertirEnCompte(email, password, role);
           this.errorMessage = null;
-          this.router.navigate([`/app/dashboard/${convertedUser?.uid}`]);
+          this.router.navigate([`/app/dashboard`]);
         } else {
           //  Cas 2 : inscription classique
           const newUser = await this.authService.register(email, password, role);
           this.errorMessage = null;
-          this.router.navigate([`/app/dashboard/${newUser?.uid}`]);
+          this.router.navigate([`/app/dashboard`]);
         }
   
       } catch (error: any) {

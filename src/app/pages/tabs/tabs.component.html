@@ -1,33 +1,27 @@
 <ion-tabs>
 
-  @if (user$ | async; as user) {
-      @if (user.isAnonymous) {
-        <ion-chip color="warning">
-          <ion-icon name="flask-outline" slot="start"></ion-icon>
-          <ion-label>Mode test actif</ion-label>
-        </ion-chip>
-      }
-    <ion-tab-bar slot="bottom">
-      <ion-tab-button tab="home">
-        <ion-icon name="home-outline"></ion-icon>
-        <ion-label>Home</ion-label>
-      </ion-tab-button>
-
-      <ion-tab-button tab="emotions/live">
-        <ion-icon name="camera-outline"></ion-icon>
-        <ion-label>Emotions</ion-label>
-      </ion-tab-button>
-
-      <ion-tab-button tab="dashboard">
-        <ion-icon name="apps-outline"></ion-icon>
-        <ion-label>Dashboard</ion-label>
-      </ion-tab-button>
-  
-      <ion-tab-button tab="chat">
-        <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-        <ion-label>IA Chat</ion-label>
-      </ion-tab-button>
-
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="home">
+      <ion-icon name="home-outline"></ion-icon>
+      <ion-label>Home</ion-label>
+    </ion-tab-button>
+    
+    <ion-tab-button tab="emotions/live">
+      <ion-icon name="camera-outline"></ion-icon>
+      <ion-label>Emotions</ion-label>
+    </ion-tab-button>
+    
+    <ion-tab-button tab="dashboard">
+      <ion-icon name="apps-outline"></ion-icon>
+      <ion-label>Dashboard</ion-label>
+    </ion-tab-button>
+    
+    <ion-tab-button tab="chat">
+      <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+      <ion-label>IA Chat</ion-label>
+    </ion-tab-button>
+    
+    @if (user$ | async; as user) {
       @if (!user.email) {
         <ion-tab-button tab="login">
           <ion-icon name="log-in-outline"></ion-icon>
@@ -39,12 +33,7 @@
           <ion-label>Log-out</ion-label>
         </ion-tab-button>
       }
+    } 
     </ion-tab-bar>
-  } @else {
-    <ion-content class="ion-padding">
-      <ion-spinner name="crescent"></ion-spinner>
-      <p class="ion-text-center">Chargement...</p>
-    </ion-content>
-  }
 
 </ion-tabs>

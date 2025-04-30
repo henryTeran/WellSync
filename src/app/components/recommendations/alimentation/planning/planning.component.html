@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button routerLink="/app/recommendations/alimentation">
+        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Planning Nutrition</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [class]="backgroundClass + ' ion-padding'" class="ion-padding">
+  <ion-toolbar class="export-toolbar">
+    <ion-button class="export-button" expand="block" (click)="exporterPDF()">
+      <ion-icon name="document-outline" slot="start"></ion-icon>
+      Exporter mon planning
+    </ion-button>
+  </ion-toolbar>
+
+  @if (recommendation?.jours?.length > 0) {
+
+    <swiper-container #swiper 
+      class="custom-swiper"
+      [slides-per-view]="1"
+      [allow-touch-move]="true"
+      [speed]="400"
+      (slidechange)="onSlideChange($event)">
+
+      @for (jour of recommendation.jours; track $index) {
+        <swiper-slide>
+          <h2 class="jour-title">{{ jour.jour }}</h2>
+
+          <ion-list>
+            @for (repas of jour.repas; track $index) {
+              <ion-item lines="none">
+                <ion-label>
+                  <h3>{{ repas.nom }}</h3>
+                  <p><strong>Ingrédients :</strong></p>
+                  <ul>
+                    @for (ing of repas.ingredients; track $index) {
+                      <li>{{ ing }}</li>
+                    }
+                  </ul>
+                  <p><strong>Préparation :</strong> {{ repas.instructions }}</p>
+                </ion-label>
+              </ion-item>
+            }
+          </ion-list>
+        </swiper-slide>
+      }
+
+    </swiper-container>
+
+    <div class="footer-buttons">
+      <ion-button color = "danger" fill="outline" (click)="prevSlide()" [disabled]="currentSlideIndex === 0">
+        Précédent
+      </ion-button>
+
+      <ion-button color="primary" fill="outline" (click)="nextSlide()" [disabled]="currentSlideIndex === recommendation.jours.length - 1">
+        Suivant
+       </ion-button>
+    </div>
+
+  } @else {
+    <ion-text color="medium">
+      <p class="ion-text-center">Aucun planning disponible.</p>
+    </ion-text>
+  }
+
+</ion-content>
+

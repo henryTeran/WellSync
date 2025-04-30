@@ -23,6 +23,7 @@
             "assets": [
               "src/assets",
                "src/firebase-messaging-sw.js",
+               "src/assets/js/Roboto-Regular-normal.js",
               {
                 "glob": "**/*",
                 "input": "public",
@@ -121,6 +122,7 @@
             "assets": [
               "src/assets",
                "src/firebase-messaging-sw.js",
+               "src/assets/js/Roboto-Regular-normal.js",
               {
                 "glob": "**/*",
                 "input": "public",

@@ -1,52 +1,104 @@
-
-import { JsonPipe } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { JsonPipe, TitleCasePipe } from '@angular/common';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
 import { EmotionDetectionService } from '../../core/services/emotion-detection.service';
+
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
+import { isPlatform, ViewDidEnter } from '@ionic/angular';
+import { OpenAiService } from '../../core/services/openia.service';
+import { IonBadge, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonSpinner } from '@ionic/angular/standalone';
+
+const elementsUI = [
+  IonContent,
+  IonSpinner,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonBadge,
+  IonButton,
+  IonCardContent
+]; 
+
 
 @Component({
   selector: 'app-emotion-live',
   standalone: true,
-  imports: [JsonPipe],
+  imports: [...elementsUI, TitleCasePipe],
   templateUrl: './emotion-live.component.html',
   styleUrl: './emotion-live.component.css'
 })
-export class EmotionLiveComponent {
-  @ViewChild('video') videoRef!: ElementRef<HTMLVideoElement>;
-  @ViewChild('canvas') canvasRef!: ElementRef<HTMLCanvasElement>;
-
-  result: any = null;
+export class EmotionLiveComponent implements ViewDidEnter{
+  image: string | undefined;
+  emotionResult: any = null;
+  recommandationResult: any = null;
   loading = false;
+  isMobile = false;
+  emotionDetected: string | null = null;
 
-  constructor(private emotionService: EmotionDetectionService) {}
+  constructor(
+    private emotionService: EmotionDetectionService,
+    private openAiService: OpenAiService
+  ) {}
 
-  ngAfterViewInit() {
-    navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
-      this.videoRef.nativeElement.srcObject = stream;
-    });
+  ionViewDidEnter() {
+    this.startEmotionCapture();
   }
 
-  captureAndDetect() {
+  async startEmotionCapture() {
+    this.isMobile = isPlatform('capacitor');
+    await this.takePictureAndAnalyze();
+  }
+
+  async takePictureAndAnalyze() {
     this.loading = true;
-
-    const canvas = this.canvasRef.nativeElement;
-    const video = this.videoRef.nativeElement;
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    const ctx = canvas.getContext('2d')!;
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-    canvas.toBlob(async (blob) => {
-      if (blob) {
-        try {
-          const file = new File([blob], 'snapshot.png', { type: 'image/png' });
-          this.result = await this.emotionService.detectEmotions(file);
-        } catch (err) {
-          console.error('Erreur de détection :', err);
-        } finally {
-          this.loading = false;
+    this.emotionDetected = null;
+    this.emotionResult = null;
+    this.recommandationResult = null;
+  
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.Uri,
+        source: CameraSource.Camera,
+      });
+  
+      if (image.webPath) {
+        this.image = image.webPath;
+  
+        const blob = await this.urlToBlob(this.image);
+        const file = new File([blob], 'photo_emotion.png', { type: 'image/png' });
+  
+        this.emotionResult = await this.emotionService.detectEmotions(file);
+  
+        const emotion = this.extractMainEmotion(this.emotionResult);
+        this.emotionDetected = emotion;
+  
+        if (emotion) {
+          // this.recommandationResult = await this.openAiService.envoyerEmotionEtRecevoirRecommandation(emotion);
+        } else {
+          console.warn("Aucune émotion principale détectée.");
         }
       }
-    }, 'image/png');
+    } catch (error) {
+      console.error('Erreur lors de l’analyse d’émotion :', error);
+    } finally {
+      this.loading = false;
+    }
+  }
+  
+
+  private async urlToBlob(webPath: string): Promise<Blob> {
+    const response = await fetch(webPath);
+    return await response.blob();
+  }
+
+  public extractMainEmotion(result: any): string | null {
+    if (result && result.emotions) {
+      const sorted = Object.entries(result.emotions as { [key: string]: number })
+        .sort(([, a], [, b]) => (b as number) - (a as number));
+  
+      return sorted.length > 0 ? sorted[0][0] : null;
+    }
+    return null;
   }
 }

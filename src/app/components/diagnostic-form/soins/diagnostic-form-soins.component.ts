@@ -1,24 +1,47 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { OpenAiService } from '../../../core/services/openia.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { Recommendation } from '../../../core/interfaces';
-import { IonicModule } from '@ionic/angular';
 import { FACIAL_FORM, MASSAGE_FORM, CORPS_FORM, ESTHETIQUE_FORM } from './forms.constants';
+import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCheckbox, IonContent, IonDatetime, IonHeader, IonItem, IonLabel, IonProgressBar, IonRadio, IonRadioGroup, IonSelect, IonSelectOption, IonSpinner, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline } from 'ionicons/icons';
+import { Swiper } from 'swiper';
 
+const elementsUI =[
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonProgressBar,
+  IonCard,
+  IonCardHeader,
+  IonCardContent,
+  IonItem,
+  IonLabel,
+  IonSelect,
+  IonSelectOption,
+  IonRadioGroup,
+  IonRadio,
+  IonCheckbox,
+  IonDatetime,
+  IonButton,
+  IonSpinner
+];
 @Component({
   selector: 'app-diagnostic-form-soins',
-  imports: [ReactiveFormsModule, IonicModule],
+  imports: [ReactiveFormsModule, ...elementsUI, RouterLink],
   templateUrl: './diagnostic-form-soins.component.html',
   styleUrl: './diagnostic-form-soins.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class DiagnosticFormSoinsComponent implements OnInit {
-  @ViewChild('swiper', { static: true }) swiperRef: any;
+  @ViewChild('swiper', { static: true }) swiperRef!: ElementRef; 
   form: FormGroup;
-  currentStep = 0;
+  currentSlide = 0;
   steps: any[] = [];
   typeSoin: string = '';
   userId: string | null = null;
@@ -32,6 +55,7 @@ export class DiagnosticFormSoinsComponent implements OnInit {
     private _authService: AuthService,
     private _router: Router
   ) {
+    addIcons({ arrowBackOutline });
     this.form = new FormGroup({
       typeSoin: new FormControl('', Validators.required),
       rappelHoraire: new FormControl('') // Ajout du champ pour les rappels
@@ -90,21 +114,25 @@ export class DiagnosticFormSoinsComponent implements OnInit {
   }
 
   async nextStep() {
-    const swiperContainer = document.querySelector('swiper-container') as any;
-    await swiperContainer.swiper.slideNext();
-    this.currentStep++;
-    this.updateProgress();
+    const swiper = this.swiperRef.nativeElement.swiper as Swiper;
+    if (swiper && swiper.slideNext) {
+      await swiper.slideNext();
+      this.currentSlide++;
+      this.updateProgress();
+    }
   }
   
   async prevStep() {
-    const swiperContainer = document.querySelector('swiper-container') as any;
-    await swiperContainer.swiper.slidePrev();
-    this.currentStep--;
-    this.updateProgress();
+    const swiper = this.swiperRef.nativeElement.swiper as Swiper;
+    if (swiper && swiper.slidePrev) {
+      await swiper.slidePrev();
+      this.currentSlide--;
+      this.updateProgress();
+    }
   }
   
   updateProgress() {
-    this.progress = (this.currentStep + 1) / this.totalSteps;
+    this.progress = (this.currentSlide + 1) / this.totalSteps;
   }
 
   async onSubmit() {
@@ -151,16 +179,16 @@ export class DiagnosticFormSoinsComponent implements OnInit {
   }
 
   isStepIncomplete(): boolean {
-    if (this.currentStep === 0) {
+    if (this.currentSlide === 0) {
       return this.form.get('typeSoin')?.invalid || false;
     } else {
-      const step = this.steps[this.currentStep - 1];
+      const step = this.steps[this.currentSlide - 1];
       const control = this.form.get(step.controlName);
       return control?.invalid || false;
     }
   }
   get backgroundClass(): string {
-    return `background-slide-${this.currentStep + 1}`;
+    return `background-slide-${this.currentSlide + 1}`;
   }
 
 }

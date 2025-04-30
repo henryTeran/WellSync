@@ -1,47 +1,77 @@
-<ion-content class="ion-padding">
-  <ion-header>
+  <ion-header class="custom-header">
     <ion-toolbar color="primary">
-      <ion-title>Choisissez un service de bien-être</ion-title>
+      <ion-buttons slot="start">
+        <ion-button routerLink="/app/dashboard" fill="clear">
+          <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-title>Choisissez un service ✨</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <ion-grid class="ion-padding">
-    <ion-row>
-      <ion-col size="12" size-md="6">
+  <ion-content class="ion-padding content-bg">
+    <div class="swiper-wrapper-container">
+      <swiper-container
+      class="custom-swiper"
+      [slides-per-view]="1"
+      [pagination]="true"
+      [space-between]="40"
+      [centered-slides]="true"
+      [loop]="false"
+      effect="slide"
+      >
+         <!-- Slide Nutrition -->
+      <swiper-slide>
         <ion-card>
+          <img src="assets/diag-nutrition.png" alt="Nutrition" class="recommendation-img" />
           <ion-card-header>
             <ion-card-title>🍽️ Nutrition personnalisée</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <p>Recevez un plat adapté à vos besoins bien-être.</p>
-            <ion-button expand="block" (click)="naviguerVers('alimentation')">Commencer le diagnostic</ion-button>
           </ion-card-content>
-        </ion-card>
-      </ion-col>
+          <div class="button-container">
+            <ion-button expand="block" (click)="naviguerVers('alimentation')">
+              Commencer le diagnostic
+            </ion-button>
 
-      <ion-col size="12" size-md="6">
+          </div>
+        </ion-card>
+      </swiper-slide>
+
+      <swiper-slide>
         <ion-card>
+          <img src="assets/diag-sport.png" alt="Nutrition" class="recommendation-img" />
           <ion-card-header>
             <ion-card-title>🏋️ Routine sportive ciblée</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <p>Obtenez une routine d'entraînement adaptée à votre forme.</p>
-            <ion-button expand="block" (click)="naviguerVers('sport')">Commencer le diagnostic</ion-button>
           </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-      <ion-col size="12" size-md="6">
+          <div class="button-container">
+            <ion-button expand="block" (click)="naviguerVers('sport')">Commencer le diagnostic</ion-button>
+          </div>
+          </ion-card>
+      </swiper-slide>
+      <swiper-slide>
         <ion-card>
+          <img src="assets/diag-soins.jpg" alt="Nutrition" class="recommendation-img" />
           <ion-card-header>
             <ion-card-title>🧖‍♀️ Soin esthétique & relaxant</ion-card-title>
           </ion-card-header>
           <ion-card-content>
             <p>Bénéficiez d'un soin sur mesure selon votre peau ou votre tension.</p>
-            <ion-button expand="block" (click)="naviguerVers('soins')">Commencer le diagnostic</ion-button>
           </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-</ion-content>
+          <div class="button-container">
+            <ion-button expand="block" (click)="naviguerVers('soins')">Commencer le diagnostic</ion-button>
+          </div>
+          </ion-card>
+      </swiper-slide>
+
+
+  
+      </swiper-container>
+
+    </div>
+
+  </ion-content>

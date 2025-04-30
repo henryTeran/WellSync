@@ -1,0 +1,126 @@
+:host {
+    display: block;
+    height: 100%;
+    background-color: var(--ion-color-light); 
+    position: relative;
+  }
+  
+  ion-content {
+    --background: linear-gradient(to top, #c8ffe3 0%, #f6f9fc 90%) ;
+  }
+  
+  ion-header {
+    --background: transparent;
+    box-shadow: none;
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0;
+  }
+  
+  ion-toolbar {
+    --background: transparent;
+    --ion-color-base: transparent;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-bottom: none;
+  }
+  
+  ion-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center; 
+    justify-content: center;
+  }
+  
+  /* Swiper */
+  swiper-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  swiper-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 24px 16px;
+  }
+  
+  ion-card {
+    width: 100%;
+    max-width: 420px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    padding-bottom: 20px;
+    text-align: center;
+    margin: 0 auto;
+    height: 15%;
+  }
+  
+  ion-card img {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    width: 100%;
+    object-fit: cover;
+    height: 300px;
+  }
+  
+  .card-title {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #226688;
+    margin-top: 12px;
+  }
+  
+  .card-description {
+    color: #555;
+    font-size: 0.95rem;
+    margin-top: 10px;
+    padding: 0 12px;
+  }
+  
+  /* Bouton */
+  ion-button {
+    margin: 16px auto 8px auto;
+    max-width: 220px;
+    --border-radius: 12px;
+    --padding-top: 12px;
+    --padding-bottom: 12px;
+    font-weight: bold;
+  }
+  
+  /* Pagination points */
+  swiper-container::part(pagination) {
+    margin-top: 8px;
+    position: relative;
+    bottom: -12px;
+  }
+  
+  .swiper-pagination-bullet {
+    background: var(--ion-color-medium);
+    opacity: 1;
+  }
+  
+  .swiper-pagination-bullet-active {
+    background: var(--ion-color-primary);
+  }
+  
+  .new-diacnostic {
+    margin: 32px auto 40px auto;
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    justify-content: center;
+  
+  }
+  /* Responsive */
+  @media screen and (max-height: 700px) {
+    swiper-container {
+      height: auto;
+      margin-top: 30px;
+    }
+  }
+  

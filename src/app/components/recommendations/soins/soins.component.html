@@ -1,24 +1,33 @@
-<ion-content class="ion-padding">
-  <ion-header>
-    <ion-toolbar color="primary">
-      <ion-title>🧖‍♀️ Recommandation Bien-Être</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button routerLink="/app/dashboard">
+        <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-icon name="fitness-outline"></ion-icon> Bien-Être
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
 
+<ion-content class="ion-padding"> 
   @if (isLoading) {
     <ion-spinner name="crescent" class="ion-margin-top"></ion-spinner>
     <p class="ion-text-center">Chargement de votre soin personnalisé...</p>
   } @else {
     @if (recommendation) {
       <ion-card>
+        <img src="assets/soins-cover.jpg" alt="soin" style="width: 100%; border-radius: 20px 20px 0 0;" />
         <ion-card-header>
           <ion-card-title>{{ recommendation.titre }}</ion-card-title>
-          <ion-card-subtitle>{{ recommendation.description }}</ion-card-subtitle>
+          <!-- <ion-card-subtitle>{{ recommendation.description }}</ion-card-subtitle> -->
         </ion-card-header>
 
         <ion-card-content>
           <ion-item lines="none">
             <ion-label class="ion-text-wrap">
+              <p class="description">{{ recommendation?.description }}</p>
               <h4>✨ <strong>Prestation proposée</strong></h4>
               <p><strong>Nom :</strong> {{ recommendation.prestation.nom }}</p>
               <p><strong>Durée :</strong> {{ recommendation.prestation.duree }}</p>
@@ -39,6 +48,9 @@
             </ion-label>
           </ion-item>
         </ion-card-content>
+        <ion-button expand="block" (click)="goTodetails()">
+          VOIR LE PROTOCOLE DÉTAILLÉ
+        </ion-button>
       </ion-card>
     } @else {
       <ion-card>

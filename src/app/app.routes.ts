@@ -1,16 +1,13 @@
 import { Routes } from '@angular/router';
-import { HomePageComponent } from './pages/home/home-page.component';
-import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { SplashScreenComponent } from './pages/splash-screen/splash-screen.component';
-import { TabsComponent } from './pages/tabs/tabs.component';
-import { ChatbotComponent } from './components/chatbot/chatbot.component';
 
 // Guards
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
+import { provideIonicAngular } from '@ionic/angular/standalone';
+import { authAnonymousGuard } from './core/guards/auth-anonymous.guard';
 
 export const routes: Routes = [
   {
@@ -21,6 +18,7 @@ export const routes: Routes = [
   {
     path: 'app',
     loadComponent: () => import('./pages/tabs/tabs.component').then(m => m.TabsComponent),
+    canActivate: [authAnonymousGuard],
     children: [
       
       { path: 'home', loadComponent: () => import('./pages/home/home-page.component').then(m => m.HomePageComponent) },
@@ -70,13 +68,33 @@ export const routes: Routes = [
           },
           {
             path: 'alimentation',
-            loadComponent: () => import('./components/recommendations/alimentation/alimentation.component').then(m => m.AlimentationComponent),
-            canActivate: [authGuard]
+            children: [
+              {
+                path: '',
+                loadComponent: () => import('./components/recommendations/alimentation/alimentation.component').then(m => m.AlimentationComponent),
+                canActivate: [authGuard]
+              },
+              {
+                path: 'planning',
+                loadComponent: () => import('./components/recommendations/alimentation/planning/planning.component').then(m => m.PlanningComponent),
+                canActivate: [authGuard]
+              }
+            ]
           },
           {
             path: 'soins',
-            loadComponent: () => import('./components/recommendations/soins/soins.component').then(m => m.SoinsComponent),
-            canActivate: [authGuard]
+            children: [
+              {
+                path: '',
+                loadComponent: () => import('./components/recommendations/soins/soins.component').then(m => m.SoinsComponent),
+                canActivate: [authGuard]
+              },
+              {
+                path: 'details',
+                loadComponent: () => import('./components/recommendations/soins/details/details.component').then(m => m.DetailsComponent),
+                canActivate: [authGuard]
+              }
+            ]
           },
         ]
       },

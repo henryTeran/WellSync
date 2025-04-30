@@ -5,12 +5,27 @@ import { AuthService } from '../../../core/services/auth.service';
 import { SportRecommendation } from '../../../core/interfaces';
 import { OpenAiService } from '../../../core/services/openia.service';
 import { firstValueFrom } from 'rxjs';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { IonButton, IonContent, IonFooter, IonHeader, IonItem, IonLabel, IonList, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { Router, RouterLink } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline, fitnessOutline } from 'ionicons/icons';
+
+const elementsUI = [
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonContent,
+  IonList,
+  IonItem,
+  IonLabel,
+  IonFooter,
+  IonButton
+];
 
 @Component({
   selector: 'app-sport',
   standalone: true,
-  imports: [CommonModule, IonicModule],
+  imports: [CommonModule, ...elementsUI, RouterLink],
   templateUrl: './sport.component.html',
   styleUrl: './sport.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
@@ -20,31 +35,38 @@ export class SportComponent implements OnInit {
   recommendation: SportRecommendation | null = null;
   isLoading = true;
 
-  // Carrousel & timer
-  currentDayIndex: number = 0;
-  currentExerciseIndex: number = 0;
-  isRoutineStarted: boolean = false;
-  isTimerRunning: boolean = false;
-  remainingTime: number = 30; // 30 secondes par exercice par défaut
-  timerInterval: any;
-
+  currentDayIndex = 0;
   timerStarted = false;
   timerDisplay = '00:00';
   intervalId: any = null;
 
-  slideOpts = {
-    initialSlide: 0,
-    speed: 400,
-    slidesPerView: 1,
-  };
-
   constructor(
     private firestore: Firestore,
     private _authService: AuthService,
-    private _openAiService: OpenAiService
-  ) {}
+    private _openAiService: OpenAiService,
+    private router: Router
+  ) {
+    addIcons({arrowBackOutline, fitnessOutline});
+  }
+  async ngOnInit() {
+    // Vérifie si une nouvelle reco a été transmise via le state (après un diagnostic)
+    const navigation = this.router.getCurrentNavigation();
+    const stateReco = navigation?.extras?.state?.['recommendation'];
 
-  async ngOnInit(): Promise<void> {
+    if (stateReco) {
+      this.recommendation = stateReco;
+      this.isLoading = false;
+    } else {
+      // Sinon, charge la dernière depuis Firebase
+      const user = await firstValueFrom(this._authService.user$);
+      if (user?.uid) {
+        this.userId = user.uid;
+        await this.loadRecommendation();
+      }
+    }
+  }
+
+  async aionViewWillEnter() {
     const user = await firstValueFrom(this._authService.user$);
     if (user?.uid) {
       this.userId = user.uid;
@@ -63,51 +85,6 @@ export class SportComponent implements OnInit {
     }
   }
 
-  commencerRoutine() {
-    this.isRoutineStarted = true;
-    this.currentDayIndex = 0;
-    this.currentExerciseIndex = 0;
-    this.startTimer();
-  }
-
-  startTimer() {
-    this.isTimerRunning = true;
-    this.remainingTime = 30;
-
-    this.timerInterval = setInterval(() => {
-      this.remainingTime--;
-
-      if (this.remainingTime <= 0) {
-        this.nextExercise();
-      }
-    }, 1000);
-  }
-
-  pauseTimer() {
-    this.isTimerRunning = false;
-    clearInterval(this.timerInterval);
-  }
-
-  nextExercise() {
-    if (!this.recommendation) return;
-
-    const currentDay = this.recommendation.routine.jours[this.currentDayIndex];
-
-    if (this.currentExerciseIndex < currentDay.exercices.length - 1) {
-      this.currentExerciseIndex++;
-    } else {
-      if (this.currentDayIndex < this.recommendation.routine.jours.length - 1) {
-        this.currentDayIndex++;
-        this.currentExerciseIndex = 0;
-      } else {
-        this.stopRoutine();
-        return;
-      }
-    }
-
-    this.remainingTime = 30;
-  }
-
   startRoutine() {
     this.timerStarted = true;
     let totalSeconds = 0;
@@ -118,24 +95,16 @@ export class SportComponent implements OnInit {
       this.timerDisplay = `${minutes}:${seconds}`;
     }, 1000);
   }
-  
 
   stopRoutine() {
-    this.pauseTimer();
-    this.isRoutineStarted = false;
-    this.currentDayIndex = 0;
-    this.currentExerciseIndex = 0;
-  }
-
-  get currentExercise() {
-    if (!this.recommendation) return null;
-    return this.recommendation.routine.jours[this.currentDayIndex].exercices[this.currentExerciseIndex];
+    clearInterval(this.intervalId);
+    this.timerStarted = false;
+    this.timerDisplay = '00:00';
   }
 
   removeAccents(str: string): string {
     return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
-  
 
   getVideoUrl(exName: string): string {
     if (!exName) return '';
