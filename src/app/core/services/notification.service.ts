@@ -20,7 +20,7 @@ export class NotificationService {
     private firestore: Firestore,
     private authService: AuthService) {}
 
-  async requestPermission() {
+  async requestPermission(userId: string) {
     const permission = await Notification.requestPermission();
 
     if (permission === 'granted') {
@@ -28,13 +28,11 @@ export class NotificationService {
         vapidKey: environment.firebase.vapidKey
       });
       console.log('FCM Token :', token);
-      const user = await firstValueFrom(this.authService.user$); // Convert observable to promise
-      if (user && user.uid) {
-        const ref = doc(this.firestore, `users/${user.uid}`);
-        await setDoc(ref, { fcmToken: token }, { merge: true });
-        console.log('✅ Token FCM enregistré dans Firestore');
+      if (token) {
+        const userRef = doc(this.firestore, `users/${userId}`);
+        await setDoc(userRef, { fcmToken: token }, { merge: true });
+        console.log(` Token FCM enregistré dans Firestore pour le user: ${userId} `);
       }
-
       return token;
     } else {
       console.error('Notification permission not granted.');
@@ -49,7 +47,7 @@ export class NotificationService {
   }
 
   envoyerNotificationParTheme(token: string, theme: string) {
-    const baseUrl = environment.notificationBaseUrl || 'https://172.20.10.9:5000';
+    const baseUrl = environment.notificationBaseUrl;
 
     const payload = {
       token: token,

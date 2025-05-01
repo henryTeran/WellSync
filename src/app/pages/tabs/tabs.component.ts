@@ -1,22 +1,19 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { firstValueFrom, Observable } from 'rxjs';
 import { User } from 'firebase/auth';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { IonChip, IonContent, IonIcon, IonLabel, IonSpinner, IonTabBar, IonTabButton, IonTabs, ToastController } from '@ionic/angular/standalone';
+import { IonIcon, IonLabel, IonTabBar, IonTabButton, IonTabs } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { appsOutline, cameraOutline, chatbubbleEllipsesOutline, flaskOutline, homeOutline, logInOutline, logOutOutline } from 'ionicons/icons';
 
 const elementsUi = [
   IonTabs,
-  IonChip,
   IonIcon,
   IonLabel,
   IonTabButton,
-  IonTabBar,
-  IonContent,
-  IonSpinner
+  IonTabBar
 ];
 @Component({
   selector: 'app-tabs',
@@ -27,12 +24,11 @@ const elementsUi = [
 })
 export class TabsComponent  implements OnInit {
   user$: Observable <User | null>; 
-  private toastShown = false;
+  
 
   constructor(
     private _authService: AuthService, 
-    private _router: Router,
-    private toastCtrl: ToastController) {
+    private _router: Router) {
     addIcons({ chatbubbleEllipsesOutline, logInOutline, homeOutline, logOutOutline, appsOutline, cameraOutline, flaskOutline });
     this.user$ = _authService.user$; 
     console.log(firstValueFrom(this.user$))
@@ -45,7 +41,7 @@ export class TabsComponent  implements OnInit {
   async logout() {
     await this._authService.logout();
     await this._authService.loginAnonyme();
-    this._router.navigate(['app/home']);
+    this._router.navigate(['/']);
   }
 
 

@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment';
 import { lastValueFrom, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Firestore } from '@angular/fire/firestore';
-import { addDoc, collection, doc, getDocs, limit, orderBy, query, setDoc, where } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, limit, orderBy, query, setDoc, where } from 'firebase/firestore';
 import { Recommendation } from '../interfaces';
 import { AuthService } from './auth.service';
 
@@ -284,7 +284,7 @@ Réponds uniquement avec un JSON strict. Pas de commentaires, pas de texte autou
   
   
   async getLastRecommendation<T>(userId: string, theme: 'sport' | 'alimentation' | 'soins'): Promise<T> {
-    const currentUser = this._authservice.currentUser;
+    const currentUser = this._authservice.currentUser ();
   
     if (!currentUser) {
       throw new Error('Utilisateur non connecté.');
@@ -325,5 +325,93 @@ Réponds uniquement avec un JSON strict. Pas de commentaires, pas de texte autou
 
   }
 
+  async envoyerEmotionEtRecevoirRecommandation(emotion: string): Promise<string> {
+    const user = this._authservice.currentUser();
+    if (!user) throw new Error("Utilisateur non connecté");
   
+    const userId = user.uid;
+  
+    // Récupération du profil utilisateur depuis Firestore
+    const profileDoc = doc(this.firestore, `users/${userId}`);
+    const profileSnap = await getDoc(profileDoc);
+    const profile = profileSnap.exists() ? profileSnap.data() : {};
+  
+    // Récupération du dernier diagnostic
+    const diagnosticSnap = await getDocs(query(
+      collection(this.firestore, 'diagnostic'),
+      where('userId', '==', userId),
+      orderBy('date', 'desc'),
+      limit(1)
+    ));
+    const lastDiagnostic = diagnosticSnap.docs[0]?.data() || {};
+  
+    // Récupération du dernier message IA (sujet, ton)
+    const messagesSnap = await getDocs(query(
+      collection(this.firestore, 'messages'),
+      where('userId', '==', userId),
+      orderBy('date', 'desc'),
+      limit(1)
+    ));
+    const lastMessage = messagesSnap.docs[0]?.data()?.['userMessage'] || "";
+  
+    // Préparation du prompt complet
+    const prompt = `
+  Tu es un assistant bien-être et psychologie.
+  L'utilisateur vient d'être analysé par reconnaissance faciale comme étant dans l'état suivant : **${emotion}**
+  
+  Voici ses données :
+  - 🎯 Profil : ${JSON.stringify(profile)}
+  - 🧩 Diagnostic : ${JSON.stringify(lastDiagnostic)}
+  - 💬 Dernier message au chatbot : "${lastMessage}"
+  
+  Analyse son état et propose une **réponse bienveillante**, adaptée à son émotion et à son objectif.
+  Pose-lui une question pertinente pour engager un dialogue psychologique utile.
+  `;
+  
+    const response = await lastValueFrom(this.sendMessageToOpenAI(prompt));
+    return response;
+  }
+  
+  saveMessageGrouped(userId: string, userMessage: string, botMessage: string, emotionTag?: string) {
+    const convoRef = doc(collection(this.firestore, `messages`)); // génère un nouvel ID
+    return setDoc(convoRef, {
+      userId,
+      date: new Date(),
+      emotionTag: emotionTag || null,
+      messages: [
+        { sender: 'user', content: userMessage },
+        { sender: 'bot', content: botMessage }
+      ]
+    });
+  }
+  
+  async getMessagesForUser(userId: string): Promise<{ sender: string; text: string }[]> {
+    const ref = collection(this.firestore, 'messages');
+    const q = query(ref, where('userId', '==', userId), orderBy('date', 'asc'));
+  
+    const snapshot = await getDocs(q);
+  
+    const allMessages: { sender: string; text: string }[] = [];
+  
+    snapshot.forEach(doc => {
+      const data = doc.data();
+  
+      // 📌 Nouveau format (tableau de messages)
+      if (Array.isArray(data['messages'])) {
+        data['messages'].forEach((msg: any) => {
+          if (msg.sender && msg.content) {
+            allMessages.push({ sender: msg.sender, text: msg.content });
+          }
+        });
+  
+      // 📌 Ancien format
+      } else if (data['userMessage'] && data['botMessage']) {
+        allMessages.push({ sender: 'user', text: data['userMessage'] });
+        allMessages.push({ sender: 'bot', text: data['botMessage'] });
+      }
+    });
+  
+    console.log(allMessages)
+    return allMessages;
+  }
 }

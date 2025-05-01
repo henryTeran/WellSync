@@ -159,7 +159,7 @@ export class DiagnosticFormSoinsComponent implements OnInit {
         'soins'
       );
       await this._openAiService.saveRecommendation(this.userId, recommendation);
-      this._router.navigate(['app/recommendations/soins']);
+      this._router.navigate(['app/recommendations/soins']); 
 
       const rappelHoraire = this.form.get('rappelHoraire')?.value;
       if (rappelHoraire) {

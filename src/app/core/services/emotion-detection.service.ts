@@ -37,7 +37,7 @@ export class EmotionDetectionService {
     });
 
     const response = await firstValueFrom(request);
-
+    console.log(response);
     return response;
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
-import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonSpinner, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, fitnessOutline } from 'ionicons/icons';
 import { SoinsRecommendation } from '../../../../core/interfaces';
@@ -9,14 +9,10 @@ const elementsUI = [
   IonContent,
   IonHeader,
   IonToolbar,
-  IonSpinner,
   IonCard,
   IonCardHeader,
   IonCardTitle,
-  IonCardSubtitle,
   IonCardContent,
-  IonItem,
-  IonLabel,
   IonIcon,
   IonTitle,
   IonButtons,

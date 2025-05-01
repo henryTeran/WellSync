@@ -12,9 +12,10 @@ export const authAnonymousGuard: CanActivateFn = async () => {
     try {
       const cred = await signInAnonymously(auth);
       user = cred.user;
+      console.log("créationGuard")
     } catch (error) {
       console.error("Erreur lors de la création du compte anonyme :", error);
-      await router.navigate(['/register']);
+      await router.navigate(['app/register']);
       return false;
     }
   }

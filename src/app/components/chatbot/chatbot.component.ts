@@ -1,14 +1,15 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, ViewChild } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { OpenAiService } from '../../core/services/openia.service';
 import { FormsModule } from '@angular/forms';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { marked } from 'marked';
-import { IonButton, IonContent } from '@ionic/angular/standalone';
+import { IonButton, IonContent, ViewWillEnter } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, sendOutline } from 'ionicons/icons';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+import { MessageTransferService } from '../../core/services/message-transfer.service';
 
 const elementsUI = [
   IonContent,
@@ -21,7 +22,7 @@ const elementsUI = [
   styleUrls: ['./chatbot.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class ChatbotComponent {
+export class ChatbotComponent implements ViewWillEnter {
   @ViewChild('bottom') bottomRef!: ElementRef;
   userMessage: string = '';
   messages: { id: number; sender: string; text: string }[] = [];
@@ -30,9 +31,47 @@ export class ChatbotComponent {
   isLoading = false;
   pendingMessageId: number | null = null;
 
-  constructor(private openAiService: OpenAiService, private authService: AuthService) {
+  constructor(
+    private openAiService: OpenAiService, 
+    private authService: AuthService,
+    private router:Router,
+    private messageTransferService: MessageTransferService) {
     addIcons({ arrowBackOutline, sendOutline });
   }
+
+  async ionViewWillEnter() {
+  
+    const user = await firstValueFrom(this.authService.user$);
+    console.log(user)
+    if (user?.uid) {
+      const history = await this.openAiService.getMessagesForUser(user.uid);
+      this.messages = history.map(msg => ({
+        id: Date.now() + Math.random(), // pour éviter les conflits
+        sender: msg.sender,
+        text: msg.text
+      }));
+      console.log(this.messages)
+    }
+    const initial = this.messageTransferService.initialMessage;
+    console.log(initial)
+    if (initial) {
+      this.addBotMessage(initial, user!.uid);
+      this.messageTransferService.initialMessage = null; // reset
+    }
+
+    this.scrollToBottom();
+  }
+
+  async addBotMessage(message:string, userUid:string){
+    this.messages.push({
+      id: Date.now(), sender: 'bot', text: message 
+    })
+    
+    console.log("sauveGroupe")
+    await this.openAiService.saveMessageGrouped(userUid, "bot", message); // message initial sans question utilisateur
+
+  }
+
 
   async sendMessage() {
     if (!this.userMessage.trim()) return;
@@ -64,7 +103,8 @@ export class ChatbotComponent {
       // Sauvegarde si connecté
       const user = await firstValueFrom(this.authService.user$);
       if (user?.uid) {
-        this.openAiService.saveMessage(user.uid, this.userMessage, response);
+        this.openAiService.saveMessageGrouped(user.uid, this.userMessage, response)
+        // this.openAiService.saveMessage(user.uid, this.userMessage, response);
       }
   
     } catch (error) {

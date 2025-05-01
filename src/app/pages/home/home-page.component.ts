@@ -2,12 +2,11 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, ViewChild } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import {  } from '@ionic/angular';
-import { IonButton, IonContent, IonHeader } from '@ionic/angular/standalone';
+import { IonContent } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 
 const elementsUi = [
   IonContent,
-  IonHeader
 ]; 
 
 @Component({

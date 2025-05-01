@@ -147,7 +147,7 @@ export class AuthService {
     }
   }
 
-  get currentUser(): User | null {
+  currentUser(): User | null {
     return this.auth.currentUser;
   }
   

@@ -4,7 +4,7 @@ import { OpenAiService } from '../../../core/services/openia.service';
 import { SoinsRecommendation } from '../../../core/interfaces';
 import { firstValueFrom } from 'rxjs';
 import { Browser } from "@capacitor/browser"
-import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonSpinner, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonHeader, IonIcon, IonItem, IonLabel, IonSpinner, IonTitle, IonToolbar } from '@ionic/angular/standalone';
 import { Router, RouterLink } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, fitnessOutline } from 'ionicons/icons';
@@ -17,7 +17,6 @@ const elementsUI = [
   IonCard,
   IonCardHeader,
   IonCardTitle,
-  IonCardSubtitle,
   IonCardContent,
   IonItem,
   IonLabel,
@@ -50,7 +49,7 @@ export class SoinsComponent {
   const user = await firstValueFrom(this._authService.user$);
     if (user?.uid) {
       this.userId = user.uid;
-      await this.loadRecommendation();
+      await this.loadRecommendation(); 
     }
   }
 
