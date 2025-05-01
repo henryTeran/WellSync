@@ -43,7 +43,7 @@ export class AlimentationComponent {
       addIcons({arrowBackOutline, nutritionOutline});
     }
 
-  async ngOnInit(): Promise<void> {
+  async ionViewWillEnter(): Promise<void> {
     const user = await firstValueFrom(this._authService.user$);
       if (user?.uid) {
         this.userId = user.uid;

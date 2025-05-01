@@ -21,8 +21,16 @@ export const routes: Routes = [
     canActivate: [authAnonymousGuard],
     children: [
       
-      { path: 'home', loadComponent: () => import('./pages/home/home-page.component').then(m => m.HomePageComponent) },
-      { path: 'chat', loadComponent: () => import('./components/chatbot/chatbot.component').then(m => m.ChatbotComponent) },
+      { 
+        path: 'home', 
+        loadComponent: () => import('./pages/home/home-page.component').then(m => m.HomePageComponent),
+        canActivate: [authGuard]
+      },
+      { 
+        path: 'chat', 
+        loadComponent: () => import('./components/chatbot/chatbot.component').then(m => m.ChatbotComponent),
+        canActivate: [authGuard] 
+      },
       { path: 'login', loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent) },
     
       { path: 'register', component: RegisterComponent },

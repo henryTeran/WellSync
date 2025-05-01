@@ -6,6 +6,12 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { isPlatform, ViewDidEnter } from '@ionic/angular';
 import { OpenAiService } from '../../core/services/openia.service';
 import { IonBadge, IonButton, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonSpinner } from '@ionic/angular/standalone';
+import { Router } from '@angular/router';
+import { addDoc, collection } from 'firebase/firestore';
+import { Firestore } from '@angular/fire/firestore';
+import { AuthService } from '../../core/services/auth.service';
+import { firstValueFrom } from 'rxjs';
+import { MessageTransferService } from '../../core/services/message-transfer.service';
 
 const elementsUI = [
   IonContent,
@@ -36,7 +42,11 @@ export class EmotionLiveComponent implements ViewDidEnter{
 
   constructor(
     private emotionService: EmotionDetectionService,
-    private openAiService: OpenAiService
+    private openAiService: OpenAiService,
+    private router: Router,
+    private firestore: Firestore,
+    private authservice: AuthService,
+    private messageTransferService: MessageTransferService
   ) {}
 
   ionViewDidEnter() {
@@ -72,10 +82,22 @@ export class EmotionLiveComponent implements ViewDidEnter{
   
         const emotion = this.extractMainEmotion(this.emotionResult);
         this.emotionDetected = emotion;
+
+        console.log("emotion", emotion);
   
         if (emotion) {
-          // this.recommandationResult = await this.openAiService.envoyerEmotionEtRecevoirRecommandation(emotion);
-        } else {
+          const user = this.authservice.currentUser();
+          if(user?.uid) {
+            await addDoc(collection(this.firestore, 'emotions'), {
+              userId: user.uid,
+              emotion: this.emotionResult.faces,
+              timestamp: new Date(),
+            });
+            this.recommandationResult = await this.openAiService.envoyerEmotionEtRecevoirRecommandation(emotion);
+            this.messageTransferService.initialMessage = this.recommandationResult
+            this.router.navigate(['/app/chat']);
+          }
+       } else {
           console.warn("Aucune émotion principale détectée.");
         }
       }
@@ -93,8 +115,9 @@ export class EmotionLiveComponent implements ViewDidEnter{
   }
 
   public extractMainEmotion(result: any): string | null {
-    if (result && result.emotions) {
-      const sorted = Object.entries(result.emotions as { [key: string]: number })
+    if (result?.faces?.length > 0 && result.faces[0].emotion) {
+      const emotionMap = result.faces[0].emotion;
+      const sorted = Object.entries(emotionMap)
         .sort(([, a], [, b]) => (b as number) - (a as number));
   
       return sorted.length > 0 ? sorted[0][0] : null;

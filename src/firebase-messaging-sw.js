@@ -28,7 +28,7 @@ messaging.onBackgroundMessage(function(payload) {
     badge: '/assets/logo-wellsync.svg',
     vibrate: [200, 100, 200],
     data: {
-      click_action: payload.data.click_action || 'https://172.20.10.9:5000/app/dashboard'
+      click_action: payload.data.click_action || 'https://wellsync-a4123.web.app/app/dashboard'
     },
     actions: [
       {

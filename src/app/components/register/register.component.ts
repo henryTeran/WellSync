@@ -3,22 +3,17 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonInput, IonItem, IonLabel, IonSelect, IonSelectOption, IonText } from '@ionic/angular/standalone';
+import { IonButton, IonCard, IonCardContent, IonContent, IonInput, IonItem, IonLabel, IonText } from '@ionic/angular/standalone';
 
 const elementsUI = [
   IonContent,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
   IonCardContent,
   IonItem, 
   IonLabel,
   IonInput,
-  IonText,
-  IonSelect, 
-  IonSelectOption,
-  IonButton,
-  IonCardSubtitle
+  IonText,   
+  IonButton
 ];
 @Component({
   selector: 'app-register',
@@ -42,7 +37,7 @@ export class RegisterComponent {
     if (this.registerForm.valid) {
       const { email, password, role } = this.registerForm.value;
       try {
-        const currentUser = this.authService.currentUser;
+        const currentUser = this.authService.currentUser();
   
         if (currentUser && currentUser.isAnonymous) {
           //  Cas 1 : conversion depuis compte anonyme

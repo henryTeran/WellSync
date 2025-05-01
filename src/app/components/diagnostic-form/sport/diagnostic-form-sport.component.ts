@@ -182,9 +182,7 @@ export class DiagnosticFormSportComponent implements OnInit {
         this.planifierNotification(rappelHoraire, 'sport');
       }
 
-      this.router.navigate(['app/recommendations/sport'], {
-        state: { recommendation }
-      });
+      this.router.navigate(['app/recommendations/sport']);
     } catch (err) {
       console.error('Erreur lors de la génération de la recommandation sport :', err);
       alert("Erreur lors de l’analyse IA. Veuillez réessayer.");

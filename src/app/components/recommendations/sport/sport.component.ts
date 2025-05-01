@@ -30,7 +30,7 @@ const elementsUI = [
   styleUrl: './sport.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class SportComponent implements OnInit {
+export class SportComponent {
   userId: string | null = null;
   recommendation: SportRecommendation | null = null;
   isLoading = true;
@@ -48,31 +48,14 @@ export class SportComponent implements OnInit {
   ) {
     addIcons({arrowBackOutline, fitnessOutline});
   }
-  async ngOnInit() {
-    // Vérifie si une nouvelle reco a été transmise via le state (après un diagnostic)
-    const navigation = this.router.getCurrentNavigation();
-    const stateReco = navigation?.extras?.state?.['recommendation'];
 
-    if (stateReco) {
-      this.recommendation = stateReco;
-      this.isLoading = false;
-    } else {
-      // Sinon, charge la dernière depuis Firebase
-      const user = await firstValueFrom(this._authService.user$);
+  async ionViewWillEnter(): Promise<void> {
+    const user = await firstValueFrom(this._authService.user$);
       if (user?.uid) {
         this.userId = user.uid;
-        await this.loadRecommendation();
+        await this.loadRecommendation(); 
       }
     }
-  }
-
-  async aionViewWillEnter() {
-    const user = await firstValueFrom(this._authService.user$);
-    if (user?.uid) {
-      this.userId = user.uid;
-      await this.loadRecommendation();
-    }
-  }
 
   async loadRecommendation() {
     try {

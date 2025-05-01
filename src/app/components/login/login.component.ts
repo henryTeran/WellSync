@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonInput, IonItem, IonLabel, IonText } from '@ionic/angular/standalone';
 
@@ -21,7 +21,7 @@ const elementsUI = [
 ];
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, CommonModule, ...elementsUI],
+  imports: [ReactiveFormsModule, CommonModule, ...elementsUI, RouterLink],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
