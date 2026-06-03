@@ -8,6 +8,7 @@ import { arrowBackOutline } from 'ionicons/icons';
 import { CommonModule } from '@angular/common';
 import { AlimentationRecommendation, SportRecommendation, SoinsRecommendation } from '../../core/interfaces';
 import { firstValueFrom, Observable, of, switchMap } from 'rxjs';
+import { NotificationService } from '../../core/services/notification.service';
 
 const elementsUI = [
   CommonModule,
@@ -40,7 +41,8 @@ export class DashboardComponent {
   constructor(
     private _authService: AuthService,
     private _openAiService: OpenAiService,
-    private _router: Router
+    private _router: Router,
+    private notificationService: NotificationService
   ) {
     addIcons({ arrowBackOutline });
 
@@ -61,5 +63,12 @@ export class DashboardComponent {
 
   naviguerVers(path: string): void {
     this._router.navigate([path]);
+  }
+
+  envoyerNotifTest() {
+    const token = 'fxzZncCqu9UyDJRjkoGV-9:APA91bE45z4ycOD9N5ecJMjItfJg69si1vG6l1J0QpdRuGNhh_D2XnLdUmiZMs_heWWPjgb24JhvR75fEEh0Us-9CyU7ZOJtEpKILeb7k18RP46UNY1s1Kw'; // récupéré depuis Firebase Messaging
+    const theme = 'soin'; // ou 'sport', 'alimentation', etc.
+
+    this.notificationService.envoyerNotificationParTheme(token, theme);
   }
 }

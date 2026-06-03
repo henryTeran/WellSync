@@ -99,74 +99,74 @@ export class OpenAiService {
     if (theme === 'sport') {
       const nbJours = this.getTrainingDays(diagnostic.frequence); // ex: 3 jours par semaine
       prompt = `
-  ${basePrompt}
-Génère un programme de sport adapté aux réponses ci-dessus, avec ${nbJours} jours d'entraînement par semaine.
+      ${basePrompt}
+      Génère un programme de sport adapté aux réponses ci-dessus, avec ${nbJours} jours d'entraînement par semaine.
 
-Retour attendu au format JSON STRICT, avec cette structure :
+      Retour attendu au format JSON STRICT, avec cette structure :
 
-{
-  "theme": "sport",
-  "titre": "Programme personnalisé",
-  "description": "Courte description du programme",
-  "routine": {
-    "jours": [
       {
-        "jour": "Lundi",
-        "exercices": [
-          { "nom": "...", "repetitions": "...", "zoneCiblee": "...", "tempsEntrainement": "..."},
-          ...
-        ]
-      },
-      ...
-    ]
-  }
-}
-
-⚠️ Ne place surtout **pas** le champ "jour" à l’intérieur d’un exercice. Il doit être **au même niveau que le tableau "exercices"**.
-Réponds uniquement avec un JSON strict. Pas de commentaires, pas de texte autour.
-`;
-    } else if (theme === 'alimentation') {
-      prompt = `
-    ${basePrompt}
-    
-    Génère une recommandation alimentaire personnalisée selon les objectifs et contraintes alimentaires de l’utilisateur.
-    
-    📅 Si la préférence est « Trois repas par jour » ou « plan pour la semaine », structure par jour (Lundi à Dimanche si nécessaire).
-    Inclure pour chaque jour :
-    - jour: « Lundi »
-    - repas: [
-        { nom, quantite, ingredients, instructions }
-      ]
-    
-    📦 Structure JSON attendue :
-    {
-      "theme": "alimentation",
-      "titre": "...",
-      "description": "...",
-      "imageUrl": "...",
-      "bienfaits": "...",
-      "jours": [
-        {
-          "jour": "Lundi",
-          "repas": [
+        "theme": "sport",
+        "titre": "Programme personnalisé",
+        "description": "Courte description du programme",
+        "routine": {
+          "jours": [
             {
-              "nom": "Poulet rôti aux légumes",
-              "quantite": "1 portion",
-              "ingredients": [
-                "150g de poulet",
-                "100g de carottes",
-                "1 c. à soupe d’huile d’olive"
-              ],
-              "instructions": "Cuire le poulet au four pendant 25 min avec les légumes."
-              "tempsReparation: "45 min de préparation"
-            }
+              "jour": "Lundi",
+              "exercices": [
+                { "nom": "...", "repetitions": "...", "zoneCiblee": "...", "tempsEntrainement": "..."},
+                ...
+              ]
+            },
+            ...
           ]
         }
-      ]
-    }
-    
-    🚫 Ne commente rien, ne retourne que du JSON strict.
+      }
+
+      ⚠️ Ne place surtout **pas** le champ "jour" à l’intérieur d’un exercice. Il doit être **au même niveau que le tableau "exercices"**.
+      Réponds uniquement avec un JSON strict. Pas de commentaires, pas de texte autour.
       `;
+    } else if (theme === 'alimentation') {
+        prompt = `
+      ${basePrompt}
+      
+      Génère une recommandation alimentaire personnalisée selon les objectifs et contraintes alimentaires de l’utilisateur.
+      
+      📅 Si la préférence est « Trois repas par jour » ou « plan pour la semaine », structure par jour (Lundi à Dimanche si nécessaire).
+      Inclure pour chaque jour :
+      - jour: « Lundi »
+      - repas: [
+          { nom, quantite, ingredients, instructions }
+        ]
+      
+      📦 Structure JSON attendue :
+      {
+        "theme": "alimentation",
+        "titre": "...",
+        "description": "...",
+        "imageUrl": "...",
+        "bienfaits": "...",
+        "jours": [
+          {
+            "jour": "Lundi",
+            "repas": [
+              {
+                "nom": "Poulet rôti aux légumes",
+                "quantite": "1 portion",
+                "ingredients": [
+                  "150g de poulet",
+                  "100g de carottes",
+                  "1 c. à soupe d’huile d’olive"
+                ],
+                "instructions": "Cuire le poulet au four pendant 25 min avec les légumes."
+                "tempsReparation: "45 min de préparation"
+              }
+            ]
+          }
+        ]
+      }
+      
+      🚫 Ne commente rien, ne retourne que du JSON strict.
+        `;
     }else if (theme === 'soins') {
       prompt = `
     ${basePrompt}

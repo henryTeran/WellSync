@@ -47,17 +47,11 @@ export class NotificationService {
   }
 
   envoyerNotificationParTheme(token: string, theme: string) {
-    const baseUrl = environment.notificationBaseUrl;
-
-    const payload = {
-      token: token,
-      theme: theme,
-      click_action: `${baseUrl}/app/dashboard`
-    };
-
-    return this.http.post(environment.notificationServerUrl + '/send-notification', payload).subscribe(
-      res => console.log('Notification envoyée via serveur !', res),
-      err => console.error('Erreur envoi serveur notification', err)
-    );
+    const payload = { token, theme };
+  
+    return this.http.post(environment.notificationServerUrl + '/send-notification', payload).subscribe({
+      next: res => console.log('✅ Notification envoyée :', res),
+      error: err => console.error('❌ Erreur notification :', err)
+    });
   }
 }

@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "compodoc": "npx compodoc -p tsconfig.doc.json",
     "generate-env": "ts-node generate-env.ts",
     "start": "npm run generate-env && ng serve",
     "watch": "ng build --watch --configuration development",
@@ -13,7 +14,10 @@
     "test": "ng test",
     "server:notification": "node server/send-notification.js",
     "deploy:gh": "ng deploy --base-href=/WellSync/",
-    "deploy:firebase": "npm run build:prod && firebase deploy"
+    "deploy:firebase": "npm run build:prod && firebase deploy",
+    "compodoc:build": "compodoc -p tsconfig.doc.json",
+    "compodoc:build-and-serve": "compodoc -p tsconfig.doc.json -s",
+    "compodoc:serve": "compodoc -s"
   },
   "dependencies": {
     "@angular/common": "^19.2.8",
@@ -46,6 +50,7 @@
     "@angular/cli": "^19.2.8",
     "@angular/compiler-cli": "^19.2.8",
     "@capacitor/cli": "latest",
+    "@compodoc/compodoc": "^1.1.26",
     "@ionic/angular-toolkit": "latest",
     "@types/jasmine": "~5.1.0",
     "@types/node": "^22.13.13",
