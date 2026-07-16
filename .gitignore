@@ -1,5 +1,3 @@
-**.gitignore**
-```
 # Angular
 /dist/
 /out-tsc/
@@ -13,42 +11,30 @@
 # Env
 .env
 .env.*
-/src/environments/
-/src/environments/environment.ts
+!.env.example
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Logs and reports
+firebase-debug.log
+firestore-debug.log
+logs/
+coverage/
+
+# Sensitive files
+*.pem
+*firebase-adminsdk*.json
+serviceAccountKey.json
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Optional
-coverage/
-```
+# Firebase
+.firebase/
 
----
-
-**prettier.config.js**
-```js
-module.exports = {
-  semi: true,
-  singleQuote: true,
-  trailingComma: 'all',
-  printWidth: 100,
-  tabWidth: 2,
-  endOfLine: 'auto',
-};
-
-wellsync-a4123-firebase-adminsdk-fbsvc-18120e4005.json
-cert.pem
-key.pem
-openssl.cnf
-.firebase
-
-
+# Generated docs
 documentation/
-dist/
-.env
+
+# Package manager logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
