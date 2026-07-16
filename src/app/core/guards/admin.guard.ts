@@ -1,13 +1,20 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+import { combineLatest, map, take } from 'rxjs';
 import { AuthService } from '../services/auth.service';
-import { map } from 'rxjs';
 
-export const adminGuard: CanActivateFn = (route, state) => {
+export const adminGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  return authService.role$.pipe(
-    map(role => (role === 'admin' ? true : router.createUrlTree(['/login'])))
+  return combineLatest([authService.user$, authService.role$]).pipe(
+    take(1),
+    map(([user, role]) => {
+      if (!user) {
+        return router.createUrlTree(['/app/login']);
+      }
+
+      return role === 'admin' ? true : router.createUrlTree(['/app/home']);
+    }),
   );
 };

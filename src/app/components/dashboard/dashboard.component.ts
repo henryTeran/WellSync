@@ -7,8 +7,9 @@ import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
 import { CommonModule } from '@angular/common';
 import { AlimentationRecommendation, SportRecommendation, SoinsRecommendation } from '../../core/interfaces';
-import { firstValueFrom, Observable, of, switchMap } from 'rxjs';
+import { Observable, of, switchMap, catchError } from 'rxjs';
 import { NotificationService } from '../../core/services/notification.service';
+import { ErrorHandlerService } from '../../core/services/error-handler.service';
 
 const elementsUI = [
   CommonModule,
@@ -22,7 +23,7 @@ const elementsUI = [
   IonButton,
   IonCard,
   IonButtons,
-  IonIcon
+  IonIcon,
 ];
 
 @Component({
@@ -31,7 +32,7 @@ const elementsUI = [
   imports: [...elementsUI, RouterLink],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
-  schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class DashboardComponent {
   recommendationAlimentation$: Observable<AlimentationRecommendation | null>;
@@ -39,36 +40,52 @@ export class DashboardComponent {
   recommendationSoins$: Observable<SoinsRecommendation | null>;
 
   constructor(
-    private _authService: AuthService,
-    private _openAiService: OpenAiService,
-    private _router: Router,
-    private notificationService: NotificationService
+    private readonly authService: AuthService,
+    private readonly openAiService: OpenAiService,
+    private readonly router: Router,
+    private readonly notificationService: NotificationService,
+    private readonly errorHandlerService: ErrorHandlerService,
   ) {
     addIcons({ arrowBackOutline });
 
-    // Dynamique sans subscribe
-    this.recommendationAlimentation$ = this._authService.user$.pipe(
-      switchMap(user => user?.uid ? this._openAiService.getLastRecommendation<AlimentationRecommendation>(user.uid, 'alimentation') : of(null))
+    this.recommendationAlimentation$ = this.authService.user$.pipe(
+      switchMap((user) =>
+        user?.uid
+          ? this.openAiService.getLastRecommendation<AlimentationRecommendation>(user.uid, 'alimentation').catch(() => null)
+          : of(null),
+      ),
+      catchError(() => of(null)),
     );
 
-    this.recommendationSport$ = this._authService.user$.pipe(
-      switchMap(user => user?.uid ? this._openAiService.getLastRecommendation<SportRecommendation>(user.uid, 'sport') : of(null))
+    this.recommendationSport$ = this.authService.user$.pipe(
+      switchMap((user) =>
+        user?.uid
+          ? this.openAiService.getLastRecommendation<SportRecommendation>(user.uid, 'sport').catch(() => null)
+          : of(null),
+      ),
+      catchError(() => of(null)),
     );
 
-    this.recommendationSoins$ = this._authService.user$.pipe(
-      switchMap(user => user?.uid ? this._openAiService.getLastRecommendation<SoinsRecommendation>(user.uid, 'soins') : of(null))
+    this.recommendationSoins$ = this.authService.user$.pipe(
+      switchMap((user) =>
+        user?.uid
+          ? this.openAiService.getLastRecommendation<SoinsRecommendation>(user.uid, 'soins').catch(() => null)
+          : of(null),
+      ),
+      catchError(() => of(null)),
     );
-    console.log(firstValueFrom(this.recommendationSoins$))
   }
 
   naviguerVers(path: string): void {
-    this._router.navigate([path]);
+    this.router.navigate([path]);
   }
 
-  envoyerNotifTest() {
-    const token = 'fxzZncCqu9UyDJRjkoGV-9:APA91bE45z4ycOD9N5ecJMjItfJg69si1vG6l1J0QpdRuGNhh_D2XnLdUmiZMs_heWWPjgb24JhvR75fEEh0Us-9CyU7ZOJtEpKILeb7k18RP46UNY1s1Kw'; // récupéré depuis Firebase Messaging
-    const theme = 'soin'; // ou 'sport', 'alimentation', etc.
-
-    this.notificationService.envoyerNotificationParTheme(token, theme);
+  async activerRappels(): Promise<void> {
+    try {
+      await this.notificationService.enableNotificationsForUser();
+    } catch (error) {
+      this.errorHandlerService.logDevError('DashboardComponent.activerRappels', error);
+      await this.errorHandlerService.showUserError('Impossible d\'activer les notifications pour le moment.');
+    }
   }
 }

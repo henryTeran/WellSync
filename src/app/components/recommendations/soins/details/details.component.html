@@ -10,23 +10,27 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-card class="detail-card">
-    <ion-card-header>
-      <ion-card-title>{{ recommendation.titre }} - {{ recommendation.prestation.duree }}</ion-card-title>
-    </ion-card-header>
+  @if (recommendation) {
+    <ion-card class="detail-card">
+      <ion-card-header>
+        <ion-card-title>{{ recommendation.titre }} - {{ recommendation.prestation.duree }}</ion-card-title>
+      </ion-card-header>
 
-    <ion-card-content>
-      <p class="section-title">🧾 Protocole :</p>
-      <p>{{ recommendation.prestation.protocole }}</p>
+      <ion-card-content>
+        <p class="section-title">🧾 Protocole :</p>
+        <p>{{ recommendation.prestation.protocole }}</p>
 
-      <p class="section-title">🛠️ Appareillage utilisé :</p>
-      <p>{{ recommendation.prestation.appareillage }}</p>
+        <p class="section-title">🛠️ Appareillage utilisé :</p>
+        <p>{{ recommendation.prestation.appareillage }}</p>
 
-      <p class="section-title">🧪 Techniques recommandées :</p>
-      <p>{{ recommendation.prestation.nomTechnique }}</p>
+        <p class="section-title">🧪 Techniques recommandées :</p>
+        <p>{{ recommendation.prestation.nomTechnique }}</p>
 
-      <p class="section-title">🧴 Produits appliqués :</p>
-      <p>{{ recommendation.prestation.nomCremes }}</p>
-    </ion-card-content>
-  </ion-card>
+        <p class="section-title">🧴 Produits appliqués :</p>
+        <p>{{ recommendation.prestation.nomCremes }}</p>
+      </ion-card-content>
+    </ion-card>
+  } @else {
+    <p class="ion-text-center">Chargement des détails...</p>
+  }
 </ion-content>

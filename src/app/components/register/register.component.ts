@@ -29,26 +29,23 @@ export class RegisterComponent {
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      role: ['user', Validators.required]
     });
   }
 
   async onSubmit() {
     if (this.registerForm.valid) {
-      const { email, password, role } = this.registerForm.value;
+      const { email, password } = this.registerForm.value;
       try {
         const currentUser = this.authService.currentUser();
-  
+
         if (currentUser && currentUser.isAnonymous) {
-          //  Cas 1 : conversion depuis compte anonyme
-          const convertedUser = await this.authService.convertirEnCompte(email, password, role);
+          await this.authService.convertirEnCompte(email, password);
           this.errorMessage = null;
-          this.router.navigate([`/app/dashboard`]);
+          this.router.navigate(['/app/dashboard']);
         } else {
-          //  Cas 2 : inscription classique
-          const newUser = await this.authService.register(email, password, role);
+          await this.authService.register(email, password);
           this.errorMessage = null;
-          this.router.navigate([`/app/dashboard`]);
+          this.router.navigate(['/app/dashboard']);
         }
   
       } catch (error: any) {

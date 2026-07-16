@@ -8,6 +8,10 @@ import autoTable from 'jspdf-autotable';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, documentOutline } from 'ionicons/icons';
 import Swiper from 'swiper';
+import { OpenAiService } from '../../../../core/services/openia.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { firstValueFrom } from 'rxjs';
+import { AlimentationRecommendation } from '../../../../core/interfaces';
 
 const elementsUi = [
   IonContent,
@@ -29,28 +33,42 @@ const elementsUi = [
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PlanningComponent implements OnInit {
-  @Input() recommendation: any;
+  @Input() recommendation: AlimentationRecommendation | null = null;
   private _swiperRef!: ElementRef;
   @ViewChild('swiper') set swiper(val: ElementRef) {
-  if (val?.nativeElement?.swiper) {
-    this._swiperRef = val;
+    if (val?.nativeElement?.swiper) {
+      this._swiperRef = val;
+    }
   }
-}
   currentSlideIndex = 0;
-  currentStep = 0; // Define currentStep with an initial value
+  currentStep = 0;
 
-  constructor(private route: ActivatedRoute, private router: Router) {
-    const navigation = this.router.getCurrentNavigation();
+  constructor(
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
+    private readonly openAiService: OpenAiService,
+    private readonly authService: AuthService,
+  ) {
     addIcons({ arrowBackOutline, documentOutline });
-    if (navigation?.extras.state?.['recommendation']) {
-      this.recommendation = navigation.extras.state['recommendation'];
+    const navigation = this.router.getCurrentNavigation();
+    if (navigation?.extras?.state?.['recommendation']) {
+      this.recommendation = navigation.extras.state['recommendation'] as AlimentationRecommendation;
     }
   }
 
-  ngOnInit() {
-    const navigation = history.state;
-    if (navigation && navigation.recommendation) {
-      this.recommendation = navigation.recommendation;
+  async ngOnInit() {
+    if (!this.recommendation) {
+      const stateRec = history.state?.recommendation as AlimentationRecommendation | null;
+      if (stateRec) {
+        this.recommendation = stateRec;
+      } else {
+        const user = await firstValueFrom(this.authService.user$);
+        if (user?.uid) {
+          this.recommendation = await this.openAiService
+            .getLastRecommendation<AlimentationRecommendation>(user.uid, 'alimentation')
+            .catch(() => null);
+        }
+      }
     }
   }
 

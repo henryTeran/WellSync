@@ -1,57 +1,84 @@
-// --- fichier : src/app/services/notification.service.ts ---
+// src/app/core/services/notification.service.ts
 
 import { Injectable } from '@angular/core';
 import { getToken, Messaging, onMessage } from '@angular/fire/messaging';
 import { environment } from '../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Firestore } from '@angular/fire/firestore';
-import { AuthService } from './auth.service';
-import { firstValueFrom } from 'rxjs';
+import { Auth } from '@angular/fire/auth';
 import { doc, setDoc } from 'firebase/firestore';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotificationService {
+  private notificationsEnabled = false;
 
   constructor(
-    private _messaging: Messaging, 
-    private http: HttpClient,
-    private firestore: Firestore,
-    private authService: AuthService) {}
+    private readonly messaging: Messaging,
+    private readonly http: HttpClient,
+    private readonly firestore: Firestore,
+    private readonly auth: Auth,
+  ) {}
 
-  async requestPermission(userId: string) {
-    const permission = await Notification.requestPermission();
+  async enableNotificationsForUser(): Promise<string | null> {
+    const user = this.auth.currentUser;
 
-    if (permission === 'granted') {
-      const token = await getToken(this._messaging, {
-        vapidKey: environment.firebase.vapidKey
-      });
-      console.log('FCM Token :', token);
-      if (token) {
-        const userRef = doc(this.firestore, `users/${userId}`);
-        await setDoc(userRef, { fcmToken: token }, { merge: true });
-        console.log(` Token FCM enregistré dans Firestore pour le user: ${userId} `);
-      }
-      return token;
-    } else {
-      console.error('Notification permission not granted.');
+    if (!user) {
       return null;
     }
+
+    if (this.notificationsEnabled) {
+      return null;
+    }
+
+    const permission = await Notification.requestPermission();
+
+    if (permission !== 'granted') {
+      return null;
+    }
+
+    const token = await getToken(this.messaging, {
+      vapidKey: environment.firebase.vapidKey,
+    });
+
+    if (token) {
+      const userRef = doc(this.firestore, `users/${user.uid}`);
+      await setDoc(userRef, { fcmToken: token, updatedAt: new Date() }, { merge: true });
+      this.notificationsEnabled = true;
+    }
+
+    return token || null;
   }
 
-  listen() {
-    onMessage(this._messaging, (payload) => {
-      console.log('New message received :', payload);
+  listen(): void {
+    onMessage(this.messaging, (payload) => {
+      const title = payload.data?.['title'] || payload.notification?.title || 'WellSync';
+      const body = payload.data?.['body'] || payload.notification?.body || '';
+      console.info(`[FCM] ${title}: ${body}`);
     });
   }
 
-  envoyerNotificationParTheme(token: string, theme: string) {
-    const payload = { token, theme };
-  
-    return this.http.post(environment.notificationServerUrl + '/send-notification', payload).subscribe({
-      next: res => console.log('✅ Notification envoyée :', res),
-      error: err => console.error('❌ Erreur notification :', err)
+  async envoyerNotificationParTheme(theme: 'sport' | 'alimentation' | 'soins'): Promise<void> {
+    const user = this.auth.currentUser;
+
+    if (!user) {
+      throw new Error('Utilisateur non connecté.');
+    }
+
+    const idToken = await user.getIdToken();
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${idToken}`,
+      'Content-Type': 'application/json',
     });
+
+    await firstValueFrom(
+      this.http.post(
+        `${environment.backendUrl}/api/notifications/send`,
+        { theme },
+        { headers },
+      ),
+    );
   }
 }

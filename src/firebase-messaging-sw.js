@@ -1,17 +1,17 @@
 // firebase-messaging-sw.js
+// Les clés sensibles Firebase (apiKey, appId…) restent utilisées côté client pour FCM
+// Ces valeurs ne donnent pas accès aux données — la sécurité s'appuie sur les règles Firestore et l'auth Firebase.
 
-// Import Firebase scripts pour le service worker
 importScripts('https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.11.0/firebase-messaging-compat.js');
 
-// Initialise Firebase app dans le service worker
 firebase.initializeApp({
-  apiKey: "AIzaSyChVYCzUpatehRW1N7X6--M8EG7FPyZ140",
-  authDomain: "wellsync-a4123.firebaseapp.com",
-  projectId: "wellsync-a4123",
-  storageBucket: "wellsync-a4123.appspot.com",  
-  messagingSenderId: "630604447724",
-  appId: "1:630604447724:web:ac54b79f87be1345690ac9"
+  apiKey: "REPLACED_AT_BUILD_TIME",
+  authDomain: "REPLACED_AT_BUILD_TIME",
+  projectId: "REPLACED_AT_BUILD_TIME",
+  storageBucket: "REPLACED_AT_BUILD_TIME",
+  messagingSenderId: "REPLACED_AT_BUILD_TIME",
+  appId: "REPLACED_AT_BUILD_TIME"
 });
 
 // Récupère Firebase Messaging

@@ -10,7 +10,7 @@ import { BehaviorSubject, map, Observable } from 'rxjs';
 export class AuthService {
   private auth = inject(Auth);
  
-  private roleSubject = new BehaviorSubject<string | null>(null); 
+  private roleSubject = new BehaviorSubject<string | null>(null);
 
   user$: Observable<User | null> ;
   role$: Observable<string | null> = this.roleSubject.asObservable(); 
@@ -18,9 +18,8 @@ export class AuthService {
   constructor(private _firestore: Firestore) {
     this.user$ = authState(this.auth);
     this.auth.onAuthStateChanged(async (user) => {
-      // this.userSubject.next(user);
       if (user) {
-        const role = await this.getUserRole(user.uid);
+        const role = await this.getEffectiveRole(user);
         this.roleSubject.next(role);
       } else {
         this.roleSubject.next(null);
@@ -28,19 +27,36 @@ export class AuthService {
     });
   }
 
-  async register(email: string, password: string, role: 'user' | 'admin' = 'user'): Promise<User | null> {
+  private async getEffectiveRole(user: User): Promise<string> {
+    const tokenResult = await user.getIdTokenResult();
+
+    if (tokenResult.claims['admin'] === true) {
+      return 'admin';
+    }
+
+    const firestoreRole = await this.getUserRole(user.uid);
+    return firestoreRole || 'user';
+  }
+
+  async register(email: string, password: string): Promise<User | null> {
     try {
       const credential = await createUserWithEmailAndPassword(this.auth, email, password);
       const user = credential.user;
       
       if (user) {
         const userRef = doc(this._firestore, `users/${user.uid}`);
-        await setDoc(userRef, { email: user.email, role });
+        await setDoc(userRef, {
+          uid: user.uid,
+          email: user.email,
+          role: 'user',
+          anonymous: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }, { merge: true });
 
-        this.roleSubject.next(role);
+        this.roleSubject.next('user');
       }
 
-      // this.userSubject.next(user);
       return user;
     } catch (error) {
       console.error("Erreur d'inscription :", (error as Error).message);
@@ -54,11 +70,10 @@ export class AuthService {
       const user = credential.user;
 
       if (user) {
-        const role = await this.getUserRole(user.uid);
+        const role = await this.getEffectiveRole(user);
         this.roleSubject.next(role);
       }
 
-      //  this.userSubject.next(user);
       return user;
     } catch (error) {
       console.error("Erreur de connexion :", (error as Error).message);
@@ -72,7 +87,7 @@ export class AuthService {
       const userRef = doc(this._firestore, `users/${uid}`);
       const userSnap = await getDoc(userRef);
       if (userSnap.exists()) {
-        return userSnap.data()?.['role'] || 'user'; //  Correction de l'accès à `role`
+        return userSnap.data()?.['role'] || 'user';
       }
       return null;
     } catch (error) {
@@ -83,7 +98,6 @@ export class AuthService {
 
   async logout(): Promise<void> {
     await signOut(this.auth);
-    // this.userSubject.next(null);
     this.roleSubject.next(null);
   }
 
@@ -107,7 +121,13 @@ export class AuthService {
       if (user) {
        
         const userRef = doc(this._firestore, `users/${user.uid}`);
-        await setDoc(userRef, { uid: user.uid, role: 'user', anonymous: true }, { merge: true });
+        await setDoc(userRef, {
+          uid: user.uid,
+          role: 'user',
+          anonymous: true,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        }, { merge: true });
         this.roleSubject.next('user');
       }
       console.log("userAnonyme", user )
@@ -118,7 +138,7 @@ export class AuthService {
     }
   }
 
-  async convertirEnCompte(email: string, password: string, role: string): Promise<User | null> {
+  async convertirEnCompte(email: string, password: string): Promise<User | null> {
     const user = this.auth.currentUser;
   
     if (!user) {
@@ -134,12 +154,12 @@ export class AuthService {
       const userRef = doc(this._firestore, `users/${user.uid}`);
       await setDoc(userRef, { 
         email: result.user.email,
-        role, 
+        role: 'user',
         anonymous: false,
         updatedAt: new Date() 
       }, { merge: true });
       
-      this.roleSubject.next(role);
+      this.roleSubject.next('user');
       return result.user;
     } catch (error) {
       console.error("Erreur de conversion en compte : ", error);

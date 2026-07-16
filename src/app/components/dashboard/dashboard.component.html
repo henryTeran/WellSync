@@ -10,7 +10,16 @@
 </ion-header>
 
 <ion-content class="ion-padding content-bg">
-  <button (click)="envoyerNotifTest()">🔔 Envoyer notification test</button>
+  <ion-button expand="block" fill="outline" color="secondary" (click)="activerRappels()">
+    Activer les rappels
+  </ion-button>
+
+  <ion-card>
+    <ion-card-content>
+      <p>Aucune recommandation pour le moment ? Lancez un diagnostic pour générer vos conseils personnalisés.</p>
+      <ion-button expand="block" color="success" (click)="naviguerVers('app/services')">Faire un diagnostic</ion-button>
+    </ion-card-content>
+  </ion-card>
 
   <div class="swiper-wrapper-container">
     <swiper-container
@@ -83,8 +92,7 @@
           <div class="button-container">
             <ion-button 
               expand="block" 
-              (click)="naviguerVers('app/recommendations/soins')" 
-              [disabled]="!recommendationSoins$">
+              (click)="naviguerVers('app/recommendations/soins')">
               VOIR
             </ion-button>
           </div>

@@ -14,16 +14,16 @@ describe('LoginComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'WellSync' title`, () => {
+  it('initialise un formulaire de connexion invalide par défaut', () => {
     const fixture = TestBed.createComponent(LoginComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('WellSync');
+    expect(app.loginForm.valid).toBeFalse();
   });
 
-  it('should render title', () => {
+  it('affiche le contenu principal', () => {
     const fixture = TestBed.createComponent(LoginComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, WellSync');
+    expect(compiled.querySelector('ion-card')).toBeTruthy();
   });
 });

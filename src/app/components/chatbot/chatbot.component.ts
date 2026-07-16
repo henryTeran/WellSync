@@ -42,21 +42,18 @@ export class ChatbotComponent implements ViewWillEnter {
   async ionViewWillEnter() {
   
     const user = await firstValueFrom(this.authService.user$);
-    console.log(user)
     if (user?.uid) {
       const history = await this.openAiService.getMessagesForUser(user.uid);
-      this.messages = history.map(msg => ({
-        id: Date.now() + Math.random(), // pour éviter les conflits
+      this.messages = history.map((msg: { sender: string; text: string }) => ({
+        id: Date.now() + Math.random(),
         sender: msg.sender,
-        text: msg.text
+        text: msg.text,
       }));
-      console.log(this.messages)
     }
     const initial = this.messageTransferService.initialMessage;
-    console.log(initial)
     if (initial) {
       this.addBotMessage(initial, user!.uid);
-      this.messageTransferService.initialMessage = null; // reset
+      this.messageTransferService.initialMessage = null;
     }
 
     this.scrollToBottom();
@@ -68,7 +65,7 @@ export class ChatbotComponent implements ViewWillEnter {
     })
     
     console.log("sauveGroupe")
-    await this.openAiService.saveMessageGrouped(userUid, "bot", message); // message initial sans question utilisateur
+    await this.openAiService.saveMessageGrouped(userUid, 'bot', message);
 
   }
 
@@ -91,7 +88,8 @@ export class ChatbotComponent implements ViewWillEnter {
     this.scrollToBottom();
   
     try {
-      const response = await lastValueFrom(this.openAiService.sendMessageToOpenAI(this.userMessage));
+      const responseRaw = await lastValueFrom(this.openAiService.sendMessageToOpenAI(this.userMessage));
+      const response = typeof responseRaw === 'string' ? responseRaw : 'Réponse indisponible.';
   
       // Supprimer le message "en cours..."
       this.messages = this.messages.filter(msg => msg.id !== this.pendingMessageId);
@@ -103,8 +101,7 @@ export class ChatbotComponent implements ViewWillEnter {
       // Sauvegarde si connecté
       const user = await firstValueFrom(this.authService.user$);
       if (user?.uid) {
-        this.openAiService.saveMessageGrouped(user.uid, this.userMessage, response)
-        // this.openAiService.saveMessage(user.uid, this.userMessage, response);
+        this.openAiService.saveMessageGrouped(user.uid, this.userMessage, response);
       }
   
     } catch (error) {

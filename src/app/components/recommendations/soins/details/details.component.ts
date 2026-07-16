@@ -4,6 +4,10 @@ import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardT
 import { addIcons } from 'ionicons';
 import { arrowBackOutline, fitnessOutline } from 'ionicons/icons';
 import { SoinsRecommendation } from '../../../../core/interfaces';
+import { OpenAiService } from '../../../../core/services/openia.service';
+import { AuthService } from '../../../../core/services/auth.service';
+import { firstValueFrom } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 const elementsUI = [
   IonContent,
@@ -17,26 +21,38 @@ const elementsUI = [
   IonTitle,
   IonButtons,
   IonButton,
-  RouterLink
+  RouterLink,
 ];
 
 @Component({
   selector: 'app-details',
   standalone: true,
-  imports: [...elementsUI],
+  imports: [...elementsUI, CommonModule],
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.css'],
 })
 export class DetailsComponent implements OnInit {
-  recommendation!: SoinsRecommendation;
+  recommendation: SoinsRecommendation | null = null;
 
-  constructor(private router: Router) {
+  constructor(
+    private readonly router: Router,
+    private readonly openAiService: OpenAiService,
+    private readonly authService: AuthService,
+  ) {
     addIcons({ arrowBackOutline, fitnessOutline });
   }
 
-  ngOnInit() {
-    const navigation = history.state;
-    this.recommendation = navigation.recommendation;
-    console.log('Recommandation reçue :', this.recommendation);
+  async ngOnInit() {
+    const stateRec = history.state?.recommendation as SoinsRecommendation | null;
+    if (stateRec) {
+      this.recommendation = stateRec;
+    } else {
+      const user = await firstValueFrom(this.authService.user$);
+      if (user?.uid) {
+        this.recommendation = await this.openAiService
+          .getLastRecommendation<SoinsRecommendation>(user.uid, 'soins')
+          .catch(() => null);
+      }
+    }
   }
 }

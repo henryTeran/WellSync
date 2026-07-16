@@ -1,43 +1,64 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, take } from 'rxjs';
+import { Auth, authState } from '@angular/fire/auth';
+import { environment } from '../../../environments/environment';
+import { ApiSuccessResponse } from '../interfaces';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmotionDetectionService {
-  private API_TOKEN = environment.luxandApiToken;
-  private API_URL = 'https://api.luxand.cloud/photo/emotions';
+  private readonly apiUrl = `${environment.backendUrl}/api/emotion/detect`;
 
-  constructor(private readonly http : HttpClient){}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly auth: Auth,
+  ) {}
 
-  async detectEmotions(file: File | string): Promise<any> {
-    const headers = new HttpHeaders().set('token', this.API_TOKEN);
+  private toBase64(buffer: ArrayBuffer): string {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
 
-    const formData = new FormData();
-    if (typeof file === 'string' && file.startsWith('https://')) {
-      formData.append('photo', file);
-    } else {
-      if (file instanceof File) {
-        formData.append('photo', file, 'file');
-      } else {
-        throw new Error('Invalid file type: expected a File instance.');
-      }
+    bytes.forEach((byte) => {
+      binary += String.fromCharCode(byte);
+    });
+
+    return btoa(binary);
+  }
+
+  async detectEmotions(file: File | string): Promise<unknown> {
+    const user = this.auth.currentUser || await firstValueFrom(authState(this.auth).pipe(take(1)));
+
+    if (!user) {
+      throw new Error('Utilisateur non connecté');
     }
 
-    // const request = await this.http.get(this.API_URL, {
-    //   method: 'POST',
-    //   headers,
-    //   body: formData,
-    // });
+    const idToken = await user.getIdToken(true);
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${idToken}`,
+      'Content-Type': 'application/json',
+    });
 
-    const request = await this.http.post(this.API_URL, formData, {
+    let imageBase64 = '';
+    let mimeType = 'image/png';
+
+    if (typeof file === 'string') {
+      imageBase64 = file;
+    } else {
+      const arrayBuffer = await file.arrayBuffer();
+      imageBase64 = this.toBase64(arrayBuffer);
+      mimeType = file.type || mimeType;
+    }
+
+    const request = this.http.post<ApiSuccessResponse<unknown>>(this.apiUrl, {
+      imageBase64,
+      mimeType,
+    }, {
       headers,
     });
 
     const response = await firstValueFrom(request);
-    console.log(response);
-    return response;
+    return response.data;
   }
 }

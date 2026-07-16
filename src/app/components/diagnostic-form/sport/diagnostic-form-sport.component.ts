@@ -124,13 +124,25 @@ export class DiagnosticFormSportComponent implements OnInit {
   }
   
   onCheckboxChange(event: any, field: string) {
-    const selected = this.form.get(field)?.value || [];
-    if (event.target.checked) {
-      selected.push(event.target.value);
+    const detail = event?.detail ?? event;
+    const checked = detail?.checked ?? event?.target?.checked ?? false;
+    const value = detail?.value ?? event?.target?.value ?? '';
+
+    const selected: string[] = Array.isArray(this.form.get(field)?.value)
+      ? [...this.form.get(field)!.value]
+      : [];
+
+    if (checked) {
+      if (!selected.includes(value)) {
+        selected.push(value);
+      }
     } else {
-      const index = selected.indexOf(event.target.value);
-      if (index > -1) selected.splice(index, 1);
+      const index = selected.indexOf(value);
+      if (index > -1) {
+        selected.splice(index, 1);
+      }
     }
+
     this.form.get(field)?.setValue(selected);
   }
 
@@ -167,7 +179,7 @@ export class DiagnosticFormSportComponent implements OnInit {
     const diagnosticData = this.form.value;
 
     try {
-      await this.openAiService.saveDiagnostic(this.userId, diagnosticData);
+      await this.openAiService.saveDiagnostic(this.userId, diagnosticData, 'sport');
 
       const recommendation: Recommendation = await this.openAiService.enrichirAvecDiagnostic(
         this.userId,

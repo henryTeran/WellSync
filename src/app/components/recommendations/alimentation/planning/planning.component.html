@@ -17,7 +17,8 @@
     </ion-button>
   </ion-toolbar>
 
-  @if (recommendation?.jours?.length > 0) {
+  @if (recommendation; as rec) {
+    @if ((rec.jours?.length ?? 0) > 0) {
 
     <swiper-container #swiper 
       class="custom-swiper"
@@ -26,7 +27,7 @@
       [speed]="400"
       (slidechange)="onSlideChange($event)">
 
-      @for (jour of recommendation.jours; track $index) {
+      @for (jour of rec.jours; track $index) {
         <swiper-slide>
           <h2 class="jour-title">{{ jour.jour }}</h2>
 
@@ -56,14 +57,19 @@
         Précédent
       </ion-button>
 
-      <ion-button color="primary" fill="outline" (click)="nextSlide()" [disabled]="currentSlideIndex === recommendation.jours.length - 1">
+      <ion-button color="primary" fill="outline" (click)="nextSlide()" [disabled]="currentSlideIndex === rec.jours.length - 1">
         Suivant
        </ion-button>
     </div>
 
+    } @else {
+      <ion-text color="medium">
+        <p class="ion-text-center">Aucun planning disponible.</p>
+      </ion-text>
+    }
   } @else {
     <ion-text color="medium">
-      <p class="ion-text-center">Aucun planning disponible.</p>
+      <p class="ion-text-center">Chargement du planning...</p>
     </ion-text>
   }
 

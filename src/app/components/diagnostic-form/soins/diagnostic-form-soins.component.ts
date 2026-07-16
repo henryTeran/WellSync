@@ -47,7 +47,7 @@ export class DiagnosticFormSoinsComponent implements OnInit {
   userId: string | null = null;
   isLoading = false;
   progress = 0; 
-  totalSteps = 0; 
+  totalSteps = 2;
 
   constructor(
     private _fb: FormBuilder,
@@ -71,7 +71,15 @@ export class DiagnosticFormSoinsComponent implements OnInit {
   onTypeSelected() {
     this.typeSoin = this.form.get('typeSoin')?.value;
     let selectedForm: any[];
-    this.totalSteps = this.steps.length + 1;
+    const previousDynamicControls = this.steps.map((step) => step.controlName);
+
+    previousDynamicControls.forEach((controlName) => {
+      if (this.form.contains(controlName)) {
+        this.form.removeControl(controlName);
+      }
+    });
+
+    this.currentSlide = 0;
 
     switch (this.typeSoin) {
       case 'Soin visage':
@@ -91,7 +99,7 @@ export class DiagnosticFormSoinsComponent implements OnInit {
     }
 
     this.steps = selectedForm;
-    this.totalSteps = selectedForm.length;
+    this.totalSteps = selectedForm.length + 2;
     this.updateProgress();
 
     selectedForm.forEach(q => {
@@ -100,6 +108,8 @@ export class DiagnosticFormSoinsComponent implements OnInit {
         new FormControl(q.type === 'checkbox' ? [] : '', q.type !== 'checkbox' ? Validators.required : [])
       );
     });
+
+    this.form.updateValueAndValidity();
   }
 
   onCheckboxChange(event: any, controlName: string) {
@@ -152,7 +162,7 @@ export class DiagnosticFormSoinsComponent implements OnInit {
     console.log('diagnosticData:', diagnosticData, 'UserId:', this.userId);
     
     try {
-      await this._openAiService.saveDiagnostic(this.userId, diagnosticData);
+      await this._openAiService.saveDiagnostic(this.userId, diagnosticData, 'soins');
       const recommendation: Recommendation = await this._openAiService.enrichirAvecDiagnostic(
         this.userId,
         diagnosticData,
