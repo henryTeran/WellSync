@@ -1,16 +1,23 @@
-// send-push.js (version sans axios)
+// send-push.js — Script utilitaire local (non versionné en prod)
+// Utilisez node server/index.js pour le serveur sécurisé.
+// Ce script sert uniquement aux tests locaux.
 
 const { google } = require('googleapis');
 const https = require('https');
 
-// Charger ton fichier de service Firebase
-const serviceAccount = require('./wellsync-a4123-firebase-adminsdk-fbsvc-18120e4005.json');
+// Charger le fichier de service Firebase (variable d'environnement ou fichier local)
+const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH || './wellsync-a4123-firebase-adminsdk-fbsvc-18120e4005.json';
+const serviceAccount = require(serviceAccountPath);
 
-// ID du projet Firebase
-const projectId = 'wellsync-a4123';
+const projectId = serviceAccount.project_id;
 
-// Ton token utilisateur cible
-const fcmToken = 'dtpyF9N0naUy4EpP8BSfkG:APA91bGhEBh3CgoQ7tSGJm-qBPzoTxqGP_RVUw7RKMhjHYHbn1g6juP6trCIJ9WjdogMmflxTo79oqUH11hQzMpdJDzuFBw68HUJhcKlcRSn9x1XwWHlFNI';
+// Token cible en variable d'environnement uniquement
+const fcmToken = process.env.FCM_TEST_TOKEN;
+
+if (!fcmToken) {
+  console.error('FCM_TEST_TOKEN non défini. Positionner la variable d\'environnement.');
+  process.exit(1);
+}
 
 // Fonction pour obtenir un token d'accès OAuth2
 async function getAccessToken() {
